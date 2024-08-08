@@ -55,6 +55,7 @@ Feel free to fork this repository to start your own project or contribute back t
 
 ## Project Structure
 
+```bash
 .
 ├── public # Public assets
 ├── src
@@ -73,6 +74,7 @@ Feel free to fork this repository to start your own project or contribute back t
 ├── postcss.config.js
 ├── tailwind.config.js
 └── README.md # This file
+```
 
 ## Contributing
 
