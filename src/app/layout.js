@@ -1,5 +1,5 @@
 // These styles apply to every route in the application
-import Navbar from "../../components/Navbar/Navbar";
+import Navbar from "../components/Navbar/Navbar";
 import "./globals.css";
 
 export const metadata = {
