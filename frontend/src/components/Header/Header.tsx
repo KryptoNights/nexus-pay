@@ -1,4 +1,3 @@
-import { ConnectButton } from '@rainbow-me/rainbowkit'
 
 import SidebarToggle from '@/components/Header/SidebarToggle'
 import dynamic from 'next/dynamic'

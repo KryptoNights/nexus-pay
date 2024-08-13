@@ -25,7 +25,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="flex-grow items-center justify-center py-10 px-20 text-center">
+      <main className="mt-[6.75rem] flex-grow items-center justify-center pl-2em pr-2em text-center">
         <h1 className="my-10 text-6xl font-bold">
           <span className="text-secondary">Transfer</span> anywhere
         </h1>

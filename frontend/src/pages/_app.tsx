@@ -2,7 +2,6 @@ import '@/styles/globals.css'
 
 import React, { useEffect } from 'react'
 import type { AppProps } from 'next/app'
-import '@rainbow-me/rainbowkit/styles.css'
 import { ThemeProvider } from 'next-themes'
 
 function MyApp({ Component, pageProps }: AppProps) {
