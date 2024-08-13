@@ -54,42 +54,42 @@ export function routeIsActive(pathname: String, route: INavigation): boolean {
 
 const navigation: INavigation[] = [
   { name: 'Dashboard', href: '/', icon: HomeIcon, current: true, exact: true },
-  {
-    name: 'Theme Preview',
-    href: '/themePreview',
-    icon: UsersIcon,
-    current: false,
-  },
-  { name: '404', href: '/404', icon: FolderIcon, current: false },
-  { name: '500', href: '/500', icon: CalendarIcon, current: false },
+  // {
+  //   name: 'Theme Preview',
+  //   href: '/ThemePreview',
+  //   icon: UsersIcon,
+  //   current: false,
+  // },
+  // { name: '404', href: '/404', icon: FolderIcon, current: false },
+  // { name: '500', href: '/500', icon: CalendarIcon, current: false },
 ]
 
 const bottomNavigation: IBottomNavigation[] = [
-  { name: 'Docs', href: '#', icon: BookOpenIcon },
+  // { name: 'Docs', href: '#', icon: BookOpenIcon },
   { name: 'Settings', href: '#', icon: CogIcon },
 ]
 
 const bottomIcons: IBottomIcons[] = [
   {
     name: 'GitHub',
-    href: 'https://github.com/JonnysCode/hardhat-nextjs-starter-dashboard',
+    href: 'https://github.com/kavishshahh',
     icon: TbBrandGithub,
   },
   {
     name: 'Twitter',
-    href: 'https://github.com/JonnysCode/hardhat-nextjs-starter-dashboard',
+    href: 'https://twitter.com/kavishshahh',
     icon: TbBrandTwitter,
   },
   {
     name: 'Discord',
-    href: 'https://github.com/JonnysCode/hardhat-nextjs-starter-dashboard',
+    href: 'https://twitter.com/kavishshahh',
     icon: TbBrandDiscord,
   },
-  {
-    name: 'Medium',
-    href: 'https://github.com/JonnysCode/hardhat-nextjs-starter-dashboard',
-    icon: TbBrandMedium,
-  },
+  // {
+  //   name: 'Medium',
+  //   href: 'https://github.com/JonnysCode/hardhat-nextjs-starter-dashboard',
+  //   icon: TbBrandMedium,
+  // },
 ]
 
 const bottomDisclaimer: IBottomDisclaimer[] = [
