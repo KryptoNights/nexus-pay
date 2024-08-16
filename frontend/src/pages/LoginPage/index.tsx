@@ -47,7 +47,7 @@ function LoginPage() {
   return (
     <div className="flex items-center justify-center h-screen w-screen px-4">
       <div>
-        <h1 className="text-4xl font-bold mb-2">Welcome to Aptos</h1>
+        <h1 className="text-4xl font-bold mb-2">Welcome to Move Money</h1>
         <p className="text-lg mb-8">
           Sign in with your Google account to continue
         </p>

@@ -3,20 +3,22 @@ import { useNavigate } from "react-router-dom";
 import { useKeylessAccounts } from "../core/useKeylessAccounts";
 import GoogleLogo from "../components/GoogleLogo";
 import { collapseAddress } from "../core/utils";
+import { useRouter } from "next/router";
 
 function HomePage() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
+  const router = useRouter();
 
   const { activeAccount, disconnectKeylessAccount } = useKeylessAccounts();
 
   useEffect(() => {
-    if (!activeAccount) navigate("/");
-  }, [activeAccount, navigate]);
+    if (!activeAccount) router.push("/LoginPage");
+  }, [activeAccount]);
 
   return (
     <div className="flex flex-col items-center justify-center h-screen w-screen px-4">
       <div>
-        <h1 className="text-4xl font-bold mb-2">Welcome to Aptos!</h1>
+        <h1 className="text-4xl font-bold mb-2">Welcome to Move Money!</h1>
         <p className="text-lg mb-8">You are now logged in</p>
 
         <div className="grid gap-2">
