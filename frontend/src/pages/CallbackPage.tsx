@@ -9,7 +9,7 @@ function CallbackPage() {
     (state) => state.switchKeylessAccount
   );
   const router = useRouter();
-  const [idToken, setIdToken] = useState(null);
+  const [idToken, setIdToken] = useState<string | null>(null);
 
   useEffect(() => {
     // This is a workaround to prevent firing twice due to strict mode
