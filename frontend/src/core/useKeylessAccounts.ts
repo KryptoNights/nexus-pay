@@ -6,7 +6,7 @@ import {
   KeylessAccount,
   ProofFetchStatus,
 } from "@aptos-labs/ts-sdk";
-import create from "zustand/vanilla";
+import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { LocalStorageKeys, devnetClient } from "./constants";
 import { validateIdToken } from "./idToken";
