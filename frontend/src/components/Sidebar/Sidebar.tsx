@@ -23,11 +23,11 @@ export function Sidebar({ children }: any) {
       <div className="drawer-side">
         <label
           htmlFor="my-drawer-2"
-          className="drawer-button drawer-overlay z-10"
+          className="drawer-overlay drawer-button z-10"
         ></label>
-        <div className="menu z-0 w-72 p-3 pr-5 text-base-content h-[100vh]">
+        <div className="menu z-0 h-[100vh] w-72 p-3 pr-5 text-base-content">
           <div className="card h-full bg-base-100 shadow-xl">
-            <Logo />
+            {/* <Logo /> */}
             <SidebarNavigation
               navigation={navigation}
               linkClicked={linkClickedHandler}
