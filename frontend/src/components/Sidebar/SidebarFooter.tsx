@@ -15,8 +15,8 @@ const SidebarFooter = () => {
       >
         {bottomDisclaimer.map((item) => (
           <div key={item.name} className="flex flex-row">
-            <Link legacyBehavior href={item.href}>
-              <a className="text-xs opacity-60 hover:opacity-90">{item.name}</a>
+            <Link  href={item.href}>
+              <div className="text-xs opacity-60 hover:opacity-90">{item.name}</div>
             </Link>
             <div className="mx-2 text-xs leading-4 opacity-50">&bull;</div>
           </div>
@@ -25,13 +25,13 @@ const SidebarFooter = () => {
 
       <div className="mt-4 flex justify-center">
         {bottomIcons.map((item) => (
-          <Link legacyBehavior href={item.href} key={item.name}>
-            <a className="space-x-4">
+          <Link  href={item.href} key={item.name}>
+            <div className="space-x-4">
               <item.icon
                 className="mx-2 h-4 w-4 flex-shrink-0 opacity-50 hover:opacity-90"
                 aria-hidden="true"
               />
-            </a>
+            </div>
           </Link>
         ))}
       </div>
