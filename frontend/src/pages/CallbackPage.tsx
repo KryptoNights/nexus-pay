@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useKeylessAccounts } from "../core/useKeylessAccounts";
 import { useRouter } from "next/router";
+import { useKeylessAccounts } from "@/core/useKeylessAccounts";
 
 function CallbackPage() {
   const isLoading = useRef(false);

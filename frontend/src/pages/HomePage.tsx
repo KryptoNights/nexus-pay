@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useKeylessAccounts } from "../core/useKeylessAccounts";
-import GoogleLogo from "../../public/assets/GoogleLogo";
-import { collapseAddress } from "../core/utils";
 import { useRouter } from "next/router";
+import { collapseAddress } from "@/core/utils";
+import GoogleLogo from "public/assets/GoogleLogo";
+import { useKeylessAccounts } from "@/core/useKeylessAccounts";
 
 function HomePage() {
   // const navigate = useNavigate();
