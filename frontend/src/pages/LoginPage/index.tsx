@@ -1,6 +1,6 @@
 import { GOOGLE_CLIENT_ID } from "../../core/constants";
 import useEphemeralKeyPair from "../../core/useEphemeralKeyPair";
-import GoogleLogo from "../../components/GoogleLogo";
+import GoogleLogo from "../../../public/assets/GoogleLogo";
 
 function LoginPage() {
   const ephemeralKeyPair = useEphemeralKeyPair();
@@ -34,7 +34,7 @@ function LoginPage() {
     const popup = window.open(redirectUrl, '“popup', 'popup=true');
     if (popup) {
       const checkPopup = setInterval(() => {
-        if (popup.window.location.href.includes('id_token')) {
+        if (popup?.window?.location?.href?.includes('id_token')) {
           popup.close();
           window.location.replace(popup.window.location.href);
         }

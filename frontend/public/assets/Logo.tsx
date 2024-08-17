@@ -8,7 +8,7 @@ export function Logo(props: any) {
           <TbPacman className="h-14 w-14 text-secondary"></TbPacman>
         </div>
         <div className="flex">
-          <h1 className="text-2xl font-bold">MoneMoney</h1>
+          <h1 className="text-2xl font-bold">MoveMoney</h1>
         </div>
       </div>
     </div>

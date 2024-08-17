@@ -15,7 +15,7 @@ interface HeaderProps {
 
 const Header = ({ title }: HeaderProps) => {
   return (
-    <div className="navbar sticky top-0 z-50 bg-base-200 bg-opacity-30 p-4 backdrop-blur-md">
+    <div className="navbar sticky top-0 z-50 bg-base-200 bg-opacity-30 p-4">
       <div className="flex flex-grow justify-between gap-3">
         <div className="flex flex-row gap-3">
           <div className="flex lg:hidden">

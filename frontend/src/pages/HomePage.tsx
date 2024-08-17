@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useKeylessAccounts } from "../core/useKeylessAccounts";
-import GoogleLogo from "../components/GoogleLogo";
+import GoogleLogo from "../../public/assets/GoogleLogo";
 import { collapseAddress } from "../core/utils";
 import { useRouter } from "next/router";
 
