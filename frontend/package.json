@@ -6,8 +6,8 @@
     "start": "next start"
   },
   "dependencies": {
-    "@aptos-labs/ts-sdk": "^1.26.0",
-    "@headlessui/react": "^1.6.6",
+    "@aptos-labs/ts-sdk": "1.18.0",
+    "@headlessui/react": "^2.1.2",
     "@heroicons/react": "^1.0.6",
     "@tailwindcss/aspect-ratio": "^0.4.0",
     "@tailwindcss/forms": "^0.5.2",
@@ -20,8 +20,8 @@
     "react": "18.1.0",
     "react-dom": "18.1.0",
     "react-icons": "^4.4.0",
-    "wagmi": "^0.5.11",
-    "zod": "^3.23.8"
+    "zod": "^3.23.8",
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@types/lodash.merge": "^4.6.7",
