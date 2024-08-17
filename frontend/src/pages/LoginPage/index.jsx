@@ -1,8 +1,11 @@
 import { GOOGLE_CLIENT_ID } from "../../core/constants";
 import useEphemeralKeyPair from "../../core/useEphemeralKeyPair";
 import GoogleLogo from "../../../public/assets/GoogleLogo";
+import { useDispatch } from "react-redux";
+import { setAuthData } from "@/redux/reducers/authReducer";
 
 function LoginPage() {
+  const dispatch = useDispatch();
   const ephemeralKeyPair = useEphemeralKeyPair();
 
   const redirectUrl = new URL("https://accounts.google.com/o/oauth2/v2/auth");
@@ -37,6 +40,19 @@ function LoginPage() {
         if (popup?.window?.location?.href?.includes('id_token')) {
           popup.close();
           window.location.replace(popup.window.location.href);
+
+          // const storedAuthDataString = localStorage.getItem('@aptos-connect/keyless-accounts');
+          // console.log(storedAuthDataString);
+
+
+          // let idToken;
+          // if (storedAuthDataString) {
+          //   idToken = JSON.parse(storedAuthDataString);
+          //   console.log("token", idToken.state.accounts[0]?.idToken?.decoded);
+          //   dispatch(setAuthData(idToken));
+          // } else {
+          //   console.log("No auth data found in localStorage.");
+          // }
         }
         if (!popup || !popup.closed) return;
         clearInterval(checkPopup);

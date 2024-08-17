@@ -1,6 +1,7 @@
 
 import SidebarToggle from '@/components/Header/SidebarToggle'
 import dynamic from 'next/dynamic'
+import { useSelector } from 'react-redux'
 
 const ThemeSelector = dynamic(
   () => import('@/components/Header/ThemeSelector'),
@@ -27,7 +28,6 @@ const Header = ({ title }: HeaderProps) => {
             </h1>
           </div>
         </div>
-
         <div className="flex flex-auto items-center justify-end gap-3">
           <ThemeSelector className="pt-1" />
         </div>
