@@ -15,7 +15,7 @@
     "@types/lodash.merge": "^4.6.9",
     "@types/node": "^22.3.0",
     "clsx": "^2.1.1",
-    "daisyui": "^4.12.10",
+    "daisyui": "^2.20.0",
     "eslint-config-next": "^14.2.5",
     "ethers": "^6.13.2",
     "jwt-decode": "^4.0.0",
