@@ -1,9 +1,15 @@
-import { loadStateFromLocalStorage } from "@/core/utils";
+import {
+  getStoredAddress,
+  loadStateFromLocalStorage,
+} from "@/core/utils";
 import { createSlice } from "@reduxjs/toolkit";
 const preloadedState = loadStateFromLocalStorage();
+const address = getStoredAddress();
+console.log(address);
+
 const initialState = {
   idToken: preloadedState || {},
-  activeAccount: {},
+  activeAccount: address || {},
 };
 
 const authSlice = createSlice({

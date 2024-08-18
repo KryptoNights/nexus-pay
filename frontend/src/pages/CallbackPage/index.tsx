@@ -4,15 +4,27 @@ import { useRouter } from "next/router";
 import { useKeylessAccounts } from "@/core/useKeylessAccounts";
 import { useDispatch } from "react-redux";
 import { setActiveAccount } from "@/redux/reducers/authReducer";
+import { stringify } from "flatted";
+import { getAddressAsString } from "@/core/utils";
 
 function CallbackPage() {
   const isLoading = useRef(false);
   const switchKeylessAccount = useKeylessAccounts(
     (state) => state.switchKeylessAccount
   );
+  const { activeAccount } = useKeylessAccounts();
   const dispatch = useDispatch();
-  // dispatch(setActiveAccount(switchKeylessAccount))
-  
+  const address = getAddressAsString(activeAccount?.accountAddress.toString());
+  console.log("hehe", address);
+
+  localStorage.setItem("activeAccount", address);
+
+  dispatch(
+    setActiveAccount(
+      getAddressAsString(activeAccount?.accountAddress.toString())
+    )
+  );
+
   const router = useRouter();
   const [idToken, setIdToken] = useState<string | null>(null);
 
@@ -26,7 +38,7 @@ function CallbackPage() {
         await switchKeylessAccount(idToken);
         router.push("/HomePage");
       } catch (error) {
-        console.log("error",error);
+        console.log("error", error);
         router.push("/");
       }
     }

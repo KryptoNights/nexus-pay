@@ -1,16 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
-import authSlice from "./reducers/authReducer"; // Adjust the path as needed
-import { loadStateFromLocalStorage } from "@/core/utils";
-
-const preloadedState = loadStateFromLocalStorage();
-console.log(preloadedState);
-
+import authSlice from "./reducers/authReducer";
 
 const store = configureStore({
   reducer: {
-    authSlice: authSlice, // Correctly reference the reducer
+    authSlice: authSlice,
   },
-  preloadedState,
 });
 
 export const RootState = store.getState;

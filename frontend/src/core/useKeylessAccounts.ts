@@ -187,8 +187,6 @@ export const useKeylessAccounts = create<
     {
       merge: (persistedState, currentState) => {
         const merged = { ...currentState, ...(persistedState as object) };
-        const dispatch = useDispatch();
-        dispatch(setActiveAccount(merged.activeAccount))
         return {
           ...merged,
           activeAccount:

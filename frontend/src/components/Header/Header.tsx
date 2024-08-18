@@ -20,9 +20,7 @@ const Header = ({ title }: HeaderProps) => {
     (state: any) => state.authSlice
   );
   const dispatch = useDispatch();
-  console.log(idToken);
   console.log(activeAccount);
-  
 
   const handlePopupOpen = () => {
     setIsPopupOpen(true);
@@ -58,8 +56,7 @@ const Header = ({ title }: HeaderProps) => {
               <div className="w-24 rounded-full bg-pink-300 p-2">
                 <Image
                   src={
-                    idToken?.state?.accounts[0]?.idToken?.decoded
-                      ?.picture ?? ""
+                    idToken?.state?.accounts[0]?.idToken?.decoded?.picture ?? ""
                   }
                   width={240}
                   height={240}
@@ -69,7 +66,7 @@ const Header = ({ title }: HeaderProps) => {
               </div>
             </div>
             <h3 className="font-bold text-lg mt-4">
-              {/* {collapseAddress(activeAccount?.accountAddress?.toString())} */}
+              {collapseAddress(activeAccount ? activeAccount : "0x1234")}
             </h3>
             <p className="text-gray-400">0 ETH</p>
             <div className="modal-action flex justify-between w-full mt-6">
@@ -82,6 +79,7 @@ const Header = ({ title }: HeaderProps) => {
                   disconnectKeylessAccount();
                   dispatch(setAuthData({}));
                   dispatch(setActiveAccount({}));
+                  localStorage.removeItem("activeAccount");
                   handlePopupClose();
                 }}
               >
@@ -131,7 +129,7 @@ const Header = ({ title }: HeaderProps) => {
                     />
                   </div>
                   <div style={{ textTransform: "none" }}>
-                    {/* {collapseAddress(activeAccount?.accountAddress?.toString())} */}
+                    {collapseAddress(activeAccount ? activeAccount : "0x1234")}
                   </div>
                   <DropdownIcon />
                 </div>

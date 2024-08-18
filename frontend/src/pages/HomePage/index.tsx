@@ -7,9 +7,10 @@ import { useKeylessAccounts } from "@/core/useKeylessAccounts";
 import Head from "next/head";
 import Layout from "@/components/Layout/Layout";
 import { useDispatch } from "react-redux";
+import { setActiveAccount } from "@/redux/reducers/authReducer";
 
 function HomePage() {
-  // const navigate = useNavigate();
+  const dispatch = useDispatch();
   const router = useRouter();
 
   const { activeAccount, disconnectKeylessAccount } = useKeylessAccounts();

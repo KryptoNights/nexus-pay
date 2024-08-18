@@ -1,16 +1,49 @@
 export const collapseAddress = (address: any): string => {
-  return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  if (typeof address === 'string') {
+    return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  } else {
+    console.error("Provided address is not a string:", address);
+    return ''; 
+  }
+};
+
+export const getAddressAsString = (address: any): any => {
+  if (typeof address === 'string') {
+    return address; // It's already a string
+  } else if (Array.isArray(address)) {
+    return address[0] || ''; // Ensure the array has an element
+  } else if (typeof address === 'object' && address !== null) {
+    const values = Object.values(address);
+    if (typeof values[0] === 'string') {
+      return values[0] as string; // Return the first value as a string
+    }
+  }
+  return ''; // Default fallback if address is not usable
 };
 
 export const loadStateFromLocalStorage = () => {
   try {
-    const serializedState = localStorage.getItem('@aptos-connect/keyless-accounts');
+    const serializedState = localStorage.getItem(
+      "@aptos-connect/keyless-accounts"
+    );
     if (serializedState === null) return undefined;
-    console.log(JSON.parse(serializedState));
 
     return JSON.parse(serializedState);
   } catch (err) {
     console.error("Could not load state from localStorage", err);
     return undefined;
   }
+};
+
+export const getStoredAddress = (): string | undefined => {
+  try {
+    const storedAddress = localStorage.getItem("activeAccount");
+
+    if (storedAddress) {
+      return storedAddress;
+    }
+  } catch (error) {
+    console.error("Error parsing address:", error);
+  }
+  return undefined;
 };
