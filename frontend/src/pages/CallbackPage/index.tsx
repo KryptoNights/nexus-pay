@@ -2,12 +2,17 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useRouter } from "next/router";
 import { useKeylessAccounts } from "@/core/useKeylessAccounts";
+import { useDispatch } from "react-redux";
+import { setActiveAccount } from "@/redux/reducers/authReducer";
 
 function CallbackPage() {
   const isLoading = useRef(false);
   const switchKeylessAccount = useKeylessAccounts(
     (state) => state.switchKeylessAccount
   );
+  const dispatch = useDispatch();
+  // dispatch(setActiveAccount(switchKeylessAccount))
+  
   const router = useRouter();
   const [idToken, setIdToken] = useState<string | null>(null);
 
@@ -21,6 +26,7 @@ function CallbackPage() {
         await switchKeylessAccount(idToken);
         router.push("/HomePage");
       } catch (error) {
+        console.log("error",error);
         router.push("/");
       }
     }

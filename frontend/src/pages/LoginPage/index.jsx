@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { setAuthData } from "@/redux/reducers/authReducer";
 import Layout from "@/components/Layout/Layout";
 import Head from "next/head";
+import { useRouter } from "next/router";
 
 function LoginPage() {
   const dispatch = useDispatch();
@@ -35,26 +36,35 @@ function LoginPage() {
   });
   redirectUrl.search = searchParams.toString();
 
+  const router = useRouter();
   const openPopup = () => {
     const popup = window.open(redirectUrl, '“popup', 'popup=true');
+    if (!popup) {
+      alert('Popup blocked! Please allow popups for this site.');
+      return;
+    }
     if (popup) {
       const checkPopup = setInterval(() => {
         if (popup?.window?.location?.href?.includes('id_token')) {
+
+          let idToken;
+          if (popup?.localStorage?.getItem("@aptos-connect/keyless-accounts")) {
+            idToken = JSON.parse(popup.localStorage.getItem("@aptos-connect/keyless-accounts"));
+            console.log("id", idToken);
+
+            dispatch(setAuthData(idToken));
+          } else {
+            console.log("No auth data found in localStorage.");
+          }
+
+          const fullUrl = popup.window.location.href;
+          const url = new URL(fullUrl);
+          const path = `${url.pathname}${url.search}${url.hash}`;
+
           popup.close();
-          window.location.replace(popup.window.location.href);
 
-          // const storedAuthDataString = localStorage.getItem('@aptos-connect/keyless-accounts');
-          // console.log(storedAuthDataString);
-
-
-          // let idToken;
-          // if (storedAuthDataString) {
-          //   idToken = JSON.parse(storedAuthDataString);
-          //   console.log("token", idToken.state.accounts[0]?.idToken?.decoded);
-          //   dispatch(setAuthData(idToken));
-          // } else {
-          //   console.log("No auth data found in localStorage.");
-          // }
+          router.push(path)
+          // window.location.replace(popup.window.location.href);
         }
         if (!popup || !popup.closed) return;
         clearInterval(checkPopup);

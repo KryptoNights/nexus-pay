@@ -17,6 +17,8 @@ import {
 } from "./ephemeral";
 import { EncryptedScopedIdToken } from "./types";
 import { KeylessAccountEncoding, validateKeylessAccount } from "./keyless";
+import { useDispatch } from "react-redux";
+import { setActiveAccount } from "@/redux/reducers/authReducer";
 
 interface KeylessAccountsState {
   accounts: {
@@ -162,20 +164,21 @@ export const useKeylessAccounts = create<
           set({
             accounts: storedAccount
               ? // If the account already exists, update it. Otherwise, append it.
-                get().accounts.map((a) =>
-                  a.idToken.decoded.sub === decodedToken.sub
-                    ? {
-                        idToken: { decoded: decodedToken, raw: idToken },
-                        pepper,
-                      }
-                    : a
-                )
+              get().accounts.map((a) =>
+                a.idToken.decoded.sub === decodedToken.sub
+                  ? {
+                    idToken: { decoded: decodedToken, raw: idToken },
+                    pepper,
+                  }
+                  : a
+              )
               : [
-                  ...get().accounts,
-                  { idToken: { decoded: decodedToken, raw: idToken }, pepper },
-                ],
+                ...get().accounts,
+                { idToken: { decoded: decodedToken, raw: idToken }, pepper },
+              ],
             activeAccount,
           });
+          console.log(activeAccount);
 
           return activeAccount;
         },
@@ -184,6 +187,8 @@ export const useKeylessAccounts = create<
     {
       merge: (persistedState, currentState) => {
         const merged = { ...currentState, ...(persistedState as object) };
+        const dispatch = useDispatch();
+        dispatch(setActiveAccount(merged.activeAccount))
         return {
           ...merged,
           activeAccount:
@@ -193,6 +198,7 @@ export const useKeylessAccounts = create<
             merged.ephemeralKeyPair &&
             validateEphemeralKeyPair(merged.ephemeralKeyPair),
         };
+
       },
       name: LocalStorageKeys.keylessAccounts,
       partialize: ({ activeAccount, ephemeralKeyPair, ...state }) => ({

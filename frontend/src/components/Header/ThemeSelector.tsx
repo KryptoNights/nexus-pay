@@ -25,7 +25,7 @@ const themes: ThemeOption[] = [
   // { name: 'System', value: 'system', icon: DesktopComputerIcon },
 ];
 
-const defaultTheme: ThemeOption = themes[0];
+const defaultTheme: ThemeOption = themes[1];
 
 const getTheme = (theme: string | undefined) => {
   return themes.find((t) => t.value === theme);

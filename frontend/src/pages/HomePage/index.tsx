@@ -6,6 +6,7 @@ import GoogleLogo from "public/assets/GoogleLogo";
 import { useKeylessAccounts } from "@/core/useKeylessAccounts";
 import Head from "next/head";
 import Layout from "@/components/Layout/Layout";
+import { useDispatch } from "react-redux";
 
 function HomePage() {
   // const navigate = useNavigate();

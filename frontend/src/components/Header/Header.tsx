@@ -1,16 +1,13 @@
 import SidebarToggle from "@/components/Header/SidebarToggle";
 import { useKeylessAccounts } from "@/core/useKeylessAccounts";
+import { collapseAddress } from "@/core/utils";
+import { setActiveAccount, setAuthData } from "@/redux/reducers/authReducer";
+import { AccountAddress } from "@aptos-labs/ts-sdk";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import DropdownIcon from "public/assets/svgs/DropdownIcon";
-import { useState } from "react";
-import { useSelector } from "react-redux";
-
-const ThemeSelector = dynamic(
-  () => import("@/components/Header/ThemeSelector"),
-  {
-    ssr: false,
-  }
-);
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 interface HeaderProps {
   title?: string;
@@ -18,7 +15,14 @@ interface HeaderProps {
 
 const Header = ({ title }: HeaderProps) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const { activeAccount, disconnectKeylessAccount } = useKeylessAccounts();
+  const { disconnectKeylessAccount } = useKeylessAccounts();
+  const { idToken, activeAccount } = useSelector(
+    (state: any) => state.authSlice
+  );
+  const dispatch = useDispatch();
+  console.log(idToken);
+  console.log(activeAccount);
+  
 
   const handlePopupOpen = () => {
     setIsPopupOpen(true);
@@ -28,7 +32,6 @@ const Header = ({ title }: HeaderProps) => {
     setIsPopupOpen(false);
   };
 
-  // Define Popup as a separate component
   const Popup = ({ onClose }: { onClose: () => void }) => {
     const handleBackgroundClick = (e: React.MouseEvent<HTMLDivElement>) => {
       if (e.target === e.currentTarget) {
@@ -53,14 +56,21 @@ const Header = ({ title }: HeaderProps) => {
           <div className="flex flex-col items-center">
             <div className="avatar">
               <div className="w-24 rounded-full bg-pink-300 p-2">
-                <img
-                  src="path/to/avatar.png"
+                <Image
+                  src={
+                    idToken?.state?.accounts[0]?.idToken?.decoded
+                      ?.picture ?? ""
+                  }
+                  width={240}
+                  height={240}
                   alt="Avatar"
                   className="mask mask-squircle"
                 />
               </div>
             </div>
-            <h3 className="font-bold text-lg mt-4">0x6D...aF46</h3>
+            <h3 className="font-bold text-lg mt-4">
+              {/* {collapseAddress(activeAccount?.accountAddress?.toString())} */}
+            </h3>
             <p className="text-gray-400">0 ETH</p>
             <div className="modal-action flex justify-between w-full mt-6">
               <button className="btn btn-outline btn-primary">
@@ -70,6 +80,8 @@ const Header = ({ title }: HeaderProps) => {
                 className="btn btn-outline btn-secondary"
                 onClick={() => {
                   disconnectKeylessAccount();
+                  dispatch(setAuthData({}));
+                  dispatch(setActiveAccount({}));
                   handlePopupClose();
                 }}
               >
@@ -96,21 +108,38 @@ const Header = ({ title }: HeaderProps) => {
           </div>
         </div>
         <div className="flex flex-auto items-center justify-end gap-3">
-          {/* <ThemeSelector className="pt-1" /> */}
-          <button
-            onClick={handlePopupOpen}
-            className="text-white btn btn-primary p-0 m-3 bg-[rgb(0,0,0)] rounded-xl hover:bg-transparent"
-          >
-            <div className="block pt-[8px] pr-[8px] pb-[8px] pl-[12px]">
-              0 ETH
-            </div>
-            <div className="bg-custom-gradient pt-[6px] pr-[8px] pl-[8px] pb-[8px] font-bold rounded-xl flex items-center h-[100%]">
-              <div className="gap-[6px] flex align-middle">
-                <div>0x234</div>
-                <DropdownIcon />
+          {idToken ? (
+            <button
+              onClick={handlePopupOpen}
+              className="text-white btn btn-primary p-0 m-3 bg-[rgb(0,0,0)] rounded-xl hover:bg-transparent"
+            >
+              <div className="block pt-[8px] pr-[8px] pb-[8px] pl-[12px]">
+                0 ETH
               </div>
-            </div>
-          </button>
+              <div className="bg-custom-gradient pt-[6px] pr-[8px] pl-[8px] pb-[8px] font-bold rounded-xl flex items-center h-[100%]">
+                <div className="gap-[6px] flex items-center">
+                  <div className="rounded-xl">
+                    <Image
+                      src={
+                        idToken?.state?.accounts[0]?.idToken?.decoded
+                          ?.picture ?? ""
+                      }
+                      width={24}
+                      height={24}
+                      alt="profile"
+                      className="rounded-xl"
+                    />
+                  </div>
+                  <div style={{ textTransform: "none" }}>
+                    {/* {collapseAddress(activeAccount?.accountAddress?.toString())} */}
+                  </div>
+                  <DropdownIcon />
+                </div>
+              </div>
+            </button>
+          ) : (
+            <button>hi</button>
+          )}
         </div>
       </div>
       {isPopupOpen && <Popup onClose={handlePopupClose} />}

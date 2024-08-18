@@ -12,6 +12,8 @@ const Home: NextPage = () => {
   const [isReceiveModalOpen, setIsReceiveModalOpen] = useState(false);
   const [copyFeedback, setCopyFeedback] = useState("");
   const { activeAccount } = useKeylessAccounts();
+  console.log(activeAccount);
+  
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRecipientAddress(event.target.value);

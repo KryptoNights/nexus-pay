@@ -1,19 +1,24 @@
+import { loadStateFromLocalStorage } from "@/core/utils";
 import { createSlice } from "@reduxjs/toolkit";
-
+const preloadedState = loadStateFromLocalStorage();
 const initialState = {
-    idToken: {},
+  idToken: preloadedState || {},
+  activeAccount: {},
 };
 
-export const authSlice = createSlice({
-    name: "authSlice",
-    initialState,
-    reducers: {
-        setAuthData: (state, action) => {
-            state.idToken = action.payload;
-        },
-    }
+const authSlice = createSlice({
+  name: "auth",
+  initialState,
+  reducers: {
+    setAuthData: (state, action) => {
+      state.idToken = action.payload;
+    },
+    setActiveAccount: (state, action) => {
+      state.activeAccount = action.payload;
+    },
+  },
 });
 
-export const { setAuthData } = authSlice.actions;
+export const { setAuthData, setActiveAccount } = authSlice.actions;
 
-export default authSlice.reducer;
+export default authSlice.reducer; // Export the reducer as default
