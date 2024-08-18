@@ -1,10 +1,12 @@
 import Layout from '@/components/Layout/Layout'
+import { useKeylessAccounts } from '@/core/useKeylessAccounts'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import { useState } from 'react'
 
 const Home: NextPage = () => {
   const [recipientAddress, setRecipientAddress] = useState('')
+  const { activeAccount, disconnectKeylessAccount } = useKeylessAccounts();
 
   // const { data, isIdle, isError, isLoading, isSuccess, sendTransaction } =
   //   useSendTransaction({
@@ -17,6 +19,8 @@ const Home: NextPage = () => {
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRecipientAddress(event.target.value)
   }
+  console.log(activeAccount);
+  
 
   return (
     <Layout>

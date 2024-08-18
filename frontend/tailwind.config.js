@@ -34,6 +34,9 @@ module.exports = {
       padding: {
         '2em': '2em',
       },
+      backgroundImage: {
+        'custom-gradient': 'linear-gradient(0deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.15))',
+      }
     },
   },
 
