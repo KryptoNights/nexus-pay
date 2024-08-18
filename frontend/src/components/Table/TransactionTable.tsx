@@ -1,3 +1,5 @@
+'use client'
+
 import Layout from "@/components/Layout/Layout";
 import { useKeylessAccounts } from "@/core/useKeylessAccounts";
 import type { NextPage } from "next";
@@ -77,7 +79,7 @@ const TransactionTable: NextPage = () => {
                 <td>{transaction.address}</td>
                 <td>{transaction.date}</td>
                 <td className="text-right">
-                  ${transaction.amount.toLocaleString()}
+                  ${transaction.amount.toLocaleString('en-IN')}
                 </td>
                 <td>
                   <span className="badge badge-primary">
