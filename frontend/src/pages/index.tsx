@@ -166,7 +166,7 @@ const Home: NextPage = () => {
       </Head>
 
       <main className="flex flex-col items-center justify-center px-4 py-12 text-center lg:mr-[10px]">
-        <h1 className="mb-8 text-4xl font-bold text-secondary">
+        <h1 className="mb-8 mt-8 text-4xl font-bold text-secondary">
           Transfer <span className="text-white">anywhere</span>
         </h1>
 
