@@ -1,118 +1,102 @@
-import React from "react";
+import Layout from "@/components/Layout/Layout";
+import { useKeylessAccounts } from "@/core/useKeylessAccounts";
+import type { NextPage } from "next";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import { useState } from "react";
 
-const TransactionTable = () => {
+const TransactionTable: NextPage = () => {
+  const [recipientAddress, setRecipientAddress] = useState("");
+  const { activeAccount, disconnectKeylessAccount } = useKeylessAccounts();
+  const router = useRouter();
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setRecipientAddress(event.target.value);
+  };
+
   return (
-    <div className="container mx-auto p-2 dark:text-gray-800 sm:p-4">
-      <h2 className="my-10 text-6xl font-bold text-secondary">Transactions</h2>
+    <main className=" flex-grow px-4 text-center">
+      <h1 className="mb-8 text-4xl font-bold text-primary">Transactions</h1>
+
+      <div className="mb-6">
+        <input
+          type="text"
+          placeholder="Search transactions..."
+          className="input input-bordered w-full max-w-md rounded-full bg-gray-800 text-white"
+          onChange={(e) => console.log(e.target.value)}
+        />
+      </div>
+
       <div className="overflow-x-auto">
-        <table className="min-w-full text-xs">
-          <colgroup>
-            <col />
-            <col />
-            <col />
-            <col />
-
-            <col className="w-24" />
-          </colgroup>
-          <thead className="dark:bg-gray-300">
-            <tr className="text-left">
-              <th className="p-3">Transaction ID #</th>
-              <th className="p-3">Address</th>
-
-              <th className="p-3">Date</th>
-              <th className="p-3 text-right">Amount</th>
-              <th className="p-3">Status</th>
+        <table className="table w-full">
+          <thead>
+            <tr className="bg-gray-800 text-primary">
+              <th>Transaction ID</th>
+              <th>Address</th>
+              <th>Date</th>
+              <th className="text-right">Amount</th>
+              <th>Status</th>
             </tr>
           </thead>
           <tbody>
-            <tr className="border-b border-opacity-20 dark:border-gray-300 dark:bg-gray-50">
-              <td className="p-3">
-                <p>97412378923</p>
-              </td>
-              <td className="p-3">
-                <p>Microsoft Corporation</p>
-              </td>
-              <td className="p-3">
-                <p>14 Jan 2022</p>
-                <p className="dark:text-gray-600">Friday</p>
-              </td>
-
-              <td className="p-3 text-right">
-                <p>$15,792</p>
-              </td>
-              <td className="p-3 text-right">
-                <span className="rounded-md px-3 py-1 font-semibold dark:bg-violet-600 dark:text-gray-50">
-                  <span>Pending</span>
-                </span>
-              </td>
-            </tr>
-            <tr className="border-b border-opacity-20 dark:border-gray-300 dark:bg-gray-50">
-              <td className="p-3">
-                <p>97412378923</p>
-              </td>
-              <td className="p-3">
-                <p>Tesla Inc.</p>
-              </td>
-
-              <td className="p-3">
-                <p>01 Feb 2022</p>
-                <p className="dark:text-gray-600">Tuesday</p>
-              </td>
-              <td className="p-3 text-right">
-                <p>$275</p>
-              </td>
-              <td className="p-3 text-right">
-                <span className="rounded-md px-3 py-1 font-semibold dark:bg-violet-600 dark:text-gray-50">
-                  <span>Pending</span>
-                </span>
-              </td>
-            </tr>
-            <tr className="border-b border-opacity-20 dark:border-gray-300 dark:bg-gray-50">
-              <td className="p-3">
-                <p>97412378923</p>
-              </td>
-              <td className="p-3">
-                <p>Coca Cola co.</p>
-              </td>
-              <td className="p-3">
-                <p>14 Jan 2022</p>
-                <p className="dark:text-gray-600">Friday</p>
-              </td>
-
-              <td className="p-3 text-right">
-                <p>$8,950,500</p>
-              </td>
-              <td className="p-3 text-right">
-                <span className="rounded-md px-3 py-1 font-semibold dark:bg-violet-600 dark:text-gray-50">
-                  <span>Pending</span>
-                </span>
-              </td>
-            </tr>
-            <tr className="border-b border-opacity-20 dark:border-gray-300 dark:bg-gray-50">
-              <td className="p-3">
-                <p>97412378923</p>
-              </td>
-              <td className="p-3">
-                <p>Nvidia Corporation</p>
-              </td>
-              <td className="p-3">
-                <p>14 Jan 2022</p>
-                <p className="dark:text-gray-600">Friday</p>
-              </td>
-
-              <td className="p-3 text-right">
-                <p>$98,218</p>
-              </td>
-              <td className="p-3 text-right">
-                <span className="rounded-md px-3 py-1 font-semibold dark:bg-violet-600 dark:text-gray-50">
-                  <span>Pending</span>
-                </span>
-              </td>
-            </tr>
+            {[
+              {
+                id: "97412378923",
+                address: "Microsoft Corporation",
+                date: "14 Jan 2022",
+                amount: 15792,
+                status: "Pending",
+              },
+              {
+                id: "97412378923",
+                address: "Tesla Inc.",
+                date: "01 Feb 2022",
+                amount: 275,
+                status: "Pending",
+              },
+              {
+                id: "97412378923",
+                address: "Coca Cola co.",
+                date: "14 Jan 2022",
+                amount: 8950500,
+                status: "Pending",
+              },
+              {
+                id: "97412378923",
+                address: "Nvidia Corporation",
+                date: "14 Jan 2022",
+                amount: 98218,
+                status: "Pending",
+              },
+            ].map((transaction, index) => (
+              <tr
+                key={index}
+                className={index % 2 === 0 ? "bg-gray-900" : "bg-gray-800"}
+              >
+                <td>{transaction.id}</td>
+                <td>{transaction.address}</td>
+                <td>{transaction.date}</td>
+                <td className="text-right">
+                  ${transaction.amount.toLocaleString()}
+                </td>
+                <td>
+                  <span className="badge badge-primary">
+                    {transaction.status}
+                  </span>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
-    </div>
+
+      <div className="mt-6 flex justify-center gap-4">
+        <button className="btn btn-primary" onClick={() => {
+          router.push("/");
+        }}>New Transaction</button>
+        <button className="btn btn-outline">Export</button>
+      </div>
+    </main>
   );
 };
 

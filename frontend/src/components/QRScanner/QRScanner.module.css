@@ -1,0 +1,14 @@
+.videoWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.qrVideo {
+  object-fit: cover;
+  border: 1px solid #ddd;
+  width: 350px;
+  height: 350px;
+  border-radius: 50px;
+}

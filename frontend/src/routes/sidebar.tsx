@@ -56,7 +56,7 @@ const navigation: INavigation[] = [
   { name: 'Dashboard', href: '/', icon: HomeIcon, current: true, exact: true },
   {
     name: 'Transactions',
-    href: '/Transactions',
+    href: '/transactions',
     icon: UsersIcon,
     current: false,
   },
