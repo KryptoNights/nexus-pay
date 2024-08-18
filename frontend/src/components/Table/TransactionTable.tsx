@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 const TransactionTable = () => {
   return (
@@ -113,7 +113,7 @@ const TransactionTable = () => {
         </table>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default TransactionTable
+export default TransactionTable;

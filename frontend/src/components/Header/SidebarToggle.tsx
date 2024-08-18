@@ -1,4 +1,4 @@
-import { MenuAlt2Icon } from '@heroicons/react/outline'
+import { MenuAlt2Icon } from "@heroicons/react/outline";
 
 const SidebarToggle = (...props: any) => {
   return (
@@ -13,7 +13,7 @@ const SidebarToggle = (...props: any) => {
         </label>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default SidebarToggle
+export default SidebarToggle;

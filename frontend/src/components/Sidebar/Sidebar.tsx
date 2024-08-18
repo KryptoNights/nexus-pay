@@ -1,18 +1,18 @@
-import { Fragment, useRef, useContext } from 'react'
+import { Fragment, useRef, useContext } from "react";
 
-import navigation, { bottomNavigation } from '@/routes/sidebar'
-import SidebarContext from '@/context/SidebarContext'
-import SidebarFooter from './SidebarFooter'
-import SidebarNavigation from './SidebarNavigation'
-import { Logo } from 'public/assets/Logo'
+import navigation, { bottomNavigation } from "@/routes/sidebar";
+import SidebarContext from "@/context/SidebarContext";
+import SidebarFooter from "./SidebarFooter";
+import SidebarNavigation from "./SidebarNavigation";
+import { Logo } from "public/assets/Logo";
 
 export function Sidebar({ children }: any) {
-  const sidebarRef = useRef(null)
-  const { saveScroll } = useContext(SidebarContext)
+  const sidebarRef = useRef(null);
+  const { saveScroll } = useContext(SidebarContext);
 
   const linkClickedHandler = () => {
-    saveScroll(sidebarRef.current)
-  }
+    saveScroll(sidebarRef.current);
+  };
 
   return (
     <div className="drawer-mobile drawer">
@@ -43,5 +43,5 @@ export function Sidebar({ children }: any) {
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -3,6 +3,8 @@ import useEphemeralKeyPair from "../../core/useEphemeralKeyPair";
 import GoogleLogo from "../../../public/assets/GoogleLogo";
 import { useDispatch } from "react-redux";
 import { setAuthData } from "@/redux/reducers/authReducer";
+import Layout from "@/components/Layout/Layout";
+import Head from "next/head";
 
 function LoginPage() {
   const dispatch = useDispatch();
@@ -61,21 +63,28 @@ function LoginPage() {
   }
 
   return (
-    <div className="flex items-center justify-center h-screen w-screen px-4">
-      <div>
-        <h1 className="text-4xl font-bold mb-2">Welcome to Move Money</h1>
-        <p className="text-lg mb-8">
-          Sign in with your Google account to continue
-        </p>
-        <button
-          onClick={openPopup}
-          className="w-full flex justify-center items-center border rounded-lg px-8 py-2 hover:bg-gray-100 hover:shadow-sm active:bg-gray-50 active:scale-95 transition-all"
-        >
-          <GoogleLogo />
-          Sign in with Google
-        </button>
+    <Layout>
+      <Head>
+        <title>Login</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+
+      <div className="flex items-center justify-center h-[100%]">
+        <div>
+          <h1 className="text-4xl font-bold mb-2">Welcome to Move Money</h1>
+          <p className="text-lg mb-8">
+            Sign in with your Google account to continue
+          </p>
+          <button
+            onClick={openPopup}
+            className="w-full flex justify-center items-center border rounded-lg px-8 py-2 hover:bg-gray-100 hover:shadow-sm active:bg-gray-50 active:scale-95 transition-all"
+          >
+            <GoogleLogo />
+            Sign in with Google
+          </button>
+        </div>
       </div>
-    </div>
+    </Layout>
   );
 }
 

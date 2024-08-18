@@ -1,38 +1,40 @@
-import SidebarToggle from '@/components/Header/SidebarToggle'
-import dynamic from 'next/dynamic'
-import DropdownIcon from 'public/assets/svgs/DropdownIcon'
-import { useState } from 'react'
-import { useSelector } from 'react-redux'
+import SidebarToggle from "@/components/Header/SidebarToggle";
+import { useKeylessAccounts } from "@/core/useKeylessAccounts";
+import dynamic from "next/dynamic";
+import DropdownIcon from "public/assets/svgs/DropdownIcon";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const ThemeSelector = dynamic(
-  () => import('@/components/Header/ThemeSelector'),
+  () => import("@/components/Header/ThemeSelector"),
   {
     ssr: false,
   }
-)
+);
 
 interface HeaderProps {
-  title?: string
+  title?: string;
 }
 
 const Header = ({ title }: HeaderProps) => {
-  const [isPopupOpen, setIsPopupOpen] = useState(false)
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const { activeAccount, disconnectKeylessAccount } = useKeylessAccounts();
 
   const handlePopupOpen = () => {
-    setIsPopupOpen(true)
-  }
+    setIsPopupOpen(true);
+  };
 
   const handlePopupClose = () => {
-    setIsPopupOpen(false)
-  }
+    setIsPopupOpen(false);
+  };
 
   // Define Popup as a separate component
   const Popup = ({ onClose }: { onClose: () => void }) => {
     const handleBackgroundClick = (e: React.MouseEvent<HTMLDivElement>) => {
       if (e.target === e.currentTarget) {
-        onClose()
+        onClose();
       }
-    }
+    };
 
     return (
       <div
@@ -51,20 +53,34 @@ const Header = ({ title }: HeaderProps) => {
           <div className="flex flex-col items-center">
             <div className="avatar">
               <div className="w-24 rounded-full bg-pink-300 p-2">
-                <img src="path/to/avatar.png" alt="Avatar" className="mask mask-squircle" />
+                <img
+                  src="path/to/avatar.png"
+                  alt="Avatar"
+                  className="mask mask-squircle"
+                />
               </div>
             </div>
             <h3 className="font-bold text-lg mt-4">0x6D...aF46</h3>
             <p className="text-gray-400">0 ETH</p>
             <div className="modal-action flex justify-between w-full mt-6">
-              <button className="btn btn-outline btn-primary">Copy Address</button>
-              <button className="btn btn-outline btn-secondary">Disconnect</button>
+              <button className="btn btn-outline btn-primary">
+                Copy Address
+              </button>
+              <button
+                className="btn btn-outline btn-secondary"
+                onClick={() => {
+                  disconnectKeylessAccount();
+                  handlePopupClose();
+                }}
+              >
+                Disconnect
+              </button>
             </div>
           </div>
         </div>
       </div>
-    )
-  }
+    );
+  };
 
   return (
     <div className="navbar sticky top-0 z-50 bg-base-200 bg-opacity-30 p-4">
@@ -99,7 +115,7 @@ const Header = ({ title }: HeaderProps) => {
       </div>
       {isPopupOpen && <Popup onClose={handlePopupClose} />}
     </div>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;

@@ -1,45 +1,45 @@
-import { useEffect, useState } from 'react'
-import { Listbox } from '@headlessui/react'
-import clsx from 'clsx'
-import { useTheme } from 'next-themes'
-import { SunIcon, DesktopComputerIcon } from '@heroicons/react/outline'
+import { useEffect, useState } from "react";
+import { Listbox } from "@headlessui/react";
+import clsx from "clsx";
+import { useTheme } from "next-themes";
+import { SunIcon, DesktopComputerIcon } from "@heroicons/react/outline";
 import {
   TbBuildingSkyscraper,
   TbCandy,
   TbMoonStars,
   TbPacman,
-} from 'react-icons/tb'
+} from "react-icons/tb";
 
 interface ThemeOption {
-  name: string
-  value: string
-  icon: any
+  name: string;
+  value: string;
+  icon: any;
 }
 
 const themes: ThemeOption[] = [
-  { name: 'Light', value: 'light', icon: SunIcon },
-  { name: 'Dark', value: 'dark', icon: TbMoonStars },
+  { name: "Light", value: "light", icon: SunIcon },
+  { name: "Dark", value: "dark", icon: TbMoonStars },
   // { name: 'Cupcake', value: 'cupcake', icon: TbCandy },
   // { name: 'Lofi', value: 'lofi', icon: TbBuildingSkyscraper },
   // { name: 'Cyberpunk', value: 'cyberpunk', icon: TbPacman },
   // { name: 'System', value: 'system', icon: DesktopComputerIcon },
-]
+];
 
-const defaultTheme: ThemeOption = themes[0]
+const defaultTheme: ThemeOption = themes[0];
 
 const getTheme = (theme: string | undefined) => {
-  return themes.find((t) => t.value === theme)
-}
+  return themes.find((t) => t.value === theme);
+};
 
 const ThemeSelector = (props: any) => {
-  const { theme, setTheme } = useTheme()
+  const { theme, setTheme } = useTheme();
   const [selectedTheme, setSelectedTheme] = useState<ThemeOption>(
     getTheme(theme) ?? defaultTheme
-  )
+  );
 
   useEffect(() => {
-    setTheme(selectedTheme.value)
-  }, [selectedTheme])
+    setTheme(selectedTheme.value);
+  }, [selectedTheme]);
 
   return (
     <Listbox
@@ -57,10 +57,10 @@ const ThemeSelector = (props: any) => {
         {selectedTheme ? (
           <selectedTheme.icon
             className={clsx(
-              'h-5 w-5',
-              selectedTheme.value === 'system'
-                ? 'fill-base-content/40 text-base-content'
-                : 'fill-primary/40 text-primary'
+              "h-5 w-5",
+              selectedTheme.value === "system"
+                ? "fill-base-content/40 text-base-content"
+                : "fill-primary/40 text-primary"
             )}
           />
         ) : null}
@@ -73,12 +73,12 @@ const ThemeSelector = (props: any) => {
             value={theme}
             className={({ active, selected }) =>
               clsx(
-                'rounded-box flex cursor-pointer select-none items-center p-1',
+                "rounded-box flex cursor-pointer select-none items-center p-1",
                 {
-                  'text-primary': selected,
-                  'text-base-content': active && !selected,
-                  'text-base-content/75': !active && !selected,
-                  'bg-base-200': active,
+                  "text-primary": selected,
+                  "text-base-content": active && !selected,
+                  "text-base-content/75": !active && !selected,
+                  "bg-base-200": active,
                 }
               )
             }
@@ -87,8 +87,8 @@ const ThemeSelector = (props: any) => {
               <>
                 <div className="rounded-box bg-base-100 p-1 ring-1 ring-base-300">
                   <theme.icon
-                    className={clsx('h-5 w-5', {
-                      'fill-primary/40 text-primary': selected,
+                    className={clsx("h-5 w-5", {
+                      "fill-primary/40 text-primary": selected,
                     })}
                   />
                 </div>
@@ -99,7 +99,7 @@ const ThemeSelector = (props: any) => {
         ))}
       </Listbox.Options>
     </Listbox>
-  )
-}
+  );
+};
 
-export default ThemeSelector
+export default ThemeSelector;

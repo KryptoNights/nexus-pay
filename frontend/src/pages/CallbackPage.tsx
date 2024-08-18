@@ -25,8 +25,10 @@ function CallbackPage() {
       }
     }
 
-    if (typeof window !== 'undefined') {
-      const fragmentParams = new URLSearchParams(window.location.hash.substring(1));
+    if (typeof window !== "undefined") {
+      const fragmentParams = new URLSearchParams(
+        window.location.hash.substring(1)
+      );
       const newIdToken = fragmentParams.get("id_token");
       setIdToken(newIdToken);
 

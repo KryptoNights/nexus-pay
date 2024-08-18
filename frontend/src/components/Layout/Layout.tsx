@@ -1,18 +1,18 @@
-import { Sidebar } from '@/components/Sidebar/Sidebar'
-import Header from '@/components/Header/Header'
-import { SidebarProvider } from '@/context/SidebarContext'
-import clsx from 'clsx'
+import { Sidebar } from "@/components/Sidebar/Sidebar";
+import Header from "@/components/Header/Header";
+import { SidebarProvider } from "@/context/SidebarContext";
+import clsx from "clsx";
 
 interface Props {
-  title?: string
-  children?: any
-  className?: string
+  title?: string;
+  children?: any;
+  className?: string;
 }
 
 const Layout = ({ title, children, className }: Props) => {
   return (
     <SidebarProvider>
-      <div className={clsx(className, 'bg-base-200')}>
+      <div className={clsx(className, "bg-base-200")}>
         <Sidebar>
           <div className="flex min-h-screen flex-col">
             <Header title={title} />
@@ -22,7 +22,7 @@ const Layout = ({ title, children, className }: Props) => {
         </Sidebar>
       </div>
     </SidebarProvider>
-  )
-}
+  );
+};
 
-export default Layout
+export default Layout;

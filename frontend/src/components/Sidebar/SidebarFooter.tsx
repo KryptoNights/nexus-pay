@@ -1,8 +1,8 @@
-import { bottomIcons, bottomDisclaimer } from '@/routes/sidebar'
-import Link from 'next/link'
+import { bottomIcons, bottomDisclaimer } from "@/routes/sidebar";
+import Link from "next/link";
 
-import styles from '@/components/Sidebar/SidebarFooter.module.css'
-import clsx from 'clsx'
+import styles from "@/components/Sidebar/SidebarFooter.module.css";
+import clsx from "clsx";
 
 const SidebarFooter = () => {
   return (
@@ -10,7 +10,7 @@ const SidebarFooter = () => {
       <div
         className={clsx(
           styles.hide,
-          'mx-4 flex flex-row justify-center text-center'
+          "mx-4 flex flex-row justify-center text-center"
         )}
       >
         {bottomDisclaimer.map((item) => (
@@ -36,7 +36,7 @@ const SidebarFooter = () => {
         ))}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default SidebarFooter
+export default SidebarFooter;
