@@ -1,3 +1,5 @@
+'use client'
+
 import SidebarToggle from "@/components/Header/SidebarToggle";
 import { useKeylessAccounts } from "@/core/useKeylessAccounts";
 import { collapseAddress } from "@/core/utils";
@@ -66,7 +68,7 @@ const Header = ({ title }: HeaderProps) => {
               </div>
             </div>
             <h3 className="font-bold text-lg mt-4">
-              {collapseAddress(activeAccount ? activeAccount : "0x1234")}
+              {collapseAddress(activeAccount ?? activeAccount)}
             </h3>
             <p className="text-gray-400">0 ETH</p>
             <div className="modal-action flex justify-between w-full mt-6">
@@ -106,7 +108,7 @@ const Header = ({ title }: HeaderProps) => {
           </div>
         </div>
         <div className="flex flex-auto items-center justify-end gap-3">
-          {idToken ? (
+          {idToken && activeAccount ? (
             <button
               onClick={handlePopupOpen}
               className="text-white btn btn-primary p-0 m-3 bg-[rgb(0,0,0)] rounded-xl hover:bg-transparent"
@@ -129,7 +131,7 @@ const Header = ({ title }: HeaderProps) => {
                     />
                   </div>
                   <div style={{ textTransform: "none" }}>
-                    {collapseAddress(activeAccount ? activeAccount : "0x1234")}
+                    {collapseAddress(activeAccount ?? activeAccount)}
                   </div>
                   <DropdownIcon />
                 </div>

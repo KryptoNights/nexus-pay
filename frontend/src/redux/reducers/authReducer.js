@@ -9,7 +9,7 @@ console.log(address);
 
 const initialState = {
   idToken: preloadedState || {},
-  activeAccount: address || {},
+  activeAccount: address || "",
 };
 
 const authSlice = createSlice({
