@@ -1,4 +1,5 @@
 import { testSendMoneyToAccount } from "@/core/transactions";
+import { useKeylessAccounts } from "@/core/useKeylessAccounts";
 import { useSelector } from "react-redux";
 
 const TransferModal = ({
@@ -11,7 +12,8 @@ const TransferModal = ({
   recipientAddress,
   transferError,
 }: any) => {
-  const { activeAccount } = useSelector((state: any) => state.authSlice);
+  // const { activeAccount } = useSelector((state: any) => state.authSlice);
+  const { activeAccount } = useKeylessAccounts();
 
   const handleTransferAmountChange = (e: any) => {
     const amount = e.target.value;

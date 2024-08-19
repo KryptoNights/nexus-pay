@@ -1,5 +1,4 @@
 import Layout from "@/components/Layout/Layout";
-import QRScanner from "@/components/QRScanner/QRScanner";
 import ReceiveModal from "@/components/ReceiveModal/ReceiveModal";
 import ScannerModal from "@/components/ScannerModal/ScannerModal";
 import TransferModal from "@/components/TransferModal/TransferModal";
@@ -9,19 +8,19 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 const Home: NextPage = () => {
   const [recipientAddress, setRecipientAddress] = useState("");
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isReceiveModalOpen, setIsReceiveModalOpen] = useState(false);
   const [balance, setBalance] = useState(0);
-  const { activeAccount } = useSelector((state: any) => state.authSlice);
-  const router = useRouter();
-
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
   const [transferAmount, setTransferAmount] = useState("");
   const [transferError, setTransferError] = useState("");
+
+  const { activeAccount } = useSelector((state: any) => state.authSlice);
+  const router = useRouter();
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRecipientAddress(event.target.value);
@@ -33,10 +32,6 @@ const Home: NextPage = () => {
 
   const handlePopupClose = () => {
     setIsPopupOpen(false);
-  };
-
-  const handleGoogleSignIn = () => {
-    router.push("/LoginPage");
   };
 
   useEffect(() => {
@@ -51,6 +46,10 @@ const Home: NextPage = () => {
 
     fetchBalances();
   }, [activeAccount]);
+
+  const handleGoogleSignIn = () => {
+    router.push("/LoginPage");
+  };
 
   // if (!activeAccount) {
   //   return (

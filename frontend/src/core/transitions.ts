@@ -51,11 +51,6 @@ export const getBalances = async (address: string): Promise<{
     }
 };
 
-
-
-
-
-
 export const sendCoin = async (recipient: AccountAddress, amount: number, type: string, signer: KeylessAccount): Promise<string> => {
     const parts = type.split("::");
     if (parts.length !== 3) {
