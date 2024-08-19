@@ -1,8 +1,9 @@
-'use client'
+"use client";
 
 import SidebarToggle from "@/components/Header/SidebarToggle";
+import { getBalances } from "@/core/transactions";
 import { useKeylessAccounts } from "@/core/useKeylessAccounts";
-import { collapseAddress } from "@/core/utils";
+import { collapseAddress, divideByTenMillion } from "@/core/utils";
 import { setActiveAccount, setAuthData } from "@/redux/reducers/authReducer";
 import { AccountAddress } from "@aptos-labs/ts-sdk";
 import dynamic from "next/dynamic";
@@ -18,6 +19,7 @@ interface HeaderProps {
 const Header = ({ title }: HeaderProps) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const { disconnectKeylessAccount } = useKeylessAccounts();
+  const [balance, setBalance] = useState(0);
   const { idToken, activeAccount } = useSelector(
     (state: any) => state.authSlice
   );
@@ -31,6 +33,21 @@ const Header = ({ title }: HeaderProps) => {
   const handlePopupClose = () => {
     setIsPopupOpen(false);
   };
+
+  useEffect(() => {
+    const fetchBalances = async () => {
+      if (activeAccount) {
+        const getBalancesResponse = await getBalances(activeAccount);
+        console.log(divideByTenMillion(getBalancesResponse[0]?.amount));
+
+        setBalance(divideByTenMillion(getBalancesResponse[0]?.amount));
+      }
+    };
+    if (activeAccount.length > 0){
+
+      fetchBalances();
+    }
+  }, [activeAccount]);
 
   const Popup = ({ onClose }: { onClose: () => void }) => {
     const handleBackgroundClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -108,13 +125,13 @@ const Header = ({ title }: HeaderProps) => {
           </div>
         </div>
         <div className="flex flex-auto items-center justify-end gap-3">
-          {activeAccount.length > 0  ? (
+          {activeAccount.length > 0 ? (
             <button
               onClick={handlePopupOpen}
               className="text-white btn btn-primary p-0 m-3 bg-[rgb(0,0,0)] rounded-xl hover:bg-transparent"
             >
               <div className="block pt-[8px] pr-[8px] pb-[8px] pl-[12px]">
-                0 ETH
+                {balance} APT
               </div>
               <div className="bg-custom-gradient pt-[6px] pr-[8px] pl-[8px] pb-[8px] font-bold rounded-xl flex items-center h-[100%]">
                 <div className="gap-[6px] flex items-center">

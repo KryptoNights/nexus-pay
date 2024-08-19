@@ -7,6 +7,10 @@ export const collapseAddress = (address: any): string => {
   }
 };
 
+export const divideByTenMillion = (value:number) => {
+  return value/100000000;
+}
+
 export const getAddressAsString = (address: any): any => {
   if (typeof address === 'string') {
     return address; // It's already a string

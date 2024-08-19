@@ -1,22 +1,27 @@
 import Layout from "@/components/Layout/Layout";
 import QRScanner from "@/components/QRScanner/QRScanner";
-import { GOOGLE_CLIENT_ID } from "@/core/constants";
-import useEphemeralKeyPair from "@/core/useEphemeralKeyPair";
-import { useKeylessAccounts } from "@/core/useKeylessAccounts";
-import { setAuthData } from "@/redux/reducers/authReducer";
+import ReceiveModal from "@/components/ReceiveModal/ReceiveModal";
+import ScannerModal from "@/components/ScannerModal/ScannerModal";
+import TransferModal from "@/components/TransferModal/TransferModal";
+import { getBalances } from "@/core/transactions";
+import { divideByTenMillion } from "@/core/utils";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useState } from "react";
-import QRCode from "react-qr-code";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const Home: NextPage = () => {
   const [recipientAddress, setRecipientAddress] = useState("");
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isReceiveModalOpen, setIsReceiveModalOpen] = useState(false);
+  const [balance, setBalance] = useState(0);
   const { activeAccount } = useSelector((state: any) => state.authSlice);
   const router = useRouter();
+
+  const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
+  const [transferAmount, setTransferAmount] = useState("");
+  const [transferError, setTransferError] = useState("");
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRecipientAddress(event.target.value);
@@ -30,140 +35,22 @@ const Home: NextPage = () => {
     setIsPopupOpen(false);
   };
 
-  const ScannerModal = ({ onClose }: { onClose: () => void }) => {
-    const handleBackgroundClick = (e: React.MouseEvent<HTMLDivElement>) => {
-      if (e.target === e.currentTarget) {
-        onClose();
-      }
-    };
-    return (
-      <div
-        id="modal"
-        className="modal modal-open fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
-        onClick={handleBackgroundClick}
-      >
-        <div className="modal-box bg-gray-800 text-white max-w-sm relative">
-          <button
-            id="closeBtn"
-            className="btn btn-sm btn-circle absolute right-2 top-2"
-            onClick={onClose}
-          >
-            ✕
-          </button>
-          <div className="flex flex-col items-center">
-            <div className="">
-              <QRScanner
-                setRecipientAddress={setRecipientAddress}
-                handlePopupClose={handlePopupClose}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  const ReceiveModal = ({ onClose }: { onClose: () => void }) => {
-    const sampleUsername = "kavish.movemoney";
-    const [copyFeedback, setCopyFeedback] = useState("");
-
-    const handleCopy = (text: string, type: string) => {
-      navigator.clipboard
-        .writeText(text)
-        .then(() => {
-          setCopyFeedback(`${type} copied!`);
-          setTimeout(() => setCopyFeedback(""), 2000);
-        })
-        .catch((err) => {
-          console.error("Failed to copy: ", err);
-          setCopyFeedback("Failed to copy");
-        });
-    };
-
-    return (
-      <div
-        className="modal modal-open fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
-        onClick={(e) => e.target === e.currentTarget && onClose()}
-      >
-        <div className="modal-box bg-gray-800 text-white max-w-sm relative p-6">
-          <button
-            className="btn btn-sm btn-circle absolute right-2 top-2"
-            onClick={onClose}
-          >
-            ✕
-          </button>
-          <h3 className="font-bold text-lg mb-4">Receive Funds</h3>
-          <div className="flex flex-col items-center gap-4">
-            <div className="relative">
-              {/* QR generator */}
-              <QRCode value={activeAccount} size={200} />
-            </div>
-            <div className="text-sm w-full">
-              <p>Wallet Address:</p>
-              <div className="flex items-center bg-gray-700 p-2 rounded">
-                <p className="font-mono flex-grow truncate">{activeAccount}</p>
-                <button
-                  onClick={() => handleCopy(activeAccount, "Address")}
-                  className="ml-2 text-primary hover:text-primary-focus"
-                  title="Copy address"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    className="w-5 h-5"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </div>
-            <div className="text-sm w-full">
-              <p>Or use your MoveMoney username:</p>
-              <div className="flex items-center bg-gray-700 p-2 rounded">
-                <p className="font-mono flex-grow">{sampleUsername}</p>
-                <button
-                  onClick={() => handleCopy(sampleUsername, "Username")}
-                  className="ml-2 text-primary hover:text-primary-focus"
-                  title="Copy username"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    className="w-5 h-5"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </div>
-            {copyFeedback && (
-              <div className="text-sm text-secondary animate-fade-in-out">
-                {copyFeedback}
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   const handleGoogleSignIn = () => {
     router.push("/LoginPage");
   };
+
+  useEffect(() => {
+    const fetchBalances = async () => {
+      if (activeAccount) {
+        const getBalancesResponse = await getBalances(activeAccount);
+        console.log(divideByTenMillion(getBalancesResponse[0]?.amount));
+
+        setBalance(divideByTenMillion(getBalancesResponse[0]?.amount));
+      }
+    };
+
+    fetchBalances();
+  }, [activeAccount]);
 
   // if (!activeAccount) {
   //   return (
@@ -239,11 +126,18 @@ const Home: NextPage = () => {
 
           {isPopupOpen && (
             <div className="mt-4">
-              <ScannerModal onClose={handlePopupClose} />
+              <ScannerModal
+                onClose={handlePopupClose}
+                setRecipientAddress={setRecipientAddress}
+                handlePopupClose={handlePopupClose}
+              />
             </div>
           )}
           {isReceiveModalOpen && (
-            <ReceiveModal onClose={() => setIsReceiveModalOpen(false)} />
+            <ReceiveModal
+              onClose={() => setIsReceiveModalOpen(false)}
+              activeAccount={activeAccount}
+            />
           )}
 
           <div className="mt-6 flex justify-center gap-4">
@@ -253,15 +147,26 @@ const Home: NextPage = () => {
             >
               Receive
             </button>
-            <button className="btn btn-secondary">Transfer</button>
+            <button
+              className="btn btn-secondary"
+              onClick={() => setIsTransferModalOpen(true)}
+            >
+              Transfer
+            </button>
           </div>
         </div>
 
-        {/* {activeAccount && (
-          <div className="mt-8 text-sm text-gray-400">
-            Connected: {activeAccount.address.slice(0, 6)}...{activeAccount.address.slice(-4)}
-          </div>
-        )} */}
+        {isTransferModalOpen && (
+          <TransferModal
+            onClose={() => setIsTransferModalOpen(false)}
+            balance={balance}
+            transferAmount={transferAmount}
+            setTransferAmount={setTransferAmount}
+            setTransferError={setTransferError}
+            recipientAddress={recipientAddress}
+            transferError={transferError}
+          />
+        )}
       </main>
     </Layout>
   );
