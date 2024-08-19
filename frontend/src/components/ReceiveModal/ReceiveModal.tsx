@@ -70,7 +70,7 @@ const ReceiveModal = ({
             </div>
           </div>
           <div className="text-sm w-full">
-            <p>Or use your MoveMoney username:</p>
+            <p>Or use your Nexus username:</p>
             <div className="flex items-center bg-gray-700 p-2 rounded">
               <p className="font-mono flex-grow">{sampleUsername}</p>
               <button

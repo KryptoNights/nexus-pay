@@ -55,18 +55,18 @@ const Home: NextPage = () => {
   //   return (
   //     <Layout>
   //       <Head>
-  //         <title>Create Account | MoveMoney</title>
+  //         <title>Create Account | Nexus</title>
   //         <link rel="icon" href="/favicon.ico" />
   //       </Head>
   //       <main className="flex flex-col items-center justify-center min-h-screen bg-black text-white px-4">
   //         <div className="text-sm text-gray-400 mb-4">01 A NEW WEB3 WALLET</div>
   //         <h1 className="text-4xl md:text-6xl font-bold text-center mb-6">
-  //           CREATE YOUR MOVEMONEY ACCOUNT
+  //           CREATE YOUR NEXUS ACCOUNT
   //           <br />
   //           WITH A SINGLE CLICK
   //         </h1>
   //         <p className="text-center mb-8 max-w-2xl">
-  //           MoveMoney Connect is the MoveMoney account manager that connects you
+  //           Nexus Connect is the Nexus account manager that connects you
   //           to your favorite apps with no downloads required.
   //         </p>
   //         <button
@@ -84,7 +84,7 @@ const Home: NextPage = () => {
   return (
     <Layout>
       <Head>
-        <title>Transfer | MoveMoney</title>
+        <title>Transfer | NexusPay</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
@@ -97,7 +97,7 @@ const Home: NextPage = () => {
           <div className="relative">
             <input
               type="text"
-              placeholder="0x123... or yourname.movemoney"
+              placeholder="0x123... or yourname.nexus"
               className="input input-bordered input-primary w-full rounded-full pr-12"
               value={recipientAddress}
               onChange={handleInputChange}
