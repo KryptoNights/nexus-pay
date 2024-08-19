@@ -55,6 +55,6 @@ export const isValidWalletAddress = (address: string): boolean => {
 
 // Function to validate custom text format (e.g., xyz@movemoney)
 export const isValidCustomText = (text: string): boolean => {
-  const customTextPattern = /^[a-zA-Z0-9]+@movemoney$/; // Custom pattern for the text
+  const customTextPattern = /^[a-zA-Z0-9]+.movemoney$/; // Custom pattern for the text
   return customTextPattern.test(text);
 };

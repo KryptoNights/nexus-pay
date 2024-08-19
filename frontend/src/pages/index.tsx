@@ -1,17 +1,22 @@
 import Layout from "@/components/Layout/Layout";
 import QRScanner from "@/components/QRScanner/QRScanner";
+import { GOOGLE_CLIENT_ID } from "@/core/constants";
+import useEphemeralKeyPair from "@/core/useEphemeralKeyPair";
 import { useKeylessAccounts } from "@/core/useKeylessAccounts";
+import { setAuthData } from "@/redux/reducers/authReducer";
 import type { NextPage } from "next";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import QRCode from "react-qr-code";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const Home: NextPage = () => {
   const [recipientAddress, setRecipientAddress] = useState("");
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isReceiveModalOpen, setIsReceiveModalOpen] = useState(false);
   const { activeAccount } = useSelector((state: any) => state.authSlice);
+  const router = useRouter();
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRecipientAddress(event.target.value);
@@ -155,6 +160,40 @@ const Home: NextPage = () => {
       </div>
     );
   };
+
+  const handleGoogleSignIn = () => {
+    router.push("/LoginPage");
+  };
+
+  // if (!activeAccount) {
+  //   return (
+  //     <Layout>
+  //       <Head>
+  //         <title>Create Account | MoveMoney</title>
+  //         <link rel="icon" href="/favicon.ico" />
+  //       </Head>
+  //       <main className="flex flex-col items-center justify-center min-h-screen bg-black text-white px-4">
+  //         <div className="text-sm text-gray-400 mb-4">01 A NEW WEB3 WALLET</div>
+  //         <h1 className="text-4xl md:text-6xl font-bold text-center mb-6">
+  //           CREATE YOUR MOVEMONEY ACCOUNT
+  //           <br />
+  //           WITH A SINGLE CLICK
+  //         </h1>
+  //         <p className="text-center mb-8 max-w-2xl">
+  //           MoveMoney Connect is the MoveMoney account manager that connects you
+  //           to your favorite apps with no downloads required.
+  //         </p>
+  //         <button
+  //           className="bg-white text-black py-2 px-4 rounded-full flex items-center"
+  //           onClick={handleGoogleSignIn}
+  //         >
+  //           <img src="/google-icon.png" alt="Google" className="w-6 h-6 mr-2" />
+  //           CONTINUE WITH GOOGLE
+  //         </button>
+  //       </main>
+  //     </Layout>
+  //   );
+  // }
 
   return (
     <Layout>
