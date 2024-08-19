@@ -8,7 +8,7 @@ import {
 } from "@aptos-labs/ts-sdk";
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import { LocalStorageKeys, devnetClient } from "./constants";
+import { LocalStorageKeys, devnetClient, testnetClient } from "./constants";
 import { validateIdToken } from "./idToken";
 import {
   EphemeralKeyPairEncoding,
@@ -17,8 +17,6 @@ import {
 } from "./ephemeral";
 import { EncryptedScopedIdToken } from "./types";
 import { KeylessAccountEncoding, validateKeylessAccount } from "./keyless";
-import { useDispatch } from "react-redux";
-import { setActiveAccount } from "@/redux/reducers/authReducer";
 
 interface KeylessAccountsState {
   accounts: {
@@ -40,6 +38,10 @@ interface KeylessAccountsActions {
    * Disconnects the active account from the store.
    */
   disconnectKeylessAccount: () => void;
+  /**
+   * Retrieve the current active account from the store.
+   */
+  getKeylessAccount: () => KeylessAccount | undefined;
   /**
    * Retrieve the Ephemeral key pair from the store.
    *
@@ -101,6 +103,12 @@ export const useKeylessAccounts = create<
 
         disconnectKeylessAccount: () => set({ activeAccount: undefined }),
 
+        getKeylessAccount: () => {
+          // const account = get().activeAccount;
+          // return KeylessAccountEncoding.decode(account);
+          return get().activeAccount;
+        },
+
         getEphemeralKeyPair: () => {
           const account = get().ephemeralKeyPair;
           return account ? validateEphemeralKeyPair(account) : undefined;
@@ -143,19 +151,19 @@ export const useKeylessAccounts = create<
           );
           let activeAccount: KeylessAccount | undefined;
           try {
-            activeAccount = await devnetClient.deriveKeylessAccount({
+            activeAccount = await testnetClient.deriveKeylessAccount({
               ephemeralKeyPair,
               jwt: idToken,
-              proofFetchCallback,
+              // proofFetchCallback,
             });
           } catch (error) {
             // If we cannot derive an account using the pepper service, attempt to derive it using the stored pepper
             if (!storedAccount?.pepper) throw error;
-            activeAccount = await devnetClient.deriveKeylessAccount({
+            activeAccount = await testnetClient.deriveKeylessAccount({
               ephemeralKeyPair,
               jwt: idToken,
               pepper: storedAccount.pepper,
-              proofFetchCallback,
+              // proofFetchCallback,
             });
           }
 

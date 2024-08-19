@@ -19,3 +19,7 @@ export const LocalStorageKeys = {
 export const devnetClient = new Aptos(
   new AptosConfig({ network: Network.DEVNET }),
 );
+
+export const testnetClient = new Aptos(
+  new AptosConfig({ network: Network.TESTNET }),
+)
