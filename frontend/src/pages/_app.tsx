@@ -12,6 +12,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [localActiveAccount, setLocalActiveAccount]: any = React.useState(null);
   // suppress useLayoutEffect warnings when running outside a browser
   if (!typeof window) React.useLayoutEffect = useEffect;
+  localStorage.setItem("theme", "dark");
 
   return (
     <Provider store={store}>
