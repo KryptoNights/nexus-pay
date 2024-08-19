@@ -47,3 +47,14 @@ export const getStoredAddress = (): string | undefined => {
   }
   return undefined;
 };
+
+export const isValidWalletAddress = (address: string): boolean => {
+  const walletAddressPattern = /^0x[a-fA-F0-9]{64}$/; // Ethereum-like address pattern
+  return walletAddressPattern.test(address);
+};
+
+// Function to validate custom text format (e.g., xyz@movemoney)
+export const isValidCustomText = (text: string): boolean => {
+  const customTextPattern = /^[a-zA-Z0-9]+@movemoney$/; // Custom pattern for the text
+  return customTextPattern.test(text);
+};

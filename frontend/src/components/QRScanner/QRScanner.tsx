@@ -1,9 +1,11 @@
 import QrScanner from "qr-scanner";
 import { useEffect, useRef, useState } from "react";
 import styles from "./QRScanner.module.css";
+import { isValidCustomText, isValidWalletAddress } from "@/core/utils";
 
 const QRScanner = ({ setRecipientAddress, handlePopupClose }: any) => {
   const videoElementRef = useRef<HTMLVideoElement>(null);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const video = videoElementRef.current;
@@ -12,8 +14,18 @@ const QRScanner = ({ setRecipientAddress, handlePopupClose }: any) => {
       const qrScanner = new QrScanner(
         video,
         (result) => {
-          handlePopupClose();
-          setRecipientAddress(result.data);
+          const scannedResult = result.data.trim();
+
+          if (
+            isValidWalletAddress(scannedResult) ||
+            isValidCustomText(scannedResult)
+          ) {
+            setRecipientAddress(scannedResult);
+            handlePopupClose();
+          } else {
+            console.error("Invalid QR code scanned");
+            setError("Please scan a valid QR code");
+          }
         },
         {
           returnDetailedScanResult: true,
@@ -37,7 +49,7 @@ const QRScanner = ({ setRecipientAddress, handlePopupClose }: any) => {
       <div className={styles.videoWrapper}>
         <video className={styles.qrVideo} ref={videoElementRef} />
       </div>
-      {/* <p className={styles.scannedText}>SCANNED: {scanned}</p> */}
+      {error ?? <p className={styles.scannedText}>Error: {error}</p>}
     </div>
   );
 };

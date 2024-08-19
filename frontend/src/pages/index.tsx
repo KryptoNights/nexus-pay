@@ -5,15 +5,13 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { useState } from "react";
 import QRCode from "react-qr-code";
+import { useSelector } from "react-redux";
 
 const Home: NextPage = () => {
   const [recipientAddress, setRecipientAddress] = useState("");
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isReceiveModalOpen, setIsReceiveModalOpen] = useState(false);
-  const [copyFeedback, setCopyFeedback] = useState("");
-  const { activeAccount } = useKeylessAccounts();
-  console.log(activeAccount);
-  
+  const { activeAccount } = useSelector((state: any) => state.authSlice);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRecipientAddress(event.target.value);
@@ -61,7 +59,6 @@ const Home: NextPage = () => {
   };
 
   const ReceiveModal = ({ onClose }: { onClose: () => void }) => {
-    const sampleAddress = "0x1234...5678"; // Replace with actual sample address
     const sampleUsername = "kavish.movemoney";
     const [copyFeedback, setCopyFeedback] = useState("");
 
@@ -93,14 +90,15 @@ const Home: NextPage = () => {
           <h3 className="font-bold text-lg mb-4">Receive Funds</h3>
           <div className="flex flex-col items-center gap-4">
             <div className="relative">
-              <QRCode value={sampleAddress} size={200} />
+              {/* QR generator */}
+              <QRCode value={activeAccount} size={200} />
             </div>
             <div className="text-sm w-full">
               <p>Wallet Address:</p>
               <div className="flex items-center bg-gray-700 p-2 rounded">
-                <p className="font-mono flex-grow truncate">{sampleAddress}</p>
+                <p className="font-mono flex-grow truncate">{activeAccount}</p>
                 <button
-                  onClick={() => handleCopy(sampleAddress, "Address")}
+                  onClick={() => handleCopy(activeAccount, "Address")}
                   className="ml-2 text-primary hover:text-primary-focus"
                   title="Copy address"
                 >
@@ -220,11 +218,11 @@ const Home: NextPage = () => {
           </div>
         </div>
 
-        {activeAccount && (
+        {/* {activeAccount && (
           <div className="mt-8 text-sm text-gray-400">
-            {/* Connected: {activeAccount.address.slice(0, 6)}...{activeAccount.address.slice(-4)} */}
+            Connected: {activeAccount.address.slice(0, 6)}...{activeAccount.address.slice(-4)}
           </div>
-        )}
+        )} */}
       </main>
     </Layout>
   );
