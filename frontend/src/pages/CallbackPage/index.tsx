@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 import { useKeylessAccounts } from "@/core/useKeylessAccounts";
 import { useDispatch } from "react-redux";
 import { setActiveAccount } from "@/redux/reducers/authReducer";
-import { stringify } from "flatted";
 import { getAddressAsString } from "@/core/utils";
 
 function CallbackPage() {

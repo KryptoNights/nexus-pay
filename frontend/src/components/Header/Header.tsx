@@ -108,7 +108,7 @@ const Header = ({ title }: HeaderProps) => {
           </div>
         </div>
         <div className="flex flex-auto items-center justify-end gap-3">
-          {idToken && activeAccount ? (
+          {activeAccount.length > 0  ? (
             <button
               onClick={handlePopupOpen}
               className="text-white btn btn-primary p-0 m-3 bg-[rgb(0,0,0)] rounded-xl hover:bg-transparent"
