@@ -79,7 +79,7 @@ export const get_nexus_ids_starting_with = async (id_token: string, query_string
     const response = await axios.post(
       'https://nexus-query-startswith-7kxt74l7iq-uc.a.run.app',
       {
-        wallet: query_string,
+        query: query_string,
       },
       {
         headers: {
