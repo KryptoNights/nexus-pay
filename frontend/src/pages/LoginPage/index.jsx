@@ -13,6 +13,8 @@ function LoginPage() {
 
   const redirectUrl = new URL("https://accounts.google.com/o/oauth2/v2/auth");
 
+  if (typeof window === "undefined") return;
+
   const searchParams = new URLSearchParams({
     /**
      * Replace with your own client ID
@@ -25,7 +27,7 @@ function LoginPage() {
      *
      * window.location.origin == http://localhost:5173
      */
-    redirect_uri: `http://localhost:3000/CallbackPage`,
+    redirect_uri: `${window.location.origin}/CallbackPage`,
     /**
      * This uses the OpenID Connect implicit flow to return an id_token. This is recommended
      * for SPAs as it does not require a backend server.
@@ -81,7 +83,7 @@ function LoginPage() {
 
       <div className="flex items-center justify-center h-[100%]">
         <div>
-          <h1 className="text-4xl font-bold mb-2">Welcome to Move Money</h1>
+          <h1 className="text-4xl font-bold mb-2">Welcome to Nexus Pay</h1>
           <p className="text-lg mb-8">
             Sign in with your Google account to continue
           </p>

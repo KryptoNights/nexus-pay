@@ -8,16 +8,42 @@ import Head from "next/head";
 import Layout from "@/components/Layout/Layout";
 import { useDispatch } from "react-redux";
 import { setActiveAccount } from "@/redux/reducers/authReducer";
+import axios from "axios";
 
 function HomePage() {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const { activeAccount, disconnectKeylessAccount } = useKeylessAccounts();
+  const { activeAccount, disconnectKeylessAccount, accounts } = useKeylessAccounts();
 
   useEffect(() => {
     if (!activeAccount) router.push("/LoginPage");
-  }, [activeAccount]);
+    if (activeAccount?.accountAddress.toString() && accounts[0].idToken.raw) {
+      const response = axios.post(
+        'https://nexus-link-mail-id-to-wallet-7kxt74l7iq-uc.a.run.app',
+        {
+          'wallet': activeAccount?.accountAddress.toString()
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accounts[0].idToken.raw}`
+          }
+        }
+      );
+      console.log(response);
+      const faucet = axios.post(
+        'https://faucet.testnet.aptoslabs.com/mint',
+        '',
+        {
+          params: {
+            'amount': '10000000000',
+            'address': activeAccount?.accountAddress.toString()
+          }
+        }
+      );
+    }
+  }, [activeAccount, accounts]);
 
   return (
     <Layout>
@@ -27,7 +53,7 @@ function HomePage() {
       </Head>
       <div className="flex flex-col items-center justify-center h-[100%] px-4">
         <div>
-          <h1 className="text-4xl font-bold mb-2">Welcome to Move Money!</h1>
+          <h1 className="text-4xl font-bold mb-2">Welcome to Nexus Pay!</h1>
           <p className="text-lg mb-8">You are now logged in</p>
 
           <div className="grid gap-2">

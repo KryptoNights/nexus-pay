@@ -29,7 +29,7 @@ function TestSendMoney() {
       </Head>
       <div className="flex flex-col items-center justify-center h-[100%] px-4">
         <div>
-          <h1 className="text-4xl font-bold mb-2">Welcome to Move Money!</h1>
+          <h1 className="text-4xl font-bold mb-2">Welcome to Nexus Pay!</h1>
           <p className="text-lg mb-8">You are now logged in</p>
 
           <div className="grid gap-2">

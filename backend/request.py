@@ -1,0 +1,17 @@
+import requests, json
+
+def main():
+    url = "https://nexus-link-mail-id-to-wallet-7kxt74l7iq-uc.a.run.app"
+    headers = {
+        "Authorization ": "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6ImQyZDQ0NGNmOGM1ZTNhZTgzODZkNjZhMTNhMzE2OTc2YWEzNjk5OTEiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI4NzY0MDExNTE4NjYtZWgwcjI2czg4YjlyMmVmNTVtNGl1bThmNGszcjJxNmouYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiI4NzY0MDExNTE4NjYtZWgwcjI2czg4YjlyMmVmNTVtNGl1bThmNGszcjJxNmouYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMTgxMzEwNzI4NDY1NTIwMjI3NDYiLCJlbWFpbCI6ImRlYmppdGJob3dhbC5kYkBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibm9uY2UiOiIxODQwOTgxMDMwMDc2OTcwNTA5MzAxMTc0NTgwNjI5MDczNDcyODIxMjQxMzUwOTc1NTAzOTQzNzM2NDMxODgzODI4NTIyNTIwMDQxMiIsIm5iZiI6MTcyNDI0MTgwOCwibmFtZSI6IkRlYmppdCIsInBpY3R1cmUiOiJodHRwczovL2xoMy5nb29nbGV1c2VyY29udGVudC5jb20vYS9BQ2c4b2NLZUR5SnlBYlNzckpOWmRwQmhLVFlyaUFCTDNpRlFBU0QtQ3ZFTHNzVDdSVVN1NVg4dj1zOTYtYyIsImdpdmVuX25hbWUiOiJEZWJqaXQiLCJpYXQiOjE3MjQyNDIxMDgsImV4cCI6MTcyNDI0NTcwOCwianRpIjoiZDRiNmEwY2I0MDk4ZDE4ODU5ZjY5YzkyYjdhNGJlY2I2ZGI2ZDM4NSJ9.LsvkoYJZk3a9uGDxfnF0zJadQWf7cR4S1r1fc5iaJHFYqGng2zkm_nuFTEHlUQaMYZ0VnRSDXh24VesFo85107KXBRJWu2Gs0pyeuMf4Pbhp3sOUwb6lBqWvxumM5G8_AvELoWJpT-bMQwQG1pEUDgh5B4xSOx8Pxm7W5HL1da3BMZrAfEnbt53fLKdf1_7-UAZtfSXvJ-OAc1xOJ33i79k1hpdANI6eaSYKh34A_MoNxLGHogQLnMWvw1ZU7zqjfTJ_GomME4pAThjqQJVwGUxbGx7ZMBmqSpwBvbQUNx5VTRxRURN1G7bw7E0dPGsr_1X68wzxkfN174EYdzg19g"
+    }
+    data = {
+        "wallet": "0x957b9f946799355080caafc7194378c60355588b6e2640181f0a7e613dd00629"
+    }
+
+    response = requests.post(url, headers=headers, data=json.dumps(data))
+    print(response.status_code)
+    print(response.request.method)
+
+if __name__ == "__main__":
+    main()

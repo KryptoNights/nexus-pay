@@ -1,6 +1,7 @@
 import { Account, AccountAddress } from '@aptos-labs/ts-sdk';
 import { KeylessAccount } from "@aptos-labs/ts-sdk"
-import { Aptos, AptosConfig, Network } from '@aptos-labs/ts-sdk';
+import {Aptos, AptosConfig, Network} from '@aptos-labs/ts-sdk';
+import axios from 'axios';
 
 const aptos = new Aptos(new AptosConfig({ network: Network.TESTNET }));
 
@@ -24,25 +25,34 @@ export const getBalances = async (address: string): Promise<{
     asset_type: any;
     amount: any;
 }[]> => {
-    let all_balances = await aptos.getCurrentFungibleAssetBalances({
-        options: {
-            where: {
-                owner_address: { _eq: address },
-                _or: [
-                    { asset_type: { _eq: "0x1::aptos_coin::AptosCoin" } },
-                ]
-            },
-        }
-    });
-
-    const balances = all_balances.map((balance: any) => {
-        return {
-            asset_type: balance.asset_type,
-            amount: balance.amount
-        }
-    })
-
-    return balances;
+    try {
+        let all_balances = await aptos.getCurrentFungibleAssetBalances({
+            options: {
+                where: {
+                    owner_address: { _eq: address },
+                    _or: [
+                        {asset_type: { _eq: "0x1::aptos_coin::AptosCoin" } },
+                    ]
+                },
+            }
+        });
+    
+        const balances = all_balances.map((balance: any) => {
+            return {
+                asset_type: balance.asset_type,
+                amount: balance.amount
+            }
+        })
+    
+        return balances;
+    } catch (error) {
+        return [
+            {
+                asset_type: "0x1::aptos_coin::AptosCoin",
+                amount: 0
+            }
+        ]
+    }
 }
 
 export const sendCoin = async (recipient: AccountAddress, amount: number, type: string, signer: KeylessAccount): Promise<string> => {
@@ -62,5 +72,21 @@ export const sendCoin = async (recipient: AccountAddress, amount: number, type: 
     const committedTransactionResponse = await aptos.waitForTransaction({ transactionHash: committedTxn.hash });
     console.log("HASH: ", committedTransactionResponse);
 
-    return committedTransactionResponse.hash;
+    return committedTransactionResponse.hash;    
+}
+
+export const get_nexus_ids_starting_with = async (id_token: String, query_string: String): Promise<[String]> => {
+    const response = await axios.post(
+        'https://nexus-query-startswith-7kxt74l7iq-uc.a.run.app',
+        {
+          'query': query_string
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${id_token}`
+          }
+        }
+      );
+    return response.data.emails;
 }
