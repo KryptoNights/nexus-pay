@@ -48,7 +48,7 @@ const Home: NextPage = () => {
     };
 
     fetchBalances();
-
+    //to be removed
     if (
       activeAccount &&
       idToken?.state?.accounts[0]?.idToken?.raw
