@@ -75,18 +75,21 @@ export const sendCoin = async (recipient: AccountAddress, amount: number, type: 
     return committedTransactionResponse.hash;    
 }
 
-export const get_nexus_ids_starting_with = async (id_token: String, query_string: String): Promise<[String]> => {
+export const get_nexus_ids_starting_with = async (id_token: string, query_string: string): Promise<string[]> => {
     const response = await axios.post(
-        'https://nexus-query-startswith-7kxt74l7iq-uc.a.run.app',
-        {
-          'query': query_string
+      'https://nexus-query-startswith-7kxt74l7iq-uc.a.run.app',
+      {
+        wallet: query_string,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${id_token}`,
         },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${id_token}`
-          }
-        }
-      );
+      }
+    );
+    console.log(response);
+    
     return response.data.emails;
-}
+  };
+  

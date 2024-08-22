@@ -2,7 +2,7 @@ import Layout from "@/components/Layout/Layout";
 import ReceiveModal from "@/components/ReceiveModal/ReceiveModal";
 import ScannerModal from "@/components/ScannerModal/ScannerModal";
 import TransferModal from "@/components/TransferModal/TransferModal";
-import { getBalances } from "@/core/transactions";
+import { get_nexus_ids_starting_with, getBalances } from "@/core/transactions";
 import { divideByTenMillion } from "@/core/utils";
 import type { NextPage } from "next";
 import Head from "next/head";
@@ -12,6 +12,8 @@ import { useSelector } from "react-redux";
 
 const Home: NextPage = () => {
   const [recipientAddress, setRecipientAddress] = useState("");
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isReceiveModalOpen, setIsReceiveModalOpen] = useState(false);
   const [balance, setBalance] = useState(0);
@@ -19,12 +21,11 @@ const Home: NextPage = () => {
   const [transferAmount, setTransferAmount] = useState("");
   const [transferError, setTransferError] = useState("");
 
-  const { activeAccount } = useSelector((state: any) => state.authSlice);
-  const router = useRouter();
+  const { activeAccount, idToken } = useSelector(
+    (state: any) => state.authSlice
+  );
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRecipientAddress(event.target.value);
-  };
+  const router = useRouter();
 
   const handlePopupOpen = () => {
     setIsPopupOpen(true);
@@ -51,35 +52,29 @@ const Home: NextPage = () => {
     router.push("/LoginPage");
   };
 
-  // if (!activeAccount) {
-  //   return (
-  //     <Layout>
-  //       <Head>
-  //         <title>Create Account | Nexus</title>
-  //         <link rel="icon" href="/favicon.ico" />
-  //       </Head>
-  //       <main className="flex flex-col items-center justify-center min-h-screen bg-black text-white px-4">
-  //         <div className="text-sm text-gray-400 mb-4">01 A NEW WEB3 WALLET</div>
-  //         <h1 className="text-4xl md:text-6xl font-bold text-center mb-6">
-  //           CREATE YOUR NEXUS ACCOUNT
-  //           <br />
-  //           WITH A SINGLE CLICK
-  //         </h1>
-  //         <p className="text-center mb-8 max-w-2xl">
-  //           Nexus Connect is the Nexus account manager that connects you
-  //           to your favorite apps with no downloads required.
-  //         </p>
-  //         <button
-  //           className="bg-white text-black py-2 px-4 rounded-full flex items-center"
-  //           onClick={handleGoogleSignIn}
-  //         >
-  //           <img src="/google-icon.png" alt="Google" className="w-6 h-6 mr-2" />
-  //           CONTINUE WITH GOOGLE
-  //         </button>
-  //       </main>
-  //     </Layout>
-  //   );
-  // }
+  const handleInputChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = event.target.value;
+    setRecipientAddress(value);
+
+    if (value.length > 2) {
+      try {
+        const id_token = idToken?.state?.accounts[0]?.idToken?.raw;
+        const results: string[] = await get_nexus_ids_starting_with(
+          id_token,
+          value
+        );
+
+        setSuggestions(results);
+      } catch (error) {
+        console.error("Error fetching suggestions:", error);
+        setSuggestions([]);
+      }
+    } else {
+      setSuggestions([]);
+    }
+  };
 
   return (
     <Layout>
@@ -99,6 +94,8 @@ const Home: NextPage = () => {
               type="text"
               placeholder="0x123... or yourname.nexus"
               className="input input-bordered input-primary w-full rounded-full pr-12"
+              // value={recipientAddress}
+              // onChange={handleInputChange}
               value={recipientAddress}
               onChange={handleInputChange}
             />
@@ -121,6 +118,23 @@ const Home: NextPage = () => {
                 />
               </svg>
             </button>
+
+            {suggestions?.length > 0 && (
+              <ul className="absolute left-0 right-0 mt-1 max-h-48 overflow-y-auto bg-white border border-gray-300 rounded-md shadow-lg z-10">
+                {suggestions?.map((suggestion, index) => (
+                  <li
+                    key={index}
+                    className="p-2 hover:bg-gray-100 cursor-pointer"
+                    onClick={() => {
+                      setRecipientAddress(suggestion);
+                      setSuggestions([]);
+                    }}
+                  >
+                    {suggestion}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
 
           {isPopupOpen && (
