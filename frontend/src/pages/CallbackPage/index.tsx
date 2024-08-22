@@ -35,7 +35,7 @@ function CallbackPage() {
     async function deriveAccount(idToken: string) {
       try {
         await switchKeylessAccount(idToken);
-        router.push("/HomePage");
+        router.push("/dashboard");
       } catch (error) {
         console.log("error", error);
         router.push("/");

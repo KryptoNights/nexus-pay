@@ -6,84 +6,90 @@ import {
   HomeIcon,
   InboxIcon,
   UsersIcon,
-} from '@heroicons/react/outline'
+} from "@heroicons/react/outline";
 import {
   TbBrandGithub,
   TbBrandTwitter,
   TbBrandDiscord,
   TbBrandMedium,
-} from 'react-icons/tb'
+} from "react-icons/tb";
 
 interface INavigation {
-  name: string
-  href: string
-  icon?: any
-  current?: boolean
-  checkActive?(pathname: String, route: INavigation): boolean
-  exact?: boolean
+  name: string;
+  href: string;
+  icon?: any;
+  current?: boolean;
+  checkActive?(pathname: String, route: INavigation): boolean;
+  exact?: boolean;
 }
 
 interface IBottomNavigation {
-  name: string
-  href: string
-  icon?: any
+  name: string;
+  href: string;
+  icon?: any;
 }
 
 interface IBottomIcons {
-  name: string
-  href: string
-  icon?: any
+  name: string;
+  href: string;
+  icon?: any;
 }
 
 interface IBottomDisclaimer {
-  name: string
-  href: string
+  name: string;
+  href: string;
 }
 
 export function routeIsActive(pathname: String, route: INavigation): boolean {
   if (route.checkActive) {
-    return route.checkActive(pathname, route)
+    return route.checkActive(pathname, route);
   }
 
   return route?.exact
     ? pathname == route?.href
     : route?.href
-    ? pathname.indexOf(route.href) === 0
-    : false
+      ? pathname.indexOf(route.href) === 0
+      : false;
 }
 
 const navigation: INavigation[] = [
-  { name: 'Dashboard', href: '/', icon: HomeIcon, current: true, exact: true },
   {
-    name: 'Transactions',
-    href: '/transactions',
+    name: "Dashboard",
+    href: "/dashboard",
+    icon: HomeIcon,
+    current: true,
+    exact: true,
+  },
+  {
+    name: "Transactions",
+    href: "/transactions",
     icon: UsersIcon,
     current: false,
   },
   // { name: '404', href: '/404', icon: FolderIcon, current: false },
   // { name: '500', href: '/500', icon: CalendarIcon, current: false },
-  { name: 'Keyless', href: '/LoginPage', icon: InboxIcon, current: false },
-]
+  { name: "Keyless", href: "/LoginPage", icon: InboxIcon, current: false },
+];
 
 const bottomNavigation: IBottomNavigation[] = [
   // { name: 'Docs', href: '#', icon: BookOpenIcon },
-  { name: 'Settings', href: '#', icon: CogIcon },
-]
+  { name: "Settings", href: "#", icon: CogIcon },
+];
 
 const bottomIcons: IBottomIcons[] = [
   {
-    name: 'GitHub',
-    href: 'https://github.com/kavishshahh',
+    name: "GitHub",
+    href: "https://github.com/kavishshahh",
     icon: TbBrandGithub,
   },
   {
-    name: 'Twitter',
-    href: 'https://twitter.com/kavishshahh',
+    name: "Twitter",
+    href: "https://twitter.com/kavishshahh",
     icon: TbBrandTwitter,
   },
   {
-    name: 'Discord',
-    href: 'https://twitter.com/kavishshahh',
+    name: "Discord",
+    href: "https://twitter.com/kavishshahh",
     icon: TbBrandDiscord,
   },
   // {
@@ -91,19 +97,19 @@ const bottomIcons: IBottomIcons[] = [
   //   href: 'https://github.com/JonnysCode/hardhat-nextjs-starter-dashboard',
   //   icon: TbBrandMedium,
   // },
-]
+];
 
 const bottomDisclaimer: IBottomDisclaimer[] = [
-  { name: 'About', href: '#' },
-  { name: 'Privacy', href: '#' },
-  { name: 'Terms', href: '#' },
-]
+  { name: "About", href: "#" },
+  { name: "Privacy", href: "#" },
+  { name: "Terms", href: "#" },
+];
 
 export function updateCurrentItem(route: INavigation) {
-  navigation.map((item) => (item.current = false))
-  route.current = true
+  navigation.map((item) => (item.current = false));
+  route.current = true;
 }
 
-export type { INavigation, IBottomNavigation }
-export { bottomNavigation, bottomIcons, bottomDisclaimer }
-export default navigation
+export type { INavigation, IBottomNavigation };
+export { bottomNavigation, bottomIcons, bottomDisclaimer };
+export default navigation;

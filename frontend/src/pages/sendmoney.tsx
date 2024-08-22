@@ -14,7 +14,8 @@ function TestSendMoney() {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const { activeAccount, disconnectKeylessAccount, getKeylessAccount } = useKeylessAccounts();
+  const { activeAccount, disconnectKeylessAccount, getKeylessAccount } =
+    useKeylessAccounts();
 
   useEffect(() => {
     if (!activeAccount) router.push("/LoginPage");
@@ -49,30 +50,37 @@ function TestSendMoney() {
           </div>
         </div>
         <button
-            className="flex justify-center bg-green-50 items-center border border-green-200 rounded-lg px-8 py-2 shadow-sm shadow-green-300 hover:bg-green-100 active:scale-95 transition-all mt-8"
-            onClick={async () => {
-                const address = prompt("Enter the address to send money to");
-                if (address) {
-                const transactionHash = await testSendMoneyToAccount(address, activeAccount!);
-                alert(`Transaction successful! Transaction hash: ${transactionHash}`);
-                }
-            }}
+          className="flex justify-center bg-green-50 items-center border border-green-200 rounded-lg px-8 py-2 shadow-sm shadow-green-300 hover:bg-green-100 active:scale-95 transition-all mt-8"
+          onClick={async () => {
+            const address = prompt("Enter the address to send money to");
+            if (address) {
+              const transactionHash = await testSendMoneyToAccount(
+                address,
+                activeAccount!
+              );
+              alert(
+                `Transaction successful! Transaction hash: ${transactionHash}`
+              );
+            }
+          }}
         >
-            Send money
+          Send money
         </button>
         <button
-            className="flex justify-center bg-green-50 items-center border border-green-200 rounded-lg px-8 py-2 shadow-sm shadow-green-300 hover:bg-green-100 active:scale-95 transition-all mt-8"
-            onClick={async () => {
-                const getBalancesResponse = await getBalances(activeAccount!.accountAddress.toString());
-                // alert(`Balances: ${JSON.stringify(getBalancesResponse)}`);
-                let text = "";
-                getBalancesResponse.forEach((balance) => {
-                    text += `You have ${balance.amount} of ${balance.asset_type.split("::")[2]}\n`;
-                })
-                alert(text);
-            }}
+          className="flex justify-center bg-green-50 items-center border border-green-200 rounded-lg px-8 py-2 shadow-sm shadow-green-300 hover:bg-green-100 active:scale-95 transition-all mt-8"
+          onClick={async () => {
+            const getBalancesResponse = await getBalances(
+              activeAccount!.accountAddress.toString()
+            );
+            // alert(`Balances: ${JSON.stringify(getBalancesResponse)}`);
+            let text = "";
+            getBalancesResponse.forEach((balance) => {
+              text += `You have ${balance.amount} of ${balance.asset_type.split("::")[2]}\n`;
+            });
+            alert(text);
+          }}
         >
-            Check Balance
+          Check Balance
         </button>
       </div>
     </Layout>

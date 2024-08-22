@@ -2,6 +2,9 @@ import { Sidebar } from "@/components/Sidebar/Sidebar";
 import Header from "@/components/Header/Header";
 import { SidebarProvider } from "@/context/SidebarContext";
 import clsx from "clsx";
+import { useSelector } from "react-redux";
+import React from "react";
+import { useRouter } from "next/router";
 
 interface Props {
   title?: string;
@@ -10,6 +13,19 @@ interface Props {
 }
 
 const Layout = ({ title, children, className }: Props) => {
+  const { idToken, activeAccount } = useSelector(
+    (state: any) => state.authSlice
+  );
+
+  const router = useRouter();
+  React.useEffect(() => {
+    // if active account is  {} push to /LoginPage
+    if (Object.keys(activeAccount).length === 0) {
+      console.log(activeAccount);
+      router.push("/LoginPage");
+    }
+  }, [activeAccount]);
+
   return (
     <SidebarProvider>
       <div className={clsx(className, "bg-base-200")}>
