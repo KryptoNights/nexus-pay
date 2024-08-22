@@ -90,8 +90,82 @@ const Home: NextPage = () => {
 
       <main className="flex flex-col items-center justify-center px-4 py-12 text-center lg:mr-[10px]">
         <h1 className="mb-8 mt-8 text-4xl font-bold text-secondary">
-          Landing <span className="text-white">Page</span>
+          Transfer <span className="text-white">anywhere</span>
         </h1>
+
+        <div className="w-full max-w-md">
+          <div className="relative">
+            <input
+              type="text"
+              placeholder="0x123... or yourname.nexus"
+              className="input input-bordered input-primary w-full rounded-full pr-12"
+              value={recipientAddress}
+              onChange={handleInputChange}
+            />
+            <button
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-primary"
+              onClick={() => handlePopupOpen()}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                className="h-6 w-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"
+                />
+              </svg>
+            </button>
+          </div>
+
+          {isPopupOpen && (
+            <div className="mt-4">
+              <ScannerModal
+                onClose={handlePopupClose}
+                setRecipientAddress={setRecipientAddress}
+                handlePopupClose={handlePopupClose}
+              />
+            </div>
+          )}
+          {isReceiveModalOpen && (
+            <ReceiveModal
+              onClose={() => setIsReceiveModalOpen(false)}
+              activeAccount={activeAccount}
+            />
+          )}
+
+          <div className="mt-6 flex justify-center gap-4">
+            <button
+              className="btn btn-primary"
+              onClick={() => setIsReceiveModalOpen(true)}
+            >
+              Receive
+            </button>
+            <button
+              className="btn btn-secondary"
+              onClick={() => setIsTransferModalOpen(true)}
+            >
+              Transfer
+            </button>
+          </div>
+        </div>
+
+        {isTransferModalOpen && (
+          <TransferModal
+            onClose={() => setIsTransferModalOpen(false)}
+            balance={balance}
+            transferAmount={transferAmount}
+            setTransferAmount={setTransferAmount}
+            setTransferError={setTransferError}
+            recipientAddress={recipientAddress}
+            transferError={transferError}
+          />
+        )}
       </main>
     </Layout>
   );

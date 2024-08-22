@@ -1,6 +1,6 @@
-import {Account, AccountAddress} from '@aptos-labs/ts-sdk';
+import { Account, AccountAddress } from '@aptos-labs/ts-sdk';
 import { KeylessAccount } from "@aptos-labs/ts-sdk"
-import {Aptos, AptosConfig, Network} from '@aptos-labs/ts-sdk';
+import { Aptos, AptosConfig, Network } from '@aptos-labs/ts-sdk';
 
 const aptos = new Aptos(new AptosConfig({ network: Network.TESTNET }));
 
@@ -8,7 +8,7 @@ export const testSendMoneyToAccount = async (address: string, signer: KeylessAcc
     const transaction = await aptos.transferCoinTransaction({
         sender: signer.accountAddress,
         recipient: AccountAddress.fromString(address),
-        amount: 100,
+        amount: 100000000,
     });
 
     const committedTxn = await aptos.signAndSubmitTransaction({ signer: signer, transaction });
@@ -29,7 +29,7 @@ export const getBalances = async (address: string): Promise<{
             where: {
                 owner_address: { _eq: address },
                 _or: [
-                    {asset_type: { _eq: "0x1::aptos_coin::AptosCoin" } },
+                    { asset_type: { _eq: "0x1::aptos_coin::AptosCoin" } },
                 ]
             },
         }
@@ -62,5 +62,5 @@ export const sendCoin = async (recipient: AccountAddress, amount: number, type: 
     const committedTransactionResponse = await aptos.waitForTransaction({ transactionHash: committedTxn.hash });
     console.log("HASH: ", committedTransactionResponse);
 
-    return committedTransactionResponse.hash;    
+    return committedTransactionResponse.hash;
 }
