@@ -49,10 +49,7 @@ const Home: NextPage = () => {
 
     fetchBalances();
     //to be removed
-    if (
-      activeAccount &&
-      idToken?.state?.accounts[0]?.idToken?.raw
-    ) {
+    if (activeAccount && idToken?.state?.accounts[0]?.idToken?.raw) {
       const response = axios.post(
         "https://nexus-link-mail-id-to-wallet-7kxt74l7iq-uc.a.run.app",
         {
@@ -114,51 +111,22 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="flex flex-col items-center justify-center px-4 py-12 text-center lg:mr-[10px]">
-        <h1 className="mb-8 mt-8 text-4xl font-bold text-secondary">
+      <main className="flex flex-col items-center justify-center px-4 py-8 sm:py-12 text-center lg:mr-[10px]">
+        <h1 className="mb-6 sm:mb-8 mt-4 sm:mt-8 text-2xl sm:text-3xl md:text-4xl font-bold text-secondary">
           Transfer <span className="text-white">anywhere</span>
         </h1>
 
         <div className="w-full max-w-md">
           <div className="relative w-full">
-            {/* do not remove this commented code */}
-            {/* <input
-              type="text"
-              placeholder="0x123... or yourname.nexus"
-              className="input input-bordered input-primary w-full rounded-full pr-12"
-              // value={recipientAddress}
-              // onChange={handleInputChange}
-              value={recipientAddress}
-              onChange={handleInputChange}
-            />
-            <button
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-primary"
-              onClick={() => handlePopupOpen()}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                className="h-6 w-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"
-                />
-              </svg>
-            </button> */}
             <input
               type="text"
               placeholder="0x123... or yourname@nexus"
-              className="input input-bordered input-primary w-full pr-24 rounded-full"
+              className="input input-bordered input-primary w-full pr-20 sm:pr-24 rounded-full text-sm sm:text-base"
               value={recipientAddress}
               onChange={handleInputChange}
             />
             <button
-              className="absolute right-0 top-0 bottom-0 btn btn-secondary rounded-r-full flex items-center px-4 tooltip tooltip-left"
+              className="absolute right-0 top-0 bottom-0 btn btn-secondary rounded-r-full flex items-center px-2 sm:px-4 tooltip tooltip-left text-xs sm:text-sm"
               onClick={() => handlePopupOpen()}
               data-tip="Scan QR Code"
             >
@@ -167,7 +135,7 @@ const Home: NextPage = () => {
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
-                className="h-5 w-5 mr-1"
+                className="h-4 w-4 sm:h-5 sm:w-5 mr-1"
               >
                 <path
                   strokeLinecap="round"
@@ -176,15 +144,15 @@ const Home: NextPage = () => {
                   d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"
                 />
               </svg>
-              Scan
+              <span className="hidden sm:inline">Scan</span>
             </button>
 
             {suggestions?.length > 0 && (
-              <ul className="absolute left-0 right-0 mt-1 max-h-48 overflow-y-auto bg-white border border-gray-300 rounded-md shadow-lg z-10">
+              <ul className="absolute left-0 right-0 mt-1 max-h-48 overflow-y-auto bg-white border border-gray-300 rounded-md shadow-lg z-10 text-left">
                 {suggestions?.map((suggestion, index) => (
                   <li
                     key={index}
-                    className="p-2 hover:bg-gray-100 cursor-pointer"
+                    className="p-2 hover:bg-gray-100 cursor-pointer text-sm sm:text-base"
                     onClick={() => {
                       setRecipientAddress(suggestion);
                       setSuggestions([]);
