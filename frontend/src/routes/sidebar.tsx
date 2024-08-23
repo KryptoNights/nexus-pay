@@ -7,6 +7,7 @@ import {
   InboxIcon,
   UsersIcon,
 } from "@heroicons/react/outline";
+import UserProfile from "public/assets/svgs/UserProfile";
 import {
   TbBrandGithub,
   TbBrandTwitter,
@@ -73,7 +74,7 @@ const navigation: INavigation[] = [
 
 const bottomNavigation: IBottomNavigation[] = [
   // { name: 'Docs', href: '#', icon: BookOpenIcon },
-  { name: "Settings", href: "#", icon: CogIcon },
+  { name: "Profile", href: "/profile", icon: UserProfile },
 ];
 
 const bottomIcons: IBottomIcons[] = [

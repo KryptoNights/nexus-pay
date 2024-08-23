@@ -47,42 +47,55 @@ const Header = ({ title }: HeaderProps) => {
   }, [activeAccount]);
 
   return (
-    <div className="navbar sticky top-0 z-50 bg-base-200 bg-opacity-30 p-4">
-      <div className="flex flex-grow justify-between gap-3">
-        <div className="flex flex-row gap-3">
-          <div className="flex lg:hidden">
-            <SidebarToggle />
-          </div>
-          <div className="flex flex-auto items-center">
-            <h1 className="text-md align-middle font-bold leading-none text-primary sm:text-2xl">
+    <div className="navbar sticky top-0 z-50 bg-base-200 bg-opacity-30 p-2 sm:p-4">
+      <div className="flex w-full flex-col sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center justify-between w-full sm:w-auto">
+          <div className="flex items-center gap-3">
+            <div className="flex lg:hidden">
+              <SidebarToggle />
+            </div>
+            <h1 className="text-sm sm:text-md md:text-lg lg:text-2xl font-bold text-primary truncate">
               {title}
             </h1>
           </div>
+          <div className="sm:hidden">
+            {activeAccount.length > 0 && (
+              <button
+                onClick={handlePopupOpen}
+                className="btn btn-circle btn-ghost btn-sm"
+              >
+                <Image
+                  src={idToken?.state?.accounts[0]?.idToken?.decoded?.picture ?? ""}
+                  width={24}
+                  height={24}
+                  alt="profile"
+                  className="rounded-full"
+                />
+              </button>
+            )}
+          </div>
         </div>
-        <div className="flex flex-auto items-center justify-end gap-3">
+        <div className="hidden sm:flex items-center justify-end mt-2 sm:mt-0">
           {activeAccount.length > 0 ? (
             <button
               onClick={handlePopupOpen}
-              className="text-white btn btn-primary p-0 m-3 bg-[rgb(0,0,0)] rounded-xl hover:bg-transparent"
+              className="text-white btn btn-primary p-0 bg-[rgb(0,0,0)] rounded-xl hover:bg-transparent"
             >
-              <div className="block pt-[8px] pr-[8px] pb-[8px] pl-[12px]">
+              <div className="hidden sm:block pt-[8px] pr-[8px] pb-[8px] pl-[12px]">
                 {balance} APT
               </div>
               <div className="bg-custom-gradient pt-[6px] pr-[8px] pl-[8px] pb-[8px] font-bold rounded-xl flex items-center h-[100%]">
                 <div className="gap-[6px] flex items-center">
                   <div className="rounded-xl">
                     <Image
-                      src={
-                        idToken?.state?.accounts[0]?.idToken?.decoded
-                          ?.picture ?? ""
-                      }
+                      src={idToken?.state?.accounts[0]?.idToken?.decoded?.picture ?? ""}
                       width={24}
                       height={24}
                       alt="profile"
                       className="rounded-xl"
                     />
                   </div>
-                  <div style={{ textTransform: "none" }}>
+                  <div className="hidden sm:block" style={{ textTransform: "none" }}>
                     {collapseAddress(activeAccount ?? activeAccount)}
                   </div>
                   <DropdownIcon />
@@ -90,7 +103,7 @@ const Header = ({ title }: HeaderProps) => {
               </div>
             </button>
           ) : (
-            <button>hi</button>
+            <button></button>
           )}
         </div>
       </div>
