@@ -16,7 +16,6 @@ const Profile = () => {
   };
 
   const handleProfilePhotoChange = (event) => {
-    // Implementation remains the same
   };
 
   return (
