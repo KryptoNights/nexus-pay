@@ -9,7 +9,6 @@ import { useRouter } from "next/router";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
-  const [localActiveAccount, setLocalActiveAccount]: any = React.useState(null);
   // suppress useLayoutEffect warnings when running outside a browser
   if (!typeof window) React.useLayoutEffect = useEffect;
   localStorage.setItem("theme", "dark");
@@ -17,7 +16,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   React.useEffect(() => {
     // write useEffect if we are not having any key related to @aptos-connect/keyless-accounts redirect to 3000
     if (!localStorage.getItem("@aptos-connect/keyless-accounts")) {
-      router.push("/LoginPage");
+      router.push("/");
     } else {
       // router.push("/dashboard");
     }

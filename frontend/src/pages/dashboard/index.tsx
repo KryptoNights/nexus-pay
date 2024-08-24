@@ -49,31 +49,31 @@ const Home: NextPage = () => {
 
     fetchBalances();
     //to be removed
-    if (activeAccount && idToken?.state?.accounts[0]?.idToken?.raw) {
-      const response = axios.post(
-        "https://nexus-link-mail-id-to-wallet-7kxt74l7iq-uc.a.run.app",
-        {
-          wallet: activeAccount,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${idToken?.state?.accounts[0]?.idToken?.raw}`,
-          },
-        }
-      );
-      console.log(response);
-      const faucet = axios.post(
-        "https://faucet.testnet.aptoslabs.com/mint",
-        "",
-        {
-          params: {
-            amount: "10000000000",
-            address: activeAccount,
-          },
-        }
-      );
-    }
+    // if (activeAccount && idToken?.state?.accounts[0]?.idToken?.raw) {
+    //   const response = axios.post(
+    //     "https://nexus-link-mail-id-to-wallet-7kxt74l7iq-uc.a.run.app",
+    //     {
+    //       wallet: activeAccount,
+    //     },
+    //     {
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //         Authorization: `Bearer ${idToken?.state?.accounts[0]?.idToken?.raw}`,
+    //       },
+    //     }
+    //   );
+    //   console.log(response);
+    //   const faucet = axios.post(
+    //     "https://faucet.testnet.aptoslabs.com/mint",
+    //     "",
+    //     {
+    //       params: {
+    //         amount: "10000000000",
+    //         address: activeAccount,
+    //       },
+    //     }
+    //   );
+    // }
   }, [activeAccount]);
 
   const handleGoogleSignIn = () => {

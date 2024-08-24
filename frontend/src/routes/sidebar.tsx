@@ -69,7 +69,7 @@ const navigation: INavigation[] = [
   },
   // { name: '404', href: '/404', icon: FolderIcon, current: false },
   // { name: '500', href: '/500', icon: CalendarIcon, current: false },
-  { name: "Keyless", href: "/LoginPage", icon: InboxIcon, current: false },
+  // { name: "Keyless", href: "/LoginPage", icon: InboxIcon, current: false },
 ];
 
 const bottomNavigation: IBottomNavigation[] = [
@@ -78,21 +78,21 @@ const bottomNavigation: IBottomNavigation[] = [
 ];
 
 const bottomIcons: IBottomIcons[] = [
-  {
-    name: "GitHub",
-    href: "https://github.com/kavishshahh",
-    icon: TbBrandGithub,
-  },
+  // {
+  //   name: "GitHub",
+  //   href: "https://github.com/kavishshahh",
+  //   icon: TbBrandGithub,
+  // },
   {
     name: "Twitter",
     href: "https://twitter.com/kavishshahh",
     icon: TbBrandTwitter,
   },
-  {
-    name: "Discord",
-    href: "https://twitter.com/kavishshahh",
-    icon: TbBrandDiscord,
-  },
+  // {
+  //   name: "Discord",
+  //   href: "https://twitter.com/kavishshahh",
+  //   icon: TbBrandDiscord,
+  // },
   // {
   //   name: 'Medium',
   //   href: 'https://github.com/JonnysCode/hardhat-nextjs-starter-dashboard',

@@ -75,28 +75,32 @@ function LoginPage() {
   }
 
   return (
-    <Layout>
+    // <Layout>
+    <>
       <Head>
         <title>Login</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className="flex items-center justify-center h-[100%]">
-        <div>
-          <h1 className="text-4xl font-bold mb-2">Welcome to Nexus Pay</h1>
-          <p className="text-lg mb-8">
+      <div className="flex items-center justify-center h-screen bg-gray-900">
+        <div className="bg-gray-800 p-8 rounded-lg shadow-lg max-w-sm w-full">
+          <h1 className="text-3xl font-bold text-white mb-4 text-center">
+            Welcome to NexusPay
+          </h1>
+          <p className="text-gray-400 mb-6 text-center">
             Sign in with your Google account to continue
           </p>
           <button
             onClick={openPopup}
-            className="w-full flex justify-center items-center border rounded-lg px-8 py-2 hover:bg-gray-100 hover:shadow-sm active:bg-gray-50 active:scale-95 transition-all"
+            className="w-full flex items-center justify-center bg-gray-700 text-white border border-gray-600 rounded-lg px-4 py-2 hover:bg-gray-600 hover:shadow-md transition-all duration-200 ease-in-out"
           >
-            <GoogleLogo />
-            Sign in with Google
+            <GoogleLogo className="w-6 h-6 mr-2" />
+            <span>Sign in with Google</span>
           </button>
         </div>
       </div>
-    </Layout>
+      </>
+    // </Layout>
   );
 }
 
