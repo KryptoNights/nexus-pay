@@ -71,7 +71,7 @@ const LandingPage = () => {
               </ul>
               <button
                 className="mt-8 py-3 px-8 rounded-full font-semibold bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
-                onClick={() => router.push("/SignupPage")}
+                onClick={() => router.push("/LoginPage")}
               >
                 Get Started
               </button>
