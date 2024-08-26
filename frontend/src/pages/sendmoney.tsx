@@ -56,7 +56,8 @@ function TestSendMoney() {
             if (address) {
               const transactionHash = await testSendMoneyToAccount(
                 address,
-                activeAccount!
+                activeAccount!,
+                5000000
               );
               alert(
                 `Transaction successful! Transaction hash: ${transactionHash}`

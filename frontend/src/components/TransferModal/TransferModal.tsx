@@ -34,9 +34,11 @@ const TransferModal = ({
         throw new Error("Active account is not provided.");
       }
 
+      console.log("Transfer amount:", transferAmount);
       const transactionHash = await testSendMoneyToAccount(
         recipientAddress,
-        activeAccount!
+        activeAccount!,
+        transferAmount*10e7
       );
 
       console.log(`Transaction successful: ${transactionHash}`);

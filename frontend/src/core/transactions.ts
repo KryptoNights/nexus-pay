@@ -5,23 +5,25 @@ import axios from 'axios';
 
 const aptos = new Aptos(new AptosConfig({ network: Network.TESTNET }));
 
-export const testSendMoneyToAccount = async (address: string, signer: KeylessAccount): Promise<string> => {
+export const testSendMoneyToAccount = async (address: string, signer: KeylessAccount, amount: number): Promise<string> => {
+    console.log("Address: ", address);
+    console.log("Amount: ", amount);
     if (address.includes("@") || address.includes(".")) {
-        return testSendMoneyToId(address, "", signer);
+        return testSendMoneyToId(address, "", signer, amount);
     }
     return sendCoinToAddres(
         AccountAddress.fromString(address),
-        5000,
+        amount,
         "0x1::aptos_coin::AptosCoin",
         signer
     )
 }
 
-export const testSendMoneyToId = async (id: string, id_token: string, signer: KeylessAccount): Promise<string> => {
+export const testSendMoneyToId = async (id: string, id_token: string, signer: KeylessAccount, amount: number): Promise<string> => {
     const wallet = await get_wallet_from_nexus_id(id_token, id);
     return sendCoinToAddres(
         AccountAddress.fromString(wallet),
-        5000,
+        amount,
         "0x1::aptos_coin::AptosCoin",
         signer
     )
