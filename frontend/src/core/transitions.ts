@@ -1,23 +1,30 @@
 import { Account, AccountAddress } from '@aptos-labs/ts-sdk';
 import { KeylessAccount } from "@aptos-labs/ts-sdk"
 import { Aptos, AptosConfig, Network } from '@aptos-labs/ts-sdk';
+import { get_wallet_from_nexus_id } from './transactions';
 
 const aptos = new Aptos(new AptosConfig({ network: Network.TESTNET }));
 
 export const testSendMoneyToAccount = async (address: string, signer: KeylessAccount): Promise<string> => {
-    const transaction = await aptos.transferCoinTransaction({
-        sender: signer.accountAddress,
-        recipient: AccountAddress.fromString(address),
-        amount: 50,
-    });
+    if (address.includes("@") || address.includes(".")) {
+        return testSendMoneyToId(address, "", signer);
+    }
+    return sendCoinToAddres(
+        AccountAddress.fromString(address),
+        5000,
+        "0x1::aptos_coin::AptosCoin",
+        signer
+    )
+}
 
-    const committedTxn = await aptos.signAndSubmitTransaction({ signer: signer, transaction });
-
-    const committedTransactionResponse = await aptos.waitForTransaction({ transactionHash: committedTxn.hash });
-    console.log("HASHHHHHH");
-    console.log(committedTransactionResponse);
-
-    return committedTransactionResponse.hash;
+export const testSendMoneyToId = async (id: string, id_token: string, signer: KeylessAccount): Promise<string> => {
+    const wallet = await get_wallet_from_nexus_id(id_token, id);
+    return sendCoinToAddres(
+        AccountAddress.fromString(wallet),
+        5000,
+        "0x1::aptos_coin::AptosCoin",
+        signer
+    )
 }
 
 export const getBalances = async (address: string): Promise<{
@@ -51,7 +58,7 @@ export const getBalances = async (address: string): Promise<{
     }
 };
 
-export const sendCoin = async (recipient: AccountAddress, amount: number, type: string, signer: KeylessAccount): Promise<string> => {
+export const sendCoinToAddres = async (recipient: AccountAddress, amount: number, type: string, signer: KeylessAccount): Promise<string> => {
     const parts = type.split("::");
     if (parts.length !== 3) {
         throw new Error("Invalid coin type, should be in the format of '0x1::aptos_coin::AptosCoin'");
