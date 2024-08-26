@@ -1,7 +1,7 @@
 "use client";
 
 import SidebarToggle from "@/components/Header/SidebarToggle";
-import { getBalances } from "@/core/transactions";
+import { getBalances, get_transaction_history } from "@/core/transactions";
 import { useKeylessAccounts } from "@/core/useKeylessAccounts";
 import { collapseAddress, divideByTenMillion } from "@/core/utils";
 import {
