@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useRouter } from "next/router";
 import { useKeylessAccounts } from "@/core/useKeylessAccounts";
 import { useDispatch } from "react-redux";
-import { setActiveAccount } from "@/redux/reducers/authReducer";
+import { setActiveAccountAddress } from "@/redux/reducers/authReducer";
 import { getAddressAsString } from "@/core/utils";
 
 function CallbackPage() {
@@ -19,7 +19,7 @@ function CallbackPage() {
   localStorage.setItem("activeAccount", address);
 
   dispatch(
-    setActiveAccount(
+    setActiveAccountAddress(
       getAddressAsString(activeAccount?.accountAddress.toString())
     )
   );

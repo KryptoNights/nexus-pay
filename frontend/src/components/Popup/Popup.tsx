@@ -1,6 +1,9 @@
 import { useKeylessAccounts } from "@/core/useKeylessAccounts";
 import { collapseAddress } from "@/core/utils";
-import { setActiveAccount, setAuthData } from "@/redux/reducers/authReducer";
+import {
+  setActiveAccountAddress,
+  setAuthData,
+} from "@/redux/reducers/authReducer";
 import Image from "next/image";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,7 +20,7 @@ const Popup = ({
   const [copyFeedback, setCopyFeedback] = useState("");
 
   const dispatch = useDispatch();
-  const { idToken, activeAccount } = useSelector(
+  const { idToken, activeAccountAdress } = useSelector(
     (state: any) => state.authSlice
   );
   const { disconnectKeylessAccount } = useKeylessAccounts();
@@ -70,7 +73,7 @@ const Popup = ({
             </div>
           </div>
           <h3 className="font-bold text-lg mt-4">
-            {collapseAddress(activeAccount)}
+            {collapseAddress(activeAccountAdress)}
           </h3>
           <p className="text-gray-400">{balance} APT</p>
           <div className="modal-action flex justify-between w-full mt-6">
@@ -78,7 +81,7 @@ const Popup = ({
               <button
                 className="btn btn-outline btn-primary"
                 onClick={() => {
-                  handleCopy(activeAccount, "Address");
+                  handleCopy(activeAccountAdress, "Address");
                 }}
               >
                 Copy Address
@@ -94,7 +97,7 @@ const Popup = ({
               onClick={() => {
                 disconnectKeylessAccount();
                 dispatch(setAuthData({}));
-                dispatch(setActiveAccount({}));
+                dispatch(setActiveAccountAddress({}));
                 localStorage.removeItem("activeAccount");
                 handlePopupClose();
               }}

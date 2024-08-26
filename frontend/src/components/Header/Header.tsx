@@ -4,7 +4,11 @@ import SidebarToggle from "@/components/Header/SidebarToggle";
 import { getBalances } from "@/core/transactions";
 import { useKeylessAccounts } from "@/core/useKeylessAccounts";
 import { collapseAddress, divideByTenMillion } from "@/core/utils";
-import { setActiveAccount, setAuthData } from "@/redux/reducers/authReducer";
+import {
+  setActiveAccountAddress,
+  setAuthData,
+  setUserBalance,
+} from "@/redux/reducers/authReducer";
 import { AccountAddress } from "@aptos-labs/ts-sdk";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -12,7 +16,7 @@ import DropdownIcon from "public/assets/svgs/DropdownIcon";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Popup from "../Popup/Popup";
-import { TransakConfig, Transak } from '@transak/transak-sdk';
+import { TransakConfig, Transak } from "@transak/transak-sdk";
 
 interface HeaderProps {
   title?: string;
@@ -21,8 +25,8 @@ interface HeaderProps {
 const Header = ({ title }: HeaderProps) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const { disconnectKeylessAccount } = useKeylessAccounts();
-  const [balance, setBalance] = useState(0);
-  const { idToken, activeAccount } = useSelector(
+  // const [balance, setBalance] = useState(0);
+  const { idToken, activeAccountAdress, balance } = useSelector(
     (state: any) => state.authSlice
   );
   const dispatch = useDispatch();
@@ -37,15 +41,15 @@ const Header = ({ title }: HeaderProps) => {
 
   const handleAddFunds = (wallet: string, email: string) => {
     const transakConfig: TransakConfig = {
-      apiKey: '563eea58-1a53-4237-9ce2-949187d72a23', // (Required)
+      apiKey: "563eea58-1a53-4237-9ce2-949187d72a23", // (Required)
       environment: Transak.ENVIRONMENTS.STAGING, // (Required)
-      defaultNetwork: 'aptos',
-      cryptoCurrencyList: 'APT',
+      defaultNetwork: "aptos",
+      cryptoCurrencyList: "APT",
       walletAddress: wallet,
-      colorMode: 'DARK',
-      defaultFiatCurrency: 'USD',
+      colorMode: "DARK",
+      defaultFiatCurrency: "USD",
       defaultFiatAmount: 100,
-      cryptoCurrencyCode: 'APT',
+      cryptoCurrencyCode: "APT",
       disableWalletAddressForm: true,
       email: email,
     };
@@ -54,28 +58,28 @@ const Header = ({ title }: HeaderProps) => {
     transak.init();
 
     // To get all the events
-    Transak.on('*', (data) => {
+    Transak.on("*", (data) => {
       console.log(data);
     });
 
     // This will trigger when the user closed the widget
     Transak.on(Transak.EVENTS.TRANSAK_WIDGET_CLOSE, () => {
-      console.log('Transak SDK closed!');
+      console.log("Transak SDK closed!");
     });
 
     /*
-    * This will trigger when the user has confirmed the order
-    * This doesn't guarantee that payment has completed in all scenarios
-    * If you want to close/navigate away, use the TRANSAK_ORDER_SUCCESSFUL event
-    */
+     * This will trigger when the user has confirmed the order
+     * This doesn't guarantee that payment has completed in all scenarios
+     * If you want to close/navigate away, use the TRANSAK_ORDER_SUCCESSFUL event
+     */
     Transak.on(Transak.EVENTS.TRANSAK_ORDER_CREATED, (orderData) => {
       console.log(orderData);
     });
 
     /*
-    * This will trigger when the user marks payment is made
-    * You can close/navigate away at this event
-    */
+     * This will trigger when the user marks payment is made
+     * You can close/navigate away at this event
+     */
     Transak.on(Transak.EVENTS.TRANSAK_ORDER_SUCCESSFUL, (orderData) => {
       console.log(orderData);
       transak.close();
@@ -84,19 +88,22 @@ const Header = ({ title }: HeaderProps) => {
     return () => {
       transak.close();
     };
-  }
+  };
 
   useEffect(() => {
     const fetchBalances = async () => {
-      if (activeAccount) {
-        const getBalancesResponse = await getBalances(activeAccount);
-        setBalance(divideByTenMillion(getBalancesResponse[0]?.amount));
+      if (activeAccountAdress) {
+        const getBalancesResponse = await getBalances(activeAccountAdress);
+
+        dispatch(
+          setUserBalance(divideByTenMillion(getBalancesResponse[0]?.amount))
+        );
       }
     };
-    if (activeAccount.length > 0) {
+    if (activeAccountAdress.length > 0) {
       fetchBalances();
     }
-  }, [activeAccount]);
+  }, [activeAccountAdress]);
 
   return (
     <div className="navbar sticky top-0 z-50 bg-base-200 bg-opacity-30 p-2 sm:p-4">
@@ -111,13 +118,15 @@ const Header = ({ title }: HeaderProps) => {
             </h1>
           </div>
           <div className="sm:hidden">
-            {activeAccount.length > 0 && (
+            {activeAccountAdress.length > 0 && (
               <button
                 onClick={handlePopupOpen}
                 className="btn btn-circle btn-ghost btn-sm"
               >
                 <Image
-                  src={idToken?.state?.accounts[0]?.idToken?.decoded?.picture ?? ""}
+                  src={
+                    idToken?.state?.accounts[0]?.idToken?.decoded?.picture ?? ""
+                  }
                   width={24}
                   height={24}
                   alt="profile"
@@ -128,9 +137,15 @@ const Header = ({ title }: HeaderProps) => {
           </div>
         </div>
         <div className="hidden sm:flex items-center justify-end mt-2 sm:mt-0">
-          {activeAccount.length > 0 && idToken?.state?.accounts[0]?.idToken?.decoded?.email ? (
+          {activeAccountAdress.length > 0 &&
+          idToken?.state?.accounts[0]?.idToken?.decoded?.email ? (
             <button
-              onClick={() => handleAddFunds(activeAccount, idToken?.state?.accounts[0]?.idToken?.decoded?.email)}
+              onClick={() =>
+                handleAddFunds(
+                  activeAccountAdress,
+                  idToken?.state?.accounts[0]?.idToken?.decoded?.email
+                )
+              }
               className="btn btn-primary p-0 bg-[rgb(0,0,0)] rounded-xl hover:bg-transparent"
             >
               <div className="hidden sm:block pt-[8px] pr-[8px] pb-[8px] pl-[12px]">
@@ -140,7 +155,7 @@ const Header = ({ title }: HeaderProps) => {
           ) : (
             <button></button>
           )}
-          {activeAccount.length > 0 ? (
+          {activeAccountAdress.length > 0 ? (
             <button
               onClick={handlePopupOpen}
               className="text-white btn btn-primary p-0 bg-[rgb(0,0,0)] rounded-xl hover:bg-transparent ml-2"
@@ -152,15 +167,23 @@ const Header = ({ title }: HeaderProps) => {
                 <div className="gap-[6px] flex items-center">
                   <div className="rounded-xl">
                     <Image
-                      src={idToken?.state?.accounts[0]?.idToken?.decoded?.picture ?? ""}
+                      src={
+                        idToken?.state?.accounts[0]?.idToken?.decoded
+                          ?.picture ?? ""
+                      }
                       width={24}
                       height={24}
                       alt="profile"
                       className="rounded-xl"
                     />
                   </div>
-                  <div className="hidden sm:block" style={{ textTransform: "none" }}>
-                    {collapseAddress(activeAccount ?? activeAccount)}
+                  <div
+                    className="hidden sm:block"
+                    style={{ textTransform: "none" }}
+                  >
+                    {collapseAddress(
+                      activeAccountAdress ?? activeAccountAdress
+                    )}
                   </div>
                   <DropdownIcon />
                 </div>

@@ -1,6 +1,9 @@
 import { useState } from "react";
-import { testSendMoneyToAccount } from "@/core/transactions";
+import { getBalances, testSendMoneyToAccount } from "@/core/transactions";
 import { useKeylessAccounts } from "@/core/useKeylessAccounts";
+import { useDispatch, useSelector } from "react-redux";
+import { divideByTenMillion } from "@/core/utils";
+import { setUserBalance } from "@/redux/reducers/authReducer";
 
 const TransferModal = ({
   onClose,
@@ -12,9 +15,15 @@ const TransferModal = ({
   recipientAddress,
   transferError,
 }: any) => {
-  const { activeAccount } = useKeylessAccounts();
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const { activeAccount } = useKeylessAccounts();
+  const dispatch = useDispatch();
+  const { idToken, activeAccountAdress } = useSelector(
+    (state: any) => state.authSlice
+  );
+
+  console.log(activeAccountAdress);
 
   const handleTransferAmountChange = (e: any) => {
     const amount = e.target.value;
@@ -34,14 +43,25 @@ const TransferModal = ({
         throw new Error("Active account is not provided.");
       }
 
-      console.log("Transfer amount:", transferAmount);
+      const getBalancesResponse = await getBalances(activeAccountAdress);
+      dispatch(
+        setUserBalance(divideByTenMillion(getBalancesResponse[0]?.amount))
+      );
+
+      console.log(activeAccount);
       const transactionHash = await testSendMoneyToAccount(
         recipientAddress,
         activeAccount!,
-        transferAmount*10e7
+        transferAmount * 10e7
+      );
+
+      const getBalancesRespons2 = await getBalances(activeAccountAdress);
+      dispatch(
+        setUserBalance(divideByTenMillion(getBalancesRespons2[0]?.amount))
       );
 
       console.log(`Transaction successful: ${transactionHash}`);
+
       setIsSuccess(true);
     } catch (error) {
       console.error("Failed to send money:", error);

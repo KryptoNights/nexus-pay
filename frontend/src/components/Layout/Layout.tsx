@@ -13,18 +13,18 @@ interface Props {
 }
 
 const Layout = ({ title, children, className }: Props) => {
-  const { idToken, activeAccount } = useSelector(
+  const { idToken, activeAccountAdress } = useSelector(
     (state: any) => state.authSlice
   );
 
   const router = useRouter();
   React.useEffect(() => {
     // if active account is  {} push to /LoginPage
-    if (Object.keys(activeAccount).length === 0) {
-      console.log(activeAccount);
+    if (Object.keys(activeAccountAdress).length === 0) {
+      console.log(activeAccountAdress);
       router.push("/LoginPage");
     }
-  }, [activeAccount]);
+  }, [activeAccountAdress]);
 
   return (
     <SidebarProvider>
@@ -32,7 +32,6 @@ const Layout = ({ title, children, className }: Props) => {
         <Sidebar>
           <div className="flex min-h-screen flex-col">
             <Header title={title} />
-
             <div className="mx-4 mb-4 block flex-grow">{children}</div>
           </div>
         </Sidebar>
