@@ -17,7 +17,7 @@ const authSlice = createSlice({
     setAuthData: (state, action) => {
       state.idToken = action.payload;
     },
-    setActiveAccountAddressAddress: (state, action) => {
+    setActiveAccountAddress: (state, action) => {
       state.activeAccountAdress = action.payload;
     },
     setUserBalance: (state, action) => {

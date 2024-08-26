@@ -18,11 +18,7 @@ function CallbackPage() {
 
   localStorage.setItem("activeAccount", address);
 
-  dispatch(
-    setActiveAccountAddress(
-      getAddressAsString(activeAccount?.accountAddress.toString())
-    )
-  );
+  dispatch(setActiveAccountAddress(address));
 
   const router = useRouter();
   const [idToken, setIdToken] = useState<string | null>(null);
