@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { useKeylessAccounts } from "@/core/useKeylessAccounts";
+import mixpanel from "mixpanel-browser";
 
 const Home: NextPage = () => {
   const [recipientAddress, setRecipientAddress] = useState("");
@@ -76,6 +77,15 @@ const Home: NextPage = () => {
     // }
   }, [activeAccount]);
 
+  // mixpanel.identify(`${activeAccount}`);
+
+  // mixpanel.people.set({
+  //   $name: "kavish shah",
+  //   $email: "kavishshah30@gmail.com",
+  //   $address: `${activeAccount}`,
+  // });
+
+  // mixpanel.track("page_view");
   const handleGoogleSignIn = () => {
     router.push("/LoginPage");
   };
