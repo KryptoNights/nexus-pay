@@ -12,6 +12,7 @@ import DropdownIcon from "public/assets/svgs/DropdownIcon";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Popup from "../Popup/Popup";
+import { TransakConfig, Transak } from '@transak/transak-sdk';
 
 interface HeaderProps {
   title?: string;
@@ -33,6 +34,57 @@ const Header = ({ title }: HeaderProps) => {
   const handlePopupClose = () => {
     setIsPopupOpen(false);
   };
+
+  const handleAddFunds = (wallet: string, email: string) => {
+    const transakConfig: TransakConfig = {
+      apiKey: '563eea58-1a53-4237-9ce2-949187d72a23', // (Required)
+      environment: Transak.ENVIRONMENTS.STAGING, // (Required)
+      defaultNetwork: 'aptos',
+      cryptoCurrencyList: 'APT',
+      walletAddress: wallet,
+      colorMode: 'DARK',
+      defaultFiatCurrency: 'USD',
+      defaultFiatAmount: 100,
+      cryptoCurrencyCode: 'APT',
+      disableWalletAddressForm: true,
+      email: email,
+    };
+    const transak = new Transak(transakConfig);
+
+    transak.init();
+
+    // To get all the events
+    Transak.on('*', (data) => {
+      console.log(data);
+    });
+
+    // This will trigger when the user closed the widget
+    Transak.on(Transak.EVENTS.TRANSAK_WIDGET_CLOSE, () => {
+      console.log('Transak SDK closed!');
+    });
+
+    /*
+    * This will trigger when the user has confirmed the order
+    * This doesn't guarantee that payment has completed in all scenarios
+    * If you want to close/navigate away, use the TRANSAK_ORDER_SUCCESSFUL event
+    */
+    Transak.on(Transak.EVENTS.TRANSAK_ORDER_CREATED, (orderData) => {
+      console.log(orderData);
+    });
+
+    /*
+    * This will trigger when the user marks payment is made
+    * You can close/navigate away at this event
+    */
+    Transak.on(Transak.EVENTS.TRANSAK_ORDER_SUCCESSFUL, (orderData) => {
+      console.log(orderData);
+      transak.close();
+    });
+
+    return () => {
+      transak.close();
+    };
+  }
 
   useEffect(() => {
     const fetchBalances = async () => {
@@ -76,10 +128,22 @@ const Header = ({ title }: HeaderProps) => {
           </div>
         </div>
         <div className="hidden sm:flex items-center justify-end mt-2 sm:mt-0">
+          {activeAccount.length > 0 && idToken?.state?.accounts[0]?.idToken?.decoded?.email ? (
+            <button
+              onClick={() => handleAddFunds(activeAccount, idToken?.state?.accounts[0]?.idToken?.decoded?.email)}
+              className="btn btn-primary p-0 bg-[rgb(0,0,0)] rounded-xl hover:bg-transparent"
+            >
+              <div className="hidden sm:block pt-[8px] pr-[8px] pb-[8px] pl-[12px]">
+                + Add Funds
+              </div>
+            </button>
+          ) : (
+            <button></button>
+          )}
           {activeAccount.length > 0 ? (
             <button
               onClick={handlePopupOpen}
-              className="text-white btn btn-primary p-0 bg-[rgb(0,0,0)] rounded-xl hover:bg-transparent"
+              className="text-white btn btn-primary p-0 bg-[rgb(0,0,0)] rounded-xl hover:bg-transparent ml-2"
             >
               <div className="hidden sm:block pt-[8px] pr-[8px] pb-[8px] pl-[12px]">
                 {balance} APT
