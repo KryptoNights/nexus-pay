@@ -6,6 +6,7 @@ import { setAuthData } from "@/redux/reducers/authReducer";
 import Layout from "@/components/Layout/Layout";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import Image from 'next/image';
 
 function LoginPage() {
   const dispatch = useDispatch();
@@ -75,32 +76,47 @@ function LoginPage() {
   }
 
   return (
-    // <Layout>
     <>
       <Head>
-        <title>Login</title>
+        <title>Login | NexusPay</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className="flex items-center justify-center h-screen bg-gray-900">
-        <div className="bg-gray-800 p-8 rounded-lg shadow-lg max-w-sm w-full">
-          <h1 className="text-3xl font-bold text-white mb-4 text-center">
-            Welcome to NexusPay
-          </h1>
-          <p className="text-gray-400 mb-6 text-center">
-            Sign in with your Google account to continue
-          </p>
-          <button
-            onClick={openPopup}
-            className="w-full flex items-center justify-center bg-gray-700 text-white border border-gray-600 rounded-lg px-4 py-2 hover:bg-gray-600 hover:shadow-md transition-all duration-200 ease-in-out"
-          >
-            <GoogleLogo className="w-6 h-6 mr-2" />
-            <span>Sign in with Google</span>
-          </button>
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 to-gray-800">
+        <div className="w-full max-w-md p-8 space-y-8 bg-gray-800 rounded-xl shadow-2xl">
+          <div className="text-center">
+            <Image
+              src="/assets/nexuspay-logo.png"
+              alt="NexusPay Logo"
+              width={80}
+              height={80}
+              className="mx-auto mb-4"
+            />
+            <h1 className="text-3xl font-bold text-white">Welcome to NexusPay</h1>
+            <p className="mt-2 text-gray-400">Secure payments, simplified.</p>
+          </div>
+
+          <div className="mt-8 space-y-6">
+            <button
+              onClick={openPopup}
+              className="w-full flex items-center justify-center px-4 py-3 space-x-4 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200 ease-in-out"
+            >
+              <GoogleLogo className="w-6 h-6" />
+              <span className="font-medium">Sign in with Google</span>
+            </button>
+          </div>
+
+          <div className="mt-8 text-center">
+            <p className="text-sm text-gray-400">
+              By signing in, you agree to our{' '}
+              <a href="#" className="text-indigo-400 hover:text-indigo-300">Terms of Service</a>
+              {' '}and{' '}
+              <a href="#" className="text-indigo-400 hover:text-indigo-300">Privacy Policy</a>
+            </p>
+          </div>
         </div>
       </div>
     </>
-    // </Layout>
   );
 }
 
