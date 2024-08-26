@@ -7,7 +7,7 @@ import { useKeylessAccounts } from "@/core/useKeylessAccounts";
 import Head from "next/head";
 import Layout from "@/components/Layout/Layout";
 import { useDispatch } from "react-redux";
-import { setActiveAccount } from "@/redux/reducers/authReducer";
+import { setActiveAccountAddress } from "@/redux/reducers/authReducer";
 import { testSendMoneyToAccount, getBalances } from "@/core/transactions";
 
 function TestSendMoney() {

@@ -8,10 +8,11 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { useKeylessAccounts } from "@/core/useKeylessAccounts";
 import mixpanel from "mixpanel-browser";
+import { setUserBalance } from "@/redux/reducers/authReducer";
 
 const Home: NextPage = () => {
   const [recipientAddress, setRecipientAddress] = useState("");
@@ -19,15 +20,15 @@ const Home: NextPage = () => {
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isReceiveModalOpen, setIsReceiveModalOpen] = useState(false);
-  const [balance, setBalance] = useState(0);
+  // const [balance, setBalance] = useState(0);
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
   const [transferAmount, setTransferAmount] = useState("");
   const [transferError, setTransferError] = useState("");
 
-  const { activeAccount, idToken } = useSelector(
+  const { activeAccountAdress, idToken, balance } = useSelector(
     (state: any) => state.authSlice
   );
-
+  const dispatch = useDispatch();
   const router = useRouter();
 
   const handlePopupOpen = () => {
@@ -40,20 +41,26 @@ const Home: NextPage = () => {
 
   useEffect(() => {
     const fetchBalances = async () => {
-      if (activeAccount) {
-        const getBalancesResponse = await getBalances(activeAccount);
+      if (activeAccountAdress) {
+        const getBalancesResponse = await getBalances(activeAccountAdress);
         console.log(divideByTenMillion(getBalancesResponse[0]?.amount));
 
-        setBalance(divideByTenMillion(getBalancesResponse[0]?.amount));
+        dispatch(
+          setUserBalance(divideByTenMillion(getBalancesResponse[0]?.amount))
+        );
       }
     };
 
     //to be removed
-    if (typeof window !== 'undefined' && activeAccount && idToken?.state?.accounts[0]?.idToken?.raw) {
+    if (
+      typeof window !== "undefined" &&
+      activeAccountAdress &&
+      idToken?.state?.accounts[0]?.idToken?.raw
+    ) {
       const response = axios.post(
         "https://nexus-link-mail-id-to-wallet-7kxt74l7iq-uc.a.run.app",
         {
-          wallet: activeAccount,
+          wallet: activeAccountAdress,
         },
         {
           headers: {
@@ -64,7 +71,7 @@ const Home: NextPage = () => {
       );
     }
     fetchBalances();
-  }, [activeAccount]);
+  }, [activeAccountAdress]);
 
   // mixpanel.identify(`${activeAccount}`);
 
@@ -176,7 +183,7 @@ const Home: NextPage = () => {
           {isReceiveModalOpen && (
             <ReceiveModal
               onClose={() => setIsReceiveModalOpen(false)}
-              activeAccount={activeAccount}
+              activeAccount={activeAccountAdress}
             />
           )}
 
