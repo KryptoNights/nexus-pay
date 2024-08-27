@@ -7,7 +7,7 @@ import Head from 'next/head';
 const Profile = () => {
   const { nexusId } = useSelector((state) => state.authSlice);
   const [customNexusId, setCustomNexusId] = useState('');
-  const { idToken, activeAccount } = useSelector(
+  const { idToken, activeAccountAdress } = useSelector(
     (state) => state.authSlice
   );
 
@@ -47,20 +47,20 @@ const Profile = () => {
                 </div>
               )}
             </div>
-            <label className="btn btn-outline btn-primary btn-sm">
+            {/* <label className="btn btn-outline btn-primary btn-sm">
               Upload Photo
               <input type="file" onChange={handleProfilePhotoChange} accept="image/*" className="hidden" />
-            </label>
+            </label> */}
           </div>
 
           <div className="space-y-4">
-            <InfoField label="Wallet Address" value={activeAccount || 'Not connected'} />
+            <InfoField label="Wallet Address" value={activeAccountAdress || 'Not connected'} />
             <InfoField label="Email" value={idToken?.state?.accounts[0]?.idToken?.decoded?.email || 'Not provided'} />
             <InfoField label="Nexus ID" value={nexusId || 'Not set'} />
           </div>
         </div>
 
-        <div className="bg-gray-800 rounded-lg shadow-lg p-4 sm:p-6">
+        {/* <div className="bg-gray-800 rounded-lg shadow-lg p-4 sm:p-6">
           <h2 className="text-xl sm:text-2xl font-semibold mb-4 text-primary">Purchase Custom Nexus ID</h2>
           <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
             <input
@@ -77,7 +77,7 @@ const Profile = () => {
               Purchase
             </button>
           </div>
-        </div>
+        </div> */}
       </div>
     </Layout>
   );
