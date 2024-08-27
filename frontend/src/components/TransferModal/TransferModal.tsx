@@ -104,7 +104,15 @@ const TransferModal = ({
               <p className="text-error text-sm mt-1">{transferError}</p>
             )}
           </div>
-          <p className="text-sm">Balance: {balance} APT</p>
+          <p className="text-sm">
+            Balance: {balance} APT
+            {!recipientAddress && (
+              <p className="text-sm text-red-500">
+                Please enter address or Nexus id
+              </p>
+            )}
+          </p>
+
           {isSuccess ? (
             <div className="text-green-500 flex items-center">
               <svg
@@ -127,7 +135,7 @@ const TransferModal = ({
             <button
               className="btn btn-primary w-full"
               onClick={() => sendMoney(recipientAddress)}
-              disabled={isTransferDisabled}
+              disabled={isTransferDisabled || !recipientAddress}
             >
               {isLoading ? (
                 <svg className="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
