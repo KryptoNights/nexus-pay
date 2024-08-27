@@ -16,44 +16,45 @@ const LandingPage = () => {
         <meta property="og:description" content="Pay, send, and receive crypto in your everyday life with NexusPay." />
       </Head>
 
-      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-purple-900 text-white flex flex-col">
-        <nav className="container mx-auto px-6 py-6 flex justify-between items-center">
-          <div className="text-3xl font-bold text-purple-400 hover:text-purple-300 transition-colors duration-300">NexusPay</div>
-          <div className="space-x-4">
-            <button
-              className="text-sm py-2 px-4 bg-purple-600 rounded-full font-medium hover:bg-purple-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
-              onClick={() => router.push("/LoginPage")}
-            >
-              Login
-            </button>
+      <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white flex flex-col">
+        <nav className="sticky top-0 z-50 bg-gray-900 bg-opacity-90 backdrop-filter backdrop-blur-lg">
+          <div className="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div className="text-3xl font-bold text-blue-400 hover:text-blue-300 transition-colors duration-300">NexusPay</div>
+            <div className="space-x-4">
+              <button
+                className="text-sm py-2 px-6 bg-blue-600 rounded-full font-medium hover:bg-blue-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 shadow-lg hover:shadow-blue-500/30"
+                onClick={() => router.push("/LoginPage")}
+              >
+                Login
+              </button>
+            </div>
           </div>
         </nav>
 
         <main className="flex-grow container mx-auto px-6 py-16">
-          <header className="text-center mb-16">
-            <h1 className="text-5xl md:text-6xl font-extrabold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">
+          <header className="text-center mb-24">
+            <h1 className="text-5xl md:text-7xl font-extrabold mb-8 text-blue-300">
               Crypto Payments Simplified
             </h1>
-            <p className="text-xl md:text-2xl text-gray-300 max-w-2xl mx-auto">
-              Pay, send, and receive crypto in your everyday life with ease and security
+            <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+              Pay, send, and receive crypto in your everyday life with unparalleled ease and security
             </p>
           </header>
 
-          {/* Improved grid layout for better responsiveness */}
-          <div className="grid md:grid-cols-2 gap-16 items-center mb-24">
-            <div className="space-y-8">
-              <h2 className="text-3xl md:text-4xl font-semibold mb-6">
+          <div className="grid lg:grid-cols-2 gap-16 items-center mb-32">
+            <div className="space-y-10">
+              <h2 className="text-3xl md:text-5xl font-semibold mb-8 text-blue-200">
                 Features That Empower You
               </h2>
-              <ul className="space-y-6">
+              <ul className="space-y-8">
                 {[
                   'Scan QR codes for instant payments',
                   'Receive funds via your unique QR',
                   'Send and receive using Nexus ID',
                 ].map((feature, index) => (
-                  <li key={index} className="flex items-center text-lg">
+                  <li key={index} className="flex items-center text-lg group">
                     <svg
-                      className="w-6 h-6 mr-4 text-green-400"
+                      className="w-8 h-8 mr-4 text-green-500 group-hover:text-green-400 transition-colors duration-300"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -65,30 +66,30 @@ const LandingPage = () => {
                         d="M5 13l4 4L19 7"
                       />
                     </svg>
-                    {feature}
+                    <span className="group-hover:text-blue-300 transition-colors duration-300">{feature}</span>
                   </li>
                 ))}
               </ul>
               <button
-                className="mt-8 py-3 px-8 rounded-full font-semibold bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
+                className="mt-12 py-4 px-10 rounded-full font-semibold bg-blue-600 hover:bg-blue-700 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 shadow-xl hover:shadow-blue-500/30 text-lg"
                 onClick={() => router.push("/LoginPage")}
               >
                 Get Started
               </button>
             </div>
             <div className="relative">
-              <div className="bg-gray-800 rounded-2xl shadow-2xl p-4 transform hover:rotate-2 transition-all duration-300 hover:shadow-purple-500/30">
+              <div className="bg-gray-700 rounded-3xl shadow-2xl p-6 transform hover:rotate-2 transition-all duration-300 hover:shadow-blue-500/30">
                 <Image
                   src="/assets/dashboard_snapshot.png"
                   width={1200}
                   height={600}
                   alt="NexusPay App Interface"
-                  className="rounded-lg object-cover w-full h-auto"
+                  className="rounded-2xl object-cover w-full h-auto"
                 />
               </div>
-              <div className="absolute -bottom-6 -left-6 bg-yellow-400 text-gray-900 rounded-full p-4 shadow-lg animate-bounce">
+              <div className="absolute -bottom-8 -left-8 bg-blue-500 text-white rounded-full p-6 shadow-lg animate-bounce">
                 <svg
-                  className="w-8 h-8"
+                  className="w-10 h-10"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -104,11 +105,11 @@ const LandingPage = () => {
             </div>
           </div>
 
-          <div className="mb-24">
-            <h2 className="text-4xl md:text-5xl font-semibold text-center mb-16">
+          <div className="mb-32">
+            <h2 className="text-4xl md:text-6xl font-semibold text-center mb-20 text-blue-200">
               How It Works
             </h2>
-            <div className="grid md:grid-cols-3 gap-12">
+            <div className="grid md:grid-cols-3 gap-16">
               {[
                 {
                   title: '1. Sign Up',
@@ -128,11 +129,11 @@ const LandingPage = () => {
               ].map((step, index) => (
                 <div
                   key={index}
-                  className="bg-gray-800 rounded-xl p-8 text-center hover:shadow-xl transition-all duration-300 transform hover:-translate-y-2"
+                  className="bg-gray-700 rounded-2xl p-10 text-center hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 hover:bg-gray-600"
                 >
-                  <div className="bg-purple-700 rounded-full p-4 inline-block mb-6">
+                  <div className="bg-blue-600 rounded-full p-6 inline-block mb-8">
                     <svg
-                      className="w-10 h-10 text-purple-300"
+                      className="w-12 h-12 text-blue-200"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -145,17 +146,17 @@ const LandingPage = () => {
                       />
                     </svg>
                   </div>
-                  <h3 className="text-2xl font-semibold mb-4">{step.title}</h3>
-                  <p className="text-gray-400 text-lg">{step.description}</p>
+                  <h3 className="text-2xl font-semibold mb-6 text-blue-300">{step.title}</h3>
+                  <p className="text-gray-300 text-lg">{step.description}</p>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="text-center mb-24">
-            <h2 className="text-3xl md:text-4xl font-bold mb-8">Ready to simplify your crypto payments?</h2>
+          <div className="text-center mb-32 bg-gray-700 rounded-3xl p-16 shadow-2xl">
+            <h2 className="text-4xl md:text-5xl font-bold mb-10 text-blue-200">Ready to simplify your crypto payments?</h2>
             <button
-              className="py-4 px-10 rounded-full font-semibold bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 text-lg"
+              className="py-4 px-12 rounded-full font-semibold bg-blue-600 hover:bg-blue-700 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 text-xl shadow-xl hover:shadow-blue-500/30"
               onClick={() => router.push("/LoginPage")}
             >
               Join NexusPay Today
@@ -163,9 +164,20 @@ const LandingPage = () => {
           </div>
         </main>
 
-        <footer className="py-12 text-center bg-gray-800">
+        <footer className="py-16 text-center bg-gray-900">
           <div className="container mx-auto px-6">
-            <p className="text-gray-400 mb-4">&copy; 2024 NexusPay. All rights reserved.</p>
+            <p className="text-gray-400 mb-8">&copy; 2024 NexusPay. All rights reserved.</p>
+            <div className="flex justify-center space-x-6">
+              <a href="#" className="text-gray-400 hover:text-blue-400 transition-colors duration-300">
+                Terms of Service
+              </a>
+              <a href="#" className="text-gray-400 hover:text-blue-400 transition-colors duration-300">
+                Privacy Policy
+              </a>
+              <a href="#" className="text-gray-400 hover:text-blue-400 transition-colors duration-300">
+                Contact Us
+              </a>
+            </div>
           </div>
         </footer>
       </div>
