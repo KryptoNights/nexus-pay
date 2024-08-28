@@ -20,15 +20,25 @@ interface Transaction {
 }
 
 const TransactionTable: NextPage = () => {
+  const totalpages = 10;
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
   const router = useRouter();
   const { activeAccountAdress } = useSelector((state: any) => state.authSlice);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   useEffect(() => {
     const fetchTransactionHistory = async () => {
       try {
-        const response = await get_transaction_history(activeAccountAdress, 10);
+        const offset = (currentPage - 1) * totalpages;
+        const response = await get_transaction_history(
+          activeAccountAdress,
+          offset
+        );
         console.log("Transaction history details:", response);
         setTransactions(response as Transaction[]);
       } catch (error) {
@@ -39,14 +49,14 @@ const TransactionTable: NextPage = () => {
     if (activeAccountAdress) {
       fetchTransactionHistory();
     }
-  }, [activeAccountAdress]);
+  }, [activeAccountAdress, currentPage]);
 
   const filteredTransactions = transactions.filter((transaction) => {
-    const searchLower = searchTerm.toLowerCase();
+    const searchLower = searchTerm?.toLowerCase();
     return (
-      (transaction.sender &&
-        transaction.sender.toLowerCase().includes(searchLower)) ||
-      transaction.action.toLowerCase().includes(searchLower) ||
+      (transaction?.sender &&
+        transaction?.sender?.toLowerCase().includes(searchLower)) ||
+      transaction?.action?.toLowerCase().includes(searchLower) ||
       (transaction.success ? "success" : "failed").includes(searchLower)
     );
   });
@@ -105,6 +115,20 @@ const TransactionTable: NextPage = () => {
             ))}
           </tbody>
         </table>
+      </div>
+
+      <div className="flex justify-center mt-4 space-x-2">
+        {Array.from({ length: 10 }, (_, i) => i + 1).map((page) => (
+          <button
+            key={page}
+            onClick={() => handlePageChange(page)}
+            className={`btn btn-sm ${
+              currentPage === page ? "btn-primary" : "btn-ghost"
+            }`}
+          >
+            {page}
+          </button>
+        ))}
       </div>
 
       <div className="mt-6 flex justify-center gap-4 mb-10">
