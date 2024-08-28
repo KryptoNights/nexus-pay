@@ -2,7 +2,11 @@ import { useState } from "react";
 import { getBalances, testSendMoneyToAccount } from "@/core/transactions";
 import { useKeylessAccounts } from "@/core/useKeylessAccounts";
 import { useDispatch, useSelector } from "react-redux";
-import { divideByTenMillion } from "@/core/utils";
+import {
+  divideByTenMillion,
+  isValidCustomText,
+  isValidWalletAddress,
+} from "@/core/utils";
 import { setUserBalance } from "@/redux/reducers/authReducer";
 
 const TransferModal = ({
@@ -75,7 +79,10 @@ const TransferModal = ({
     transferError !== "" ||
     transferAmount === "" ||
     parseFloat(transferAmount) <= 0 ||
-    isLoading;
+    isLoading ||
+    !recipientAddress ||
+    (!isValidWalletAddress(recipientAddress) &&
+      !isValidCustomText(recipientAddress));
 
   return (
     <div
@@ -135,7 +142,7 @@ const TransferModal = ({
             <button
               className="btn btn-primary w-full"
               onClick={() => sendMoney(recipientAddress)}
-              disabled={isTransferDisabled || !recipientAddress}
+              disabled={isTransferDisabled}
             >
               {isLoading ? (
                 <svg className="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
