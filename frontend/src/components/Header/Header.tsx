@@ -122,13 +122,14 @@ const Header = ({ title }: HeaderProps) => {
               <button
                 onClick={handlePopupOpen}
                 className="btn btn-circle btn-ghost btn-sm"
+                aria-label="Open user menu"
               >
                 <Image
                   src={
                     idToken?.state?.accounts[0]?.idToken?.decoded?.picture ?? ""
                   }
-                  width={24}
-                  height={24}
+                  width={80}
+                  height={80}
                   alt="profile"
                   className="rounded-full"
                 />
