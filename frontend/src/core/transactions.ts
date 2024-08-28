@@ -188,10 +188,10 @@ export const get_transaction_history = async (address: string, offset: number): 
         version_activity_map[activity.transaction_version as string].success = activity.is_transaction_success as boolean || false;
         
         if ((activity.type as string).endsWith("DepositEvent")) {
-            version_activity_map[activity.transaction_version as string].action = "received";
+            version_activity_map[activity.transaction_version as string].action = "Received";
             version_activity_map[activity.transaction_version as string].amount = activity.amount;
         } else if ((activity.type as string).endsWith("WithdrawEvent")) {
-            version_activity_map[activity.transaction_version as string].action = "sent";
+            version_activity_map[activity.transaction_version as string].action = "Sent";
             version_activity_map[activity.transaction_version as string].amount = activity.amount;
         }
         // console.log(version_activity_map[activity.transaction_version as string]);
