@@ -41,11 +41,15 @@ const TransactionTable: NextPage = () => {
     }
   }, [activeAccountAdress]);
 
-  const filteredTransactions = transactions.filter((transaction) =>
-    transaction.sender
-      ? transaction.sender.toLowerCase().includes(searchTerm.toLowerCase())
-      : false
-  );
+  const filteredTransactions = transactions.filter((transaction) => {
+    const searchLower = searchTerm.toLowerCase();
+    return (
+      (transaction.sender &&
+        transaction.sender.toLowerCase().includes(searchLower)) ||
+      transaction.action.toLowerCase().includes(searchLower) ||
+      (transaction.success ? "success" : "failed").includes(searchLower)
+    );
+  });
 
   return (
     <main className="flex-grow px-4 text-center">
@@ -103,7 +107,7 @@ const TransactionTable: NextPage = () => {
         </table>
       </div>
 
-      <div className="mt-6 flex justify-center gap-4">
+      <div className="mt-6 flex justify-center gap-4 mb-10">
         <button
           className="btn btn-primary"
           onClick={() => {
