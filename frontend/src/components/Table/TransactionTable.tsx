@@ -25,7 +25,7 @@ const TransactionTable: NextPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const router = useRouter();
-  const { activeAccountAdress } = useSelector((state: any) => state.authSlice);
+  const { activeAccountAdress, balance } = useSelector((state: any) => state.authSlice);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -49,7 +49,7 @@ const TransactionTable: NextPage = () => {
     if (activeAccountAdress) {
       fetchTransactionHistory();
     }
-  }, [activeAccountAdress, currentPage]);
+  }, [activeAccountAdress, currentPage, balance]);
 
   const filteredTransactions = transactions.filter((transaction) => {
     const searchLower = searchTerm?.toLowerCase();
@@ -101,7 +101,7 @@ const TransactionTable: NextPage = () => {
                 </td>
                 <td>
                   {transaction.gas_fee !== undefined
-                    ? transaction.gas_fee.toLocaleString()
+                    ? divideByTenMillion(transaction.gas_fee)?.toLocaleString()
                     : "N/A"}
                 </td>
                 <td>

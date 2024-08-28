@@ -1,3 +1,5 @@
+'use client'
+
 import { GOOGLE_CLIENT_ID } from "../../core/constants";
 import useEphemeralKeyPair from "../../core/useEphemeralKeyPair";
 import GoogleLogo from "../../../public/assets/GoogleLogo";
