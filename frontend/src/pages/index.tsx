@@ -1,16 +1,28 @@
-import React from 'react';
-import Head from 'next/head';
-import { useRouter } from 'next/router';
-import Image from 'next/image';
+import React from "react";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import Image from "next/image";
+import { useSelector } from "react-redux";
 
 const LandingPage: React.FC = () => {
   const router = useRouter();
+  const { idToken, activeAccountAdress } = useSelector(
+    (state: any) => state.authSlice
+  );
 
   const features: string[] = [
-    'Scan QR codes for instant payments',
-    'Receive funds via your unique QR',
-    'Send and receive using Nexus ID',
+    "Scan QR codes for instant payments",
+    "Receive funds via your unique QR",
+    "Send and receive using Nexus ID",
   ];
+
+  const handleRedirect = () => {
+    if (Object.keys(activeAccountAdress).length === 0) {
+      router.push("/LoginPage");
+    } else {
+      router.push("/dashboard");
+    }
+  };
 
   const steps: Array<{
     title: string;
@@ -18,19 +30,19 @@ const LandingPage: React.FC = () => {
     icon: string;
   }> = [
     {
-      title: '1. Sign Up',
-      description: 'Create your account and get your unique Nexus ID',
-      icon: 'M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z',
+      title: "1. Sign Up",
+      description: "Create your account and get your unique Nexus ID",
+      icon: "M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z",
     },
     {
-      title: '2. Add Funds',
-      description: 'Deposit crypto into your NexusPay wallet',
-      icon: 'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z',
+      title: "2. Add Funds",
+      description: "Deposit crypto into your NexusPay wallet",
+      icon: "M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z",
     },
     {
-      title: '3. Start Paying',
-      description: 'Use NexusPay for your everyday transactions',
-      icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
+      title: "3. Start Paying",
+      description: "Use NexusPay for your everyday transactions",
+      icon: "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z",
     },
   ];
 
@@ -39,19 +51,30 @@ const LandingPage: React.FC = () => {
       <Head>
         <title>NexusPay - Simplify Your Crypto Payments</title>
         <link rel="icon" href="/favicon.ico" />
-        <meta name="description" content="NexusPay - Pay, send, and receive crypto in your everyday life. Simplify your crypto payments with our easy-to-use platform." />
-        <meta property="og:title" content="NexusPay - Simplify Your Crypto Payments" />
-        <meta property="og:description" content="Pay, send, and receive crypto in your everyday life with NexusPay." />
+        <meta
+          name="description"
+          content="NexusPay - Pay, send, and receive crypto in your everyday life. Simplify your crypto payments with our easy-to-use platform."
+        />
+        <meta
+          property="og:title"
+          content="NexusPay - Simplify Your Crypto Payments"
+        />
+        <meta
+          property="og:description"
+          content="Pay, send, and receive crypto in your everyday life with NexusPay."
+        />
       </Head>
 
       <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white flex flex-col">
         <nav className="sticky top-0 z-50 bg-gray-900 bg-opacity-90 backdrop-filter backdrop-blur-lg">
           <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-            <div className="text-3xl font-bold text-blue-400 hover:text-blue-300 transition-colors duration-300">NexusPay</div>
+            <div className="text-3xl font-bold text-blue-400 hover:text-blue-300 transition-colors duration-300">
+              NexusPay
+            </div>
             <div className="space-x-4">
               <button
                 className="text-sm py-2 px-6 bg-blue-600 rounded-full font-medium hover:bg-blue-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 shadow-lg hover:shadow-blue-500/30"
-                onClick={() => router.push("/LoginPage")}
+                onClick={handleRedirect}
               >
                 Login
               </button>
@@ -65,7 +88,8 @@ const LandingPage: React.FC = () => {
               Crypto Payments Simplified
             </h1>
             <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-              Pay, send, and receive crypto in your everyday life with unparalleled ease and security
+              Pay, send, and receive crypto in your everyday life with
+              unparalleled ease and security
             </p>
           </header>
 
@@ -90,7 +114,9 @@ const LandingPage: React.FC = () => {
                         d="M5 13l4 4L19 7"
                       />
                     </svg>
-                    <span className="group-hover:text-blue-300 transition-colors duration-300">{feature}</span>
+                    <span className="group-hover:text-blue-300 transition-colors duration-300">
+                      {feature}
+                    </span>
                   </li>
                 ))}
               </ul>
@@ -154,7 +180,9 @@ const LandingPage: React.FC = () => {
                       />
                     </svg>
                   </div>
-                  <h3 className="text-2xl font-semibold mb-6 text-blue-300">{step.title}</h3>
+                  <h3 className="text-2xl font-semibold mb-6 text-blue-300">
+                    {step.title}
+                  </h3>
                   <p className="text-gray-300 text-lg">{step.description}</p>
                 </div>
               ))}
@@ -162,7 +190,9 @@ const LandingPage: React.FC = () => {
           </div>
 
           <div className="text-center mb-32 bg-gray-700 rounded-3xl p-16 shadow-2xl">
-            <h2 className="text-4xl md:text-5xl font-bold mb-10 text-blue-200">Ready to simplify your crypto payments?</h2>
+            <h2 className="text-4xl md:text-5xl font-bold mb-10 text-blue-200">
+              Ready to simplify your crypto payments?
+            </h2>
             <button
               className="py-4 px-12 rounded-full font-semibold bg-blue-600 hover:bg-blue-700 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 text-xl shadow-xl hover:shadow-blue-500/30"
               onClick={() => router.push("/LoginPage")}
@@ -174,15 +204,26 @@ const LandingPage: React.FC = () => {
 
         <footer className="py-16 text-center bg-gray-900">
           <div className="container mx-auto px-6">
-            <p className="text-gray-400 mb-8">&copy; 2024 NexusPay. All rights reserved.</p>
+            <p className="text-gray-400 mb-8">
+              &copy; 2024 NexusPay. All rights reserved.
+            </p>
             <div className="flex justify-center space-x-6">
-              <a href="#" className="text-gray-400 hover:text-blue-400 transition-colors duration-300">
+              <a
+                href="#"
+                className="text-gray-400 hover:text-blue-400 transition-colors duration-300"
+              >
                 Terms of Service
               </a>
-              <a href="#" className="text-gray-400 hover:text-blue-400 transition-colors duration-300">
+              <a
+                href="#"
+                className="text-gray-400 hover:text-blue-400 transition-colors duration-300"
+              >
                 Privacy Policy
               </a>
-              <a href="#" className="text-gray-400 hover:text-blue-400 transition-colors duration-300">
+              <a
+                href="#"
+                className="text-gray-400 hover:text-blue-400 transition-colors duration-300"
+              >
                 Contact Us
               </a>
             </div>
