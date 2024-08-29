@@ -3,8 +3,36 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 
-const LandingPage = () => {
+const LandingPage: React.FC = () => {
   const router = useRouter();
+
+  const features: string[] = [
+    'Scan QR codes for instant payments',
+    'Receive funds via your unique QR',
+    'Send and receive using Nexus ID',
+  ];
+
+  const steps: Array<{
+    title: string;
+    description: string;
+    icon: string;
+  }> = [
+    {
+      title: '1. Sign Up',
+      description: 'Create your account and get your unique Nexus ID',
+      icon: 'M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z',
+    },
+    {
+      title: '2. Add Funds',
+      description: 'Deposit crypto into your NexusPay wallet',
+      icon: 'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z',
+    },
+    {
+      title: '3. Start Paying',
+      description: 'Use NexusPay for your everyday transactions',
+      icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
+    },
+  ];
 
   return (
     <>
@@ -47,11 +75,7 @@ const LandingPage = () => {
                 Features That Empower You
               </h2>
               <ul className="space-y-8">
-                {[
-                  'Scan QR codes for instant payments',
-                  'Receive funds via your unique QR',
-                  'Send and receive using Nexus ID',
-                ].map((feature, index) => (
+                {features.map((feature, index) => (
                   <li key={index} className="flex items-center text-lg group">
                     <svg
                       className="w-8 h-8 mr-4 text-green-500 group-hover:text-green-400 transition-colors duration-300"
@@ -110,23 +134,7 @@ const LandingPage = () => {
               How It Works
             </h2>
             <div className="grid md:grid-cols-3 gap-16">
-              {[
-                {
-                  title: '1. Sign Up',
-                  description: 'Create your account and get your unique Nexus ID',
-                  icon: 'M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z',
-                },
-                {
-                  title: '2. Add Funds',
-                  description: 'Deposit crypto into your NexusPay wallet',
-                  icon: 'M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z',
-                },
-                {
-                  title: '3. Start Paying',
-                  description: 'Use NexusPay for your everyday transactions',
-                  icon: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
-                },
-              ].map((step, index) => (
+              {steps.map((step, index) => (
                 <div
                   key={index}
                   className="bg-gray-700 rounded-2xl p-10 text-center hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 hover:bg-gray-600"
