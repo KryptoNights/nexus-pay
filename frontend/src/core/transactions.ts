@@ -168,7 +168,9 @@ export const get_transaction_history = async (address: string, offset: number): 
               }
               account_transactions(where: $accountTransactionsWhere2, order_by: $accountTransactionsOrderBy2, limit: $limit, offset: $accountTransactionsOffset2) {
                 transaction_version
+               
                 user_transaction {
+                  
                   sender
                 }
               }
@@ -194,6 +196,8 @@ export const get_transaction_history = async (address: string, offset: number): 
                 headers: { 'content-type': 'application/json' }
             }
         );
+
+        console.log(response)
 
         const raw_fungible_asset_activities: FungibleAssetActivity[] = response.data.data.fungible_asset_activities;
         console.log("raw", raw_fungible_asset_activities);

@@ -89,7 +89,7 @@ const TransactionTable: NextPage = () => {
               <th>Action</th>
               <th>Amount</th>
               <th>Sender</th>
-              <th>Gas Fee</th>
+              <th>Txn Hash</th>
               <th>Status</th>
             </tr>
           </thead>
@@ -108,9 +108,18 @@ const TransactionTable: NextPage = () => {
                     {collapseAddress(transaction?.sender || "") || "N/A"}
                   </td>
                   <td>
-                    {transaction.gas_fee !== undefined
-                      ? divideByTenMillion(transaction.gas_fee)
-                      : ""}
+                    {transaction.version !== undefined ? (
+                      <a
+                        href={`https://explorer.aptoslabs.com/txn/${transaction?.version}?network=testnet`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ textDecoration: "underline" }}
+                      >
+                        {transaction?.version}
+                      </a>
+                    ) : (
+                      ""
+                    )}
                   </td>
                   <td>
                     <span
