@@ -158,7 +158,7 @@ const Home: NextPage = () => {
                 {suggestions?.map((suggestion, index) => (
                   <li
                     key={index}
-                    className="p-2 hover:bg-gray-100 cursor-pointer text-sm sm:text-base"
+                    className="p-2 hover:bg-gray-500 cursor-pointer text-sm sm:text-base bg-[#0D0D0D]"
                     onClick={() => {
                       setRecipientAddress(suggestion);
                       setSuggestions([]);
