@@ -61,18 +61,23 @@ const Home: NextPage = () => {
       activeAccountAdress &&
       idToken?.state?.accounts[0]?.idToken?.raw
     ) {
-      const response = axios.post(
-        "https://nexus-link-mail-id-to-wallet-7kxt74l7iq-uc.a.run.app",
-        {
-          wallet: activeAccountAdress,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${idToken?.state?.accounts[0]?.idToken?.raw}`,
+      try {
+        const response = axios.post(
+          "https://nexus-link-mail-id-to-wallet-7kxt74l7iq-uc.a.run.app",
+          {
+            wallet: activeAccountAdress,
           },
-        }
-      );
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${idToken?.state?.accounts[0]?.idToken?.raw}`,
+            },
+          }
+        );
+      } catch (error) {
+        console.log(error);
+        //add mixpanel event here
+      }
     }
     fetchBalances();
   }, [activeAccountAdress]);
