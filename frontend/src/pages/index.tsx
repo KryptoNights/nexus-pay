@@ -126,8 +126,8 @@ const LandingPage: React.FC = () => {
               Crypto Payments Simplified
             </h1>
             <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed mb-8">
-              Pay, send, and receive crypto in your everyday life with
-              unparalleled ease and security
+              Effortless Crypto Payments for Consumers and Merchants – Anytime,
+              Anywhere with NexusPay
             </p>
             <button
               className="py-3 px-8 bg-blue-600 text-white rounded-full text-lg font-semibold hover:bg-blue-700 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 shadow-xl hover:shadow-blue-500/30"
