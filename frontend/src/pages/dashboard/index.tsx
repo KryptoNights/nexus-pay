@@ -2,7 +2,11 @@ import Layout from "@/components/Layout/Layout";
 import ReceiveModal from "@/components/ReceiveModal/ReceiveModal";
 import ScannerModal from "@/components/ScannerModal/ScannerModal";
 import TransferModal from "@/components/TransferModal/TransferModal";
-import { get_nexus_ids_starting_with, getBalances } from "@/core/transactions";
+import {
+  get_nexus_id_from_wallet,
+  get_nexus_ids_starting_with,
+  getBalances,
+} from "@/core/transactions";
 import { divideByTenMillion } from "@/core/utils";
 import type { NextPage } from "next";
 import Head from "next/head";
@@ -71,6 +75,18 @@ const Home: NextPage = () => {
       );
     }
     fetchBalances();
+  }, [activeAccountAdress]);
+
+  //fetch nexus id for a wallet
+  useEffect(() => {
+    const fetchNexusId = async () => {
+      const response = await get_nexus_id_from_wallet(
+        idToken?.state?.accounts[0]?.idToken?.raw,
+        activeAccountAdress
+      );
+      console.log("here", response);
+    };
+    fetchNexusId();
   }, [activeAccountAdress]);
 
   // mixpanel.identify(`${activeAccount}`);
