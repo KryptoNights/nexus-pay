@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { GOOGLE_CLIENT_ID } from "../../core/constants";
 import useEphemeralKeyPair from "../../core/useEphemeralKeyPair";
@@ -8,15 +8,16 @@ import { setAuthData } from "@/redux/reducers/authReducer";
 import Layout from "@/components/Layout/Layout";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import Image from 'next/image';
+import Image from "next/image";
 
 function LoginPage() {
+  console.log("here");
   const dispatch = useDispatch();
   const ephemeralKeyPair = useEphemeralKeyPair();
 
   const redirectUrl = new URL("https://accounts.google.com/o/oauth2/v2/auth");
 
-  if (typeof window === "undefined") return;
+  // if (typeof window === "undefined") return;
 
   const searchParams = new URLSearchParams({
     /**
@@ -43,18 +44,19 @@ function LoginPage() {
 
   const router = useRouter();
   const openPopup = () => {
-    const popup = window.open(redirectUrl, '“popup', 'popup=true');
+    const popup = window.open(redirectUrl, "“popup", "popup=true");
     if (!popup) {
-      alert('Popup blocked! Please allow popups for this site.');
+      alert("Popup blocked! Please allow popups for this site.");
       return;
     }
     if (popup) {
       const checkPopup = setInterval(() => {
-        if (popup?.window?.location?.href?.includes('id_token')) {
-
+        if (popup?.window?.location?.href?.includes("id_token")) {
           let idToken;
           if (popup?.localStorage?.getItem("@aptos-connect/keyless-accounts")) {
-            idToken = JSON.parse(popup.localStorage.getItem("@aptos-connect/keyless-accounts"));
+            idToken = JSON.parse(
+              popup.localStorage.getItem("@aptos-connect/keyless-accounts")
+            );
             console.log("id", idToken);
 
             dispatch(setAuthData(idToken));
@@ -68,14 +70,14 @@ function LoginPage() {
 
           popup.close();
 
-          router.push(path)
+          router.push(path);
           // window.location.replace(popup.window.location.href);
         }
         if (!popup || !popup.closed) return;
         clearInterval(checkPopup);
       }, 1000);
     }
-  }
+  };
 
   return (
     <>
@@ -94,7 +96,9 @@ function LoginPage() {
               height={80}
               className="mx-auto mb-4"
             />
-            <h1 className="text-3xl font-bold text-white">Welcome to NexusPay</h1>
+            <h1 className="text-3xl font-bold text-white">
+              Welcome to NexusPay
+            </h1>
             <p className="mt-2 text-gray-400">Secure payments, simplified.</p>
           </div>
 
@@ -110,10 +114,14 @@ function LoginPage() {
 
           <div className="mt-8 text-center">
             <p className="text-sm text-gray-400">
-              By signing in, you agree to our{' '}
-              <a href="#" className="text-indigo-400 hover:text-indigo-300">Terms of Service</a>
-              {' '}and{' '}
-              <a href="#" className="text-indigo-400 hover:text-indigo-300">Privacy Policy</a>
+              By signing in, you agree to our{" "}
+              <a href="#" className="text-indigo-400 hover:text-indigo-300">
+                Terms of Service
+              </a>{" "}
+              and{" "}
+              <a href="#" className="text-indigo-400 hover:text-indigo-300">
+                Privacy Policy
+              </a>
             </p>
           </div>
         </div>
