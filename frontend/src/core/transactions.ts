@@ -126,6 +126,23 @@ export const get_wallet_from_nexus_id = async (id_token: string, nexus_id: strin
     return response.data.wallet;
 }
 
+export const get_nexus_id_from_wallet = async (id_token: string, wallet: string): Promise<string> => {
+    const response = await axios.post(
+        'https://nexus-fetch-id-for-wallet-876401151866.us-central1.run.app',
+        {
+            wallet: wallet
+        },
+        {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${id_token}`
+            },
+        }
+    );
+    console.log(response);
+    return response.data;
+}
+
 interface FungibleAssetActivity {
     amount: number;
     type: string;
