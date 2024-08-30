@@ -32,7 +32,22 @@ const LandingPage: React.FC = () => {
   };
 
   const handleScroll = (ref: React.RefObject<HTMLElement>) => {
-    ref.current?.scrollIntoView({ behavior: "smooth" });
+    if (ref.current) {
+      const rect = ref.current.getBoundingClientRect();
+
+      const scrollPosition = window.scrollY + rect.top;
+
+      const headerHeight = 72;
+
+      const bufferOffset = 100;
+
+      const targetScrollPosition = scrollPosition - headerHeight - bufferOffset;
+
+      window.scrollTo({
+        top: targetScrollPosition,
+        behavior: "smooth",
+      });
+    }
   };
 
   const steps: Array<{
