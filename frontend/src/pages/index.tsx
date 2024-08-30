@@ -28,11 +28,7 @@ const LandingPage: React.FC = () => {
   ];
 
   const handleRedirect = () => {
-    if (Object.keys(activeAccountAdress).length === 0) {
-      router.push("/LoginPage");
-    } else {
-      router.push("/dashboard");
-    }
+    router.push("/dashboard");
   };
 
   const handleScroll = (ref: React.RefObject<HTMLElement>) => {
@@ -83,7 +79,10 @@ const LandingPage: React.FC = () => {
       <div className="min-h-screen bg-gradient-to-b  text-white flex flex-col bg-[#0D0D0D]">
         <nav className="sticky top-0 z-50  bg-opacity-90 backdrop-filter backdrop-blur-lg bg-[#0D0D0D]">
           <div className="container mx-auto px-6 py-4 flex justify-between items-center">
-            <div onClick={() => handleScroll(headerRef)} className="text-3xl font-bold text-blue-400 hover:text-blue-300 transition-colors duration-300 hover:cursor-pointer">
+            <div
+              onClick={() => handleScroll(headerRef)}
+              className="text-3xl font-bold text-blue-400 hover:text-blue-300 transition-colors duration-300 hover:cursor-pointer"
+            >
               NexusPay
             </div>
             <div className="space-x-4 hidden md:flex md:items-center">
@@ -115,7 +114,10 @@ const LandingPage: React.FC = () => {
           </div>
         </nav>
 
-        <main ref={headerRef} className="flex-grow container mx-auto px-6 py-16 lg:px-20 bg-[#0D0D0D]">
+        <main
+          ref={headerRef}
+          className="flex-grow container mx-auto px-6 py-16 lg:px-20 bg-[#0D0D0D]"
+        >
           <header
             className="text-center mb-24 min-h-screen flex flex-col  items-center "
             data-aos="fade-up"
