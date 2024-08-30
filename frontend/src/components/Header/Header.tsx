@@ -132,6 +132,7 @@ const Header = ({ title }: HeaderProps) => {
                   height={80}
                   alt="profile"
                   className="rounded-full"
+                  loading="lazy"
                 />
               </button>
             )}

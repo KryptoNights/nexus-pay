@@ -105,7 +105,7 @@ const LandingPage: React.FC = () => {
                 FAQs
               </a>
               <button
-                className="text-sm py-2 px-6 bg-blue-600 rounded-full font-medium hover:bg-blue-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 shadow-lg hover:shadow-blue-500/30"
+                className="text-sm py-2 px-6 bg-blue-600 rounded-full font-medium hover:bg-blue-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 shadow-xl shadow-blue-500/30"
                 onClick={handleRedirect}
               >
                 Login
