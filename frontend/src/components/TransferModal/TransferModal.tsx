@@ -80,9 +80,11 @@ const TransferModal = ({
     transferAmount === "" ||
     parseFloat(transferAmount) <= 0 ||
     isLoading ||
-    !recipientAddress 
-    // (!isValidWalletAddress(recipientAddress) ||
-    //   !isValidCustomText(recipientAddress));
+    !recipientAddress ||
+    !(
+      !isValidWalletAddress(recipientAddress) ||
+      !isValidCustomText(recipientAddress)
+    );
 
   return (
     <div

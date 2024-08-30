@@ -6,7 +6,7 @@ import clsx from "clsx";
 
 const SidebarFooter = () => {
   return (
-    <div className="rounded-box m-2 bg-base-200 p-4">
+    <div className="rounded-box m-2 bg-base-100 p-4">
       <div
         className={clsx(
           styles.hide,

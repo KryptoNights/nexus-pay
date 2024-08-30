@@ -78,16 +78,16 @@ const Home: NextPage = () => {
   }, [activeAccountAdress]);
 
   //fetch nexus id for a wallet
-  useEffect(() => {
-    const fetchNexusId = async () => {
-      const response = await get_nexus_id_from_wallet(
-        idToken?.state?.accounts[0]?.idToken?.raw,
-        activeAccountAdress
-      );
-      console.log("here", response);
-    };
-    fetchNexusId();
-  }, [activeAccountAdress]);
+  // useEffect(() => {
+  //   const fetchNexusId = async () => {
+  //     const response = await get_nexus_id_from_wallet(
+  //       idToken?.state?.accounts[0]?.idToken?.raw,
+  //       activeAccountAdress
+  //     );
+  //     console.log("here", response);
+  //   };
+  //   fetchNexusId();
+  // }, [activeAccountAdress]);
 
   // mixpanel.identify(`${activeAccount}`);
 

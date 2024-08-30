@@ -26,7 +26,7 @@ export function Sidebar({ children }: any) {
           className="drawer-overlay drawer-button z-10"
         ></label>
         <div className="menu z-0 h-[100vh] w-72 p-3 pr-5 text-base-content">
-          <div className="card h-full bg-base-100 shadow-xl">
+          <div className="card h-full bg-base-200 shadow-xl">
             {/* <Logo /> */}
             <SidebarNavigation
               navigation={navigation}

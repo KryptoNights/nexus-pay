@@ -106,7 +106,7 @@ const Header = ({ title }: HeaderProps) => {
   }, [activeAccountAdress]);
 
   return (
-    <div className="navbar sticky top-0 z-50 bg-base-200 bg-opacity-90 p-2 sm:p-4">
+    <div className="navbar sticky top-0 z-50 bg-[#0D0D0D] bg-opacity-90 p-2 sm:p-4">
       <div className="flex w-full flex-col sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center justify-between w-full sm:w-auto">
           <div className="flex items-center gap-3">

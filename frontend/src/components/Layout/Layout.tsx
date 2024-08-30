@@ -69,11 +69,11 @@ const Layout = ({ title, children, className }: Props) => {
 
   return (
     <SidebarProvider>
-      <div className={clsx(className, "bg-base-200")}>
+      <div className={clsx(className, "bg-[#0D0D0D]")}>
         <Sidebar>
           <div className="flex min-h-screen flex-col">
             <Header title={title} />
-            <div className="mx-4 mb-4 block flex-grow">{children}</div>
+            <div className="mx-4 mb-4 block flex-grow ">{children}</div>
           </div>
         </Sidebar>
       </div>
