@@ -119,7 +119,7 @@ const LandingPage: React.FC = () => {
           className="flex-grow container mx-auto px-6 py-16 lg:px-20 bg-[#0D0D0D]"
         >
           <header
-            className="text-center mb-24 min-h-screen flex flex-col  items-center "
+            className="text-center mb-24 min-h-screen flex flex-col  items-center mt-[7vh]"
             data-aos="fade-up"
           >
             <h1 className="text-5xl md:text-7xl font-extrabold mb-8 text-blue-300">
