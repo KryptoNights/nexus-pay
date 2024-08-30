@@ -146,7 +146,7 @@ const LandingPage: React.FC = () => {
             </p>
             <button
               className="py-3 px-8 bg-blue-600 text-white rounded-full text-lg font-semibold hover:bg-blue-700 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 shadow-xl hover:shadow-blue-500/30"
-              onClick={() => router.push("/LoginPage")}
+              onClick={() => router.push("/login")}
             >
               Start Paying now
             </button>

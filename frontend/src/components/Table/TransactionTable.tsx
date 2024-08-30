@@ -181,7 +181,7 @@ const TransactionTable: NextPage = () => {
         >
           New Transaction
         </button>
-        <button className="btn btn-outline">Export</button>
+        {/* <button className="btn btn-outline">Export</button> */}
       </div>
     </main>
   );

@@ -59,18 +59,17 @@ const Popup = ({
           ✕
         </button>
         <div className="flex flex-col items-center">
-          <div className="avatar">
-            <div className="w-24 rounded-full bg-pink-300 p-2">
-              <Image
-                src={
-                  idToken?.state?.accounts[0]?.idToken?.decoded?.picture ?? ""
-                }
-                width={240}
-                height={240}
-                alt="Avatar"
-                className="mask mask-squircle"
-              />
-            </div>
+          <div className="avatar" style={{ width: "6rem", height: "6rem" }}>
+            <Image
+              src={
+                idToken?.state?.accounts[0]?.idToken?.decoded?.picture ??
+                "/assets/dp.jpeg"
+              }
+              width={440}
+              height={440}
+              alt="Avatar"
+              className="mask mask-squircle rounded-full"
+            />
           </div>
           <h3 className="font-bold text-lg mt-4">
             {collapseAddress(activeAccountAdress)}

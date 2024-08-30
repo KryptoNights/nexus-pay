@@ -4,11 +4,7 @@ import SidebarToggle from "@/components/Header/SidebarToggle";
 import { getBalances } from "@/core/transactions";
 import { useKeylessAccounts } from "@/core/useKeylessAccounts";
 import { collapseAddress, divideByTenMillion } from "@/core/utils";
-import {
-  setActiveAccountAddress,
-  setAuthData,
-  setUserBalance,
-} from "@/redux/reducers/authReducer";
+import { setUserBalance } from "@/redux/reducers/authReducer";
 import { AccountAddress } from "@aptos-labs/ts-sdk";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -29,6 +25,8 @@ const Header = ({ title }: HeaderProps) => {
   const { idToken, activeAccountAdress, balance } = useSelector(
     (state: any) => state.authSlice
   );
+
+  console.log(idToken);
   const dispatch = useDispatch();
 
   const handlePopupOpen = () => {
@@ -126,7 +124,8 @@ const Header = ({ title }: HeaderProps) => {
               >
                 <Image
                   src={
-                    idToken?.state?.accounts[0]?.idToken?.decoded?.picture ?? ""
+                    idToken?.state?.accounts[0]?.idToken?.decoded?.picture ??
+                    "/assets/dp.jpeg"
                   }
                   width={80}
                   height={80}
@@ -150,7 +149,7 @@ const Header = ({ title }: HeaderProps) => {
               }
               className="btn btn-primary p-0 bg-[rgb(0,0,0)] rounded-xl hover:bg-transparent"
             >
-              <div className="hidden sm:block pt-[8px] pr-[8px] pb-[8px] pl-[12px]">
+              <div className="hidden sm:block pt-[8px] pr-[12px] pb-[8px] pl-[12px]">
                 + Add Funds
               </div>
             </button>
@@ -171,7 +170,7 @@ const Header = ({ title }: HeaderProps) => {
                     <Image
                       src={
                         idToken?.state?.accounts[0]?.idToken?.decoded
-                          ?.picture ?? ""
+                          ?.picture ?? "/assets/dp.jpeg"
                       }
                       width={24}
                       height={24}

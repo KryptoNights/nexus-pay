@@ -90,11 +90,11 @@ function LoginPage() {
         <div className="w-full max-w-md p-8 space-y-8 bg-gray-800 rounded-xl shadow-2xl">
           <div className="text-center">
             <Image
-              src="/assets/nexuspay-logo.png"
+              src="/assets/logo.jpeg"
               alt="NexusPay Logo"
               width={80}
               height={80}
-              className="mx-auto mb-4"
+              className="mx-auto mb-4 rounded-full border-black"
             />
             <h1 className="text-3xl font-bold text-white">
               Welcome to NexusPay
