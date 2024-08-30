@@ -91,7 +91,7 @@ const LandingPage: React.FC = () => {
         />
       </Head>
 
-      <div className="min-h-screen bg-gradient-to-b  text-white flex flex-col bg-[#0D0D0D]">
+      <div className="min-h-[20vh] bg-gradient-to-b  text-white flex flex-col bg-[#0D0D0D]">
         <nav className="sticky top-0 z-50  bg-opacity-90 backdrop-filter backdrop-blur-lg bg-[#0D0D0D]">
           <div className="container mx-auto px-6 py-4 flex justify-between items-center">
             <div
@@ -134,7 +134,7 @@ const LandingPage: React.FC = () => {
           className="flex-grow container mx-auto px-6 py-16 lg:px-20 bg-[#0D0D0D]"
         >
           <header
-            className="text-center mb-24 min-h-screen flex flex-col  items-center mt-[7vh]"
+            className="text-center mb-24 min-h-[20vh] flex flex-col  items-center mt-[7vh]"
             data-aos="fade-up"
           >
             <h1 className="text-5xl md:text-7xl font-extrabold mb-8 text-blue-300">
@@ -154,7 +154,7 @@ const LandingPage: React.FC = () => {
 
           <section
             ref={stepsRef}
-            className="mb-32 min-h-screen"
+            className="mb-32 min-h-[20vh]"
             data-aos="fade-up"
           >
             <h2 className="text-4xl md:text-5xl font-semibold text-center mb-16 text-blue-200">
@@ -193,7 +193,7 @@ const LandingPage: React.FC = () => {
 
           <section
             ref={featuresRef}
-            className="mb-32 min-h-screen"
+            className="mb-32 min-h-[20vh]"
             data-aos="fade-up"
           >
             <h2 className="text-4xl md:text-5xl font-semibold text-center mb-16 text-blue-200">
