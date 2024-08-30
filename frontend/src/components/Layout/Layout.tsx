@@ -60,10 +60,19 @@ const Layout = ({ title, children, className }: Props) => {
   }, []);
 
   React.useEffect(() => {
-    // if active account is  {} push to /LoginPage
+    let idToken;
+    const storedToken = localStorage.getItem("@aptos-connect/keyless-accounts");
+    if (storedToken) {
+      idToken = JSON.parse(storedToken);
+      dispatch(setAuthData(idToken));
+    }
+  }, []);
+
+  React.useEffect(() => {
+    // if active account is  {} push to /login
     if (Object.keys(activeAccountAdress).length === 0) {
       console.log(activeAccountAdress);
-      router.push("/LoginPage");
+      router.push("/login");
     }
   }, [activeAccountAdress]);
 

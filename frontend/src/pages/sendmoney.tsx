@@ -18,7 +18,7 @@ function TestSendMoney() {
     useKeylessAccounts();
 
   useEffect(() => {
-    if (!activeAccount) router.push("/LoginPage");
+    if (!activeAccount) router.push("/login");
   }, [activeAccount]);
 
   return (

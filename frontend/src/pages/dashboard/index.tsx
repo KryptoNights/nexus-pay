@@ -99,7 +99,7 @@ const Home: NextPage = () => {
 
   // mixpanel.track("page_view");
   const handleGoogleSignIn = () => {
-    router.push("/LoginPage");
+    router.push("/login");
   };
 
   const handleInputChange = async (

@@ -13,14 +13,14 @@ function MyApp({ Component, pageProps }: AppProps) {
   if (!typeof window) React.useLayoutEffect = useEffect;
   localStorage.setItem("theme", "dark");
 
-  React.useEffect(() => {
-    // write useEffect if we are not having any key related to @aptos-connect/keyless-accounts redirect to 3000
-    if (!localStorage.getItem("@aptos-connect/keyless-accounts")) {
-      router.push("/");
-    } else {
-      // router.push("/dashboard");
-    }
-  });
+  // React.useEffect(() => {
+  //   // write useEffect if we are not having any key related to @aptos-connect/keyless-accounts redirect to 3000
+  //   if (!localStorage.getItem("@aptos-connect/keyless-accounts")) {
+  //     router.push("/");
+  //   } else {
+  //     // router.push("/dashboard");
+  //   }
+  // });
 
   return (
     <Provider store={store}>
