@@ -5,11 +5,14 @@ import QRCode from "react-qr-code";
 const ReceiveModal = ({
   onClose,
   activeAccount,
+  selfNexusId,
 }: {
   onClose: () => void;
   activeAccount: any;
+  selfNexusId: any;
 }) => {
-  const sampleUsername = "kavish.nexus";
+
+  const nexusId = selfNexusId || "Can't find Nexus ID";
   const [copyFeedback, setCopyFeedback] = useState("");
   const [amount, setAmount] = useState("");
   const [qrString, setQrString] = useState("");
@@ -82,9 +85,9 @@ const ReceiveModal = ({
           <div className="text-sm w-full">
             <p>Or use your Nexus username:</p>
             <div className="flex items-center bg-gray-700 p-2 rounded">
-              <p className="font-mono flex-grow">{sampleUsername}</p>
+              <p className="font-mono flex-grow">{nexusId}</p>
               <button
-                onClick={() => handleCopy(sampleUsername, "Username")}
+                onClick={() => handleCopy(nexusId, "Username")}
                 className="ml-2 text-primary hover:text-primary-focus"
                 title="Copy username"
               >

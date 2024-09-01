@@ -30,6 +30,8 @@ const Home: NextPage = () => {
   const [transferAmount, setTransferAmount]: any = useState("");
   const [transferError, setTransferError] = useState("");
 
+  const [selfNexusId, setselfNexusId] = useState("");
+
   const { activeAccountAdress, idToken, balance } = useSelector(
     (state: any) => state.authSlice
   );
@@ -83,17 +85,35 @@ const Home: NextPage = () => {
     fetchBalances();
   }, [activeAccountAdress]);
 
-  //fetch nexus id for a wallet
-  // useEffect(() => {
-  //   const fetchNexusId = async () => {
-  //     const response = await get_nexus_id_from_wallet(
-  //       idToken?.state?.accounts[0]?.idToken?.raw,
-  //       activeAccountAdress
-  //     );
-  //     console.log("here", response);
-  //   };
-  //   fetchNexusId();
-  // }, [activeAccountAdress]);
+  // fetch nexus id for a wallet
+  useEffect(() => {
+    const fetchNexusId = async () => {
+      if (
+        typeof window !== "undefined" &&
+        activeAccountAdress &&
+        idToken?.state?.accounts[0]?.idToken?.raw
+      ) {
+        const response = await get_nexus_id_from_wallet(idToken?.state?.accounts[0]?.idToken?.raw, activeAccountAdress);
+        setselfNexusId(response.ids[0]);
+        // .post(
+        //   'https://nexus-fetch-id-for-wallet-876401151866.us-central1.run.app',
+        //   {
+        //     wallet: activeAccountAdress
+        //   },
+        //   {
+        //     headers: {
+        //       'Content-Type': 'application/json',
+        //       Authorization: `Bearer ${idToken?.state?.accounts[0]?.idToken?.raw}`
+        //     },
+        //   }
+        // );
+        console.log("FETCH RESPONSE", response);
+      } else {
+        console.log("No active account address");
+      }
+    };
+    fetchNexusId();
+  }, [activeAccountAdress]);
 
   // mixpanel.identify(`${activeAccount}`);
 
@@ -223,6 +243,7 @@ const Home: NextPage = () => {
             <ReceiveModal
               onClose={() => setIsReceiveModalOpen(false)}
               activeAccount={activeAccountAdress}
+              selfNexusId={selfNexusId}
             />
           )}
 
