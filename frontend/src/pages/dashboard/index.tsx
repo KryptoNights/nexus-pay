@@ -152,7 +152,7 @@ const Home: NextPage = () => {
     } else {
       setIsTransferModalOpen(false);
       setRecipientAddress("");
-      setTransferAmount(0);
+      setTransferAmount("");
     }
   }, [router]);
   const handleInputChange = async (

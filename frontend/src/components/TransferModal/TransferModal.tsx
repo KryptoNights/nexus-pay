@@ -102,6 +102,21 @@ const TransferModal = ({
         </button>
         <h3 className="font-bold text-lg mb-4">Transfer APT</h3>
         <div className="flex flex-col items-center gap-4">
+          {/* Show recipient address and gas fees */}
+          {recipientAddress && (
+            <>
+              <p className="text-sm text-white">Recipient:</p>
+              <input
+                type=""
+                placeholder="Receipient"
+                className="input input-bordered input-primary w-full"
+                value={recipientAddress}
+                disabled={true}
+              />
+              {/* gas fees currently hardcoded */}
+              <p className="text-sm text-white">Gas Fee: 0.01 APT</p>
+            </>
+          )}
           <div className="w-full">
             <input
               type="number"
@@ -115,14 +130,13 @@ const TransferModal = ({
               <p className="text-error text-sm mt-1">{transferError}</p>
             )}
           </div>
-          <p className="text-sm">
-            Balance: {balance} APT
-            {!recipientAddress && (
-              <p className="text-sm text-red-500">
-                Please enter address or Nexus id
-              </p>
-            )}
-          </p>
+          <p className="text-sm">Balance: {balance} APT</p>
+
+          {!recipientAddress && (
+            <p className="text-sm text-red-500">
+              Please enter address or Nexus id
+            </p>
+          )}
 
           {isSuccess ? (
             <div className="text-green-500 flex items-center">
