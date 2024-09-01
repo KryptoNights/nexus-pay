@@ -51,7 +51,13 @@ function LoginPage() {
     }
     if (popup) {
       const checkPopup = setInterval(() => {
-        if (popup?.window?.location?.href?.includes("id_token")) {
+        if (
+          popup &&
+          popup?.window &&
+          popup.window?.location &&
+          popup?.window?.location?.href &&
+          popup?.window?.location?.href?.includes("id_token")
+        ) {
           let idToken;
           if (popup?.localStorage?.getItem("@aptos-connect/keyless-accounts")) {
             idToken = JSON.parse(
