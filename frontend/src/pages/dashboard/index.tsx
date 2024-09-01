@@ -159,12 +159,16 @@ const Home: NextPage = () => {
   const handleInputChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const value = event.target.value;
+    let value = event.target.value;
     setRecipientAddress(value);
 
     if (value.length > 2) {
       try {
         const id_token = idToken?.state?.accounts[0]?.idToken?.raw;
+        //make first letter smallcase and then search for id
+        if (value.length > 0 && value[0] === value[0].toUpperCase()) {
+          value = value[0].toLowerCase() + value.slice(1);
+        }
         const results: string[] = await get_nexus_ids_starting_with(
           id_token,
           value
