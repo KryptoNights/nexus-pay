@@ -111,7 +111,6 @@ const Home: NextPage = () => {
         //     },
         //   }
         // );
-        console.log("FETCH RESPONSE", response);
       } else {
         console.log("No active account address");
       }

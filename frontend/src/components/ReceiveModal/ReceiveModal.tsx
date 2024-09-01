@@ -11,10 +11,9 @@ const ReceiveModal = ({
   activeAccount: any;
   selfNexusId: any;
 }) => {
-
   const nexusId = selfNexusId || "Can't find Nexus ID";
   const [copyFeedback, setCopyFeedback] = useState("");
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState<string>(""); // Initialize as an empty string
   const [qrString, setQrString] = useState("");
 
   const handleCopy = (text: string, type: string) => {
@@ -31,12 +30,10 @@ const ReceiveModal = ({
   };
 
   React.useEffect(() => {
-    let actualAmount = amount;
+    const actualAmount = amount || ""; // Ensure amount is a valid string for URL
     const baseUrl = `https://nexuspay.vercel.app/dashboard?address=${activeAccount}&amount=${actualAmount}`;
     setQrString(baseUrl);
   }, [activeAccount, amount]);
-
-  console.log(qrString);
 
   return (
     <div
@@ -63,7 +60,8 @@ const ReceiveModal = ({
                 type="number"
                 className="bg-gray-700 rounded w-full"
                 value={amount}
-                onChange={(e) => setAmount(Number(e.target.value))}
+                onChange={(e) => setAmount(e.target.value)} // Update to handle empty input
+                placeholder="Enter amount"
               />
             </div>
           </div>
@@ -119,7 +117,6 @@ const ReceiveModal = ({
               </button>
             </div>
           </div>
-          
           {copyFeedback && (
             <div className="text-sm text-secondary animate-fade-in-out">
               {copyFeedback}
