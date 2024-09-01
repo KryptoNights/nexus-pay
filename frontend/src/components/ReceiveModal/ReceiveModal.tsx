@@ -49,7 +49,7 @@ const ReceiveModal = ({
         </button>
         <h3 className="font-bold text-lg mb-4">Receive Funds</h3>
         <div className="flex flex-col items-center gap-4">
-          <div className="relative">
+          <div className="relative p-[5px] bg-white">
             {/* QR generator */}
             <QRCode value={qrString} size={200} />
           </div>
