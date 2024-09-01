@@ -1,3 +1,4 @@
+import React from "react";
 import { useState } from "react";
 import QRCode from "react-qr-code";
 
@@ -8,9 +9,10 @@ const ReceiveModal = ({
   onClose: () => void;
   activeAccount: any;
 }) => {
-
   const sampleUsername = "kavish.nexus";
   const [copyFeedback, setCopyFeedback] = useState("");
+  const [amount, setAmount] = useState("");
+  const [qrString, setQrString] = useState("");
 
   const handleCopy = (text: string, type: string) => {
     navigator.clipboard
@@ -24,6 +26,14 @@ const ReceiveModal = ({
         setCopyFeedback("Failed to copy");
       });
   };
+
+  React.useEffect(() => {
+    let actualAmount = amount;
+    const baseUrl = `http://localhost:3000/dashboard?address=${activeAccount}&amount=${actualAmount}`;
+    setQrString(baseUrl);
+  }, [activeAccount, amount]);
+
+  console.log(qrString);
 
   return (
     <div
@@ -41,7 +51,7 @@ const ReceiveModal = ({
         <div className="flex flex-col items-center gap-4">
           <div className="relative">
             {/* QR generator */}
-            <QRCode value={activeAccount} size={200} />
+            <QRCode value={qrString} size={200} />
           </div>
           <div className="text-sm w-full">
             <p>Wallet Address:</p>
@@ -93,6 +103,17 @@ const ReceiveModal = ({
                   />
                 </svg>
               </button>
+            </div>
+          </div>
+          <div className="text-sm w-full">
+            <p>Amount :</p>
+            <div className="flex items-center bg-gray-700 p-2 rounded">
+              <input
+                type="number"
+                className="bg-gray-700 p-2 rounded w-full"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+              />
             </div>
           </div>
           {copyFeedback && (
