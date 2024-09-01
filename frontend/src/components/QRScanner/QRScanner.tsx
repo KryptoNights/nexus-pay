@@ -2,10 +2,12 @@ import QrScanner from "qr-scanner";
 import { useEffect, useRef, useState } from "react";
 import styles from "./QRScanner.module.css";
 import { isValidCustomText, isValidWalletAddress } from "@/core/utils";
+import { useRouter } from "next/router";
 
 const QRScanner = ({ setRecipientAddress, handlePopupClose }: any) => {
   const videoElementRef = useRef<HTMLVideoElement>(null);
   const [error, setError] = useState("");
+  const router = useRouter();
 
   useEffect(() => {
     const video = videoElementRef.current;
@@ -15,12 +17,19 @@ const QRScanner = ({ setRecipientAddress, handlePopupClose }: any) => {
         video,
         (result) => {
           const scannedResult = result.data.trim();
+          const parsedUrl = new URL(scannedResult);
+          router.push(parsedUrl);
 
-          if (
-            isValidWalletAddress(scannedResult) ||
-            isValidCustomText(scannedResult)
-          ) {
-            setRecipientAddress(scannedResult);
+          const params = new URLSearchParams(parsedUrl.search);
+
+          const address = params.get("address");
+          const amount = params.get("amount");
+
+          console.log("Address:", address);
+          console.log("Amount:", amount);
+
+          if (scannedResult) {
+            setRecipientAddress(address);
             handlePopupClose();
           } else {
             console.error("Invalid QR code scanned");
