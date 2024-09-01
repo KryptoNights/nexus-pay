@@ -94,7 +94,10 @@ const Home: NextPage = () => {
         activeAccountAdress &&
         idToken?.state?.accounts[0]?.idToken?.raw
       ) {
-        const response = await get_nexus_id_from_wallet(idToken?.state?.accounts[0]?.idToken?.raw, activeAccountAdress);
+        const response = await get_nexus_id_from_wallet(
+          idToken?.state?.accounts[0]?.idToken?.raw,
+          activeAccountAdress
+        );
         setselfNexusId(response.ids[0]);
         // .post(
         //   'https://nexus-fetch-id-for-wallet-876401151866.us-central1.run.app',
@@ -137,6 +140,11 @@ const Home: NextPage = () => {
     // console.log(address);
     // console.log(amount);
     setRecipientAddress(address);
+    if (Number(amount) == 0) {
+      setTransferAmount(amount);
+      setIsTransferModalOpen(true);
+      setPaymentviaDynamicQR(false);
+    }
     if (Number(amount) > 0) {
       setTransferAmount(amount);
       setIsTransferModalOpen(true);
