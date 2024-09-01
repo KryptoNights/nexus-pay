@@ -139,8 +139,8 @@ const Home: NextPage = () => {
     const amount = params.get("amount");
     // console.log(address);
     // console.log(amount);
-    setRecipientAddress(address);
     if (Number(amount) == 0) {
+      setRecipientAddress(address);
       setTransferAmount(amount);
       setIsTransferModalOpen(true);
       setPaymentviaDynamicQR(false);
