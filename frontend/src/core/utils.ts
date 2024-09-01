@@ -7,8 +7,12 @@ export const collapseAddress = (address: any): string => {
   }
 };
 
-export const divideByTenMillion = (value:number) => {
+export const convertOctaToApt = (value:number) => {
   return value/100000000;
+}
+
+export const convertAptToOcta = (transferAmount: number) => {
+  return transferAmount * 10e7;
 }
 
 export const getAddressAsString = (address: any): any => {

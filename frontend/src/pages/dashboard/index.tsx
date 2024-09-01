@@ -7,7 +7,7 @@ import {
   get_nexus_ids_starting_with,
   getBalances,
 } from "@/core/transactions";
-import { divideByTenMillion } from "@/core/utils";
+import { convertOctaToApt } from "@/core/utils";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -50,10 +50,10 @@ const Home: NextPage = () => {
     const fetchBalances = async () => {
       if (activeAccountAdress) {
         const getBalancesResponse = await getBalances(activeAccountAdress);
-        console.log(divideByTenMillion(getBalancesResponse[0]?.amount));
+        console.log(convertOctaToApt(getBalancesResponse[0]?.amount));
 
         dispatch(
-          setUserBalance(divideByTenMillion(getBalancesResponse[0]?.amount))
+          setUserBalance(convertOctaToApt(getBalancesResponse[0]?.amount))
         );
       }
     };

@@ -3,7 +3,7 @@
 import SidebarToggle from "@/components/Header/SidebarToggle";
 import { getBalances } from "@/core/transactions";
 import { useKeylessAccounts } from "@/core/useKeylessAccounts";
-import { collapseAddress, divideByTenMillion } from "@/core/utils";
+import { collapseAddress, convertOctaToApt } from "@/core/utils";
 import { setUserBalance } from "@/redux/reducers/authReducer";
 import { AccountAddress } from "@aptos-labs/ts-sdk";
 import dynamic from "next/dynamic";
@@ -94,7 +94,7 @@ const Header = ({ title }: HeaderProps) => {
         const getBalancesResponse = await getBalances(activeAccountAdress);
 
         dispatch(
-          setUserBalance(divideByTenMillion(getBalancesResponse[0]?.amount))
+          setUserBalance(convertOctaToApt(getBalancesResponse[0]?.amount))
         );
       }
     };

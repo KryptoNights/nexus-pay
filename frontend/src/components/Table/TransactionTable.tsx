@@ -3,7 +3,7 @@
 import Layout from "@/components/Layout/Layout";
 import { get_transaction_history } from "@/core/transactions";
 import { useKeylessAccounts } from "@/core/useKeylessAccounts";
-import { collapseAddress, divideByTenMillion } from "@/core/utils";
+import { collapseAddress, convertOctaToApt } from "@/core/utils";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -102,7 +102,7 @@ const TransactionTable: NextPage = () => {
                 >
                   <td>{transaction.action}</td>
                   <td className="text-center">
-                    {divideByTenMillion(transaction?.amount)} APT
+                    {convertOctaToApt(transaction?.amount)} APT
                   </td>
                   <td className="truncate max-w-[200px]">
                     {collapseAddress(transaction?.sender || "") || "N/A"}

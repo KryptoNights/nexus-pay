@@ -3,7 +3,8 @@ import { getBalances, testSendMoneyToAccount } from "@/core/transactions";
 import { useKeylessAccounts } from "@/core/useKeylessAccounts";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  divideByTenMillion,
+  convertAptToOcta,
+  convertOctaToApt,
   isValidCustomText,
   isValidWalletAddress,
 } from "@/core/utils";
@@ -49,19 +50,19 @@ const TransferModal = ({
 
       const getBalancesResponse = await getBalances(activeAccountAdress);
       dispatch(
-        setUserBalance(divideByTenMillion(getBalancesResponse[0]?.amount))
+        setUserBalance(convertOctaToApt(getBalancesResponse[0]?.amount))
       );
 
       console.log(activeAccount);
       const transactionHash = await testSendMoneyToAccount(
         recipientAddress,
         activeAccount!,
-        transferAmount * 10e7
+        convertAptToOcta(transferAmount)
       );
 
       const getBalancesRespons2 = await getBalances(activeAccountAdress);
       dispatch(
-        setUserBalance(divideByTenMillion(getBalancesRespons2[0]?.amount))
+        setUserBalance(convertOctaToApt(getBalancesRespons2[0]?.amount))
       );
 
       console.log(`Transaction successful: ${transactionHash}`);
