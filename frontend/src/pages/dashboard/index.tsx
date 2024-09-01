@@ -29,6 +29,7 @@ const Home: NextPage = () => {
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
   const [transferAmount, setTransferAmount]: any = useState("");
   const [transferError, setTransferError] = useState("");
+  const [paymentviaDynamicQR, setPaymentviaDynamicQR] = useState(false);
 
   const [selfNexusId, setselfNexusId] = useState("");
 
@@ -139,6 +140,7 @@ const Home: NextPage = () => {
     if (Number(amount) > 0) {
       setTransferAmount(amount);
       setIsTransferModalOpen(true);
+      setPaymentviaDynamicQR(true);
     } else {
       setIsTransferModalOpen(false);
       setRecipientAddress("");
@@ -268,6 +270,7 @@ const Home: NextPage = () => {
             onClose={async () => {
               router.push("/dashboard");
               await setIsTransferModalOpen(false);
+              setPaymentviaDynamicQR(false);
             }}
             balance={balance}
             transferAmount={transferAmount}
@@ -275,6 +278,7 @@ const Home: NextPage = () => {
             setTransferError={setTransferError}
             recipientAddress={recipientAddress}
             transferError={transferError}
+            paymentviaDynamicQR={paymentviaDynamicQR}
           />
         )}
       </main>

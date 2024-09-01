@@ -19,6 +19,7 @@ const TransferModal = ({
   setTransferError,
   recipientAddress,
   transferError,
+  paymentviaDynamicQR,
 }: any) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -108,7 +109,7 @@ const TransferModal = ({
               className="input input-bordered input-primary w-full"
               value={transferAmount}
               onChange={handleTransferAmountChange}
-              disabled={isLoading || isSuccess}
+              disabled={isLoading || isSuccess || paymentviaDynamicQR}
             />
             {transferError && (
               <p className="text-error text-sm mt-1">{transferError}</p>

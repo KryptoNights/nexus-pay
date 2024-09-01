@@ -57,6 +57,17 @@ const ReceiveModal = ({
             <QRCode value={qrString} size={200} />
           </div>
           <div className="text-sm w-full">
+            <p>Amount :</p>
+            <div className="flex items-center bg-gray-700 rounded">
+              <input
+                type="number"
+                className="bg-gray-700 rounded w-full"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="text-sm w-full">
             <p>Wallet Address:</p>
             <div className="flex items-center bg-gray-700 p-2 rounded">
               <p className="font-mono flex-grow truncate">{activeAccount}</p>
@@ -108,17 +119,7 @@ const ReceiveModal = ({
               </button>
             </div>
           </div>
-          <div className="text-sm w-full">
-            <p>Amount :</p>
-            <div className="flex items-center bg-gray-700 p-2 rounded">
-              <input
-                type="number"
-                className="bg-gray-700 p-2 rounded w-full"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-              />
-            </div>
-          </div>
+          
           {copyFeedback && (
             <div className="text-sm text-secondary animate-fade-in-out">
               {copyFeedback}
