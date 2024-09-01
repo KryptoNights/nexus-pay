@@ -3,12 +3,12 @@ export const collapseAddress = (address: any): string => {
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
   } else {
     console.error("Provided address is not a string:", address);
-    return ''; 
+    return '';
   }
 };
 
-export const convertOctaToApt = (value:number) => {
-  return value/100000000;
+export const convertOctaToApt = (value: number) => {
+  return value / 100000000;
 }
 
 export const convertAptToOcta = (transferAmount: number) => {
@@ -31,12 +31,14 @@ export const getAddressAsString = (address: any): any => {
 
 export const loadStateFromLocalStorage = () => {
   try {
-    const serializedState = localStorage.getItem(
-      "@aptos-connect/keyless-accounts"
-    );
-    if (serializedState === null) return undefined;
+    if (typeof window !== 'undefined') {
+      const serializedState = localStorage.getItem(
+        "@aptos-connect/keyless-accounts"
+      );
+      if (serializedState === null) return undefined;
 
-    return JSON.parse(serializedState);
+      return JSON.parse(serializedState);
+    }
   } catch (err) {
     console.error("Could not load state from localStorage", err);
     return undefined;
@@ -45,11 +47,13 @@ export const loadStateFromLocalStorage = () => {
 
 export const getStoredAddress = (): string | undefined => {
   try {
+    if (typeof window !== 'undefined') {
     const storedAddress = localStorage.getItem("activeAccount");
 
     if (storedAddress) {
       return storedAddress;
     }
+  }
   } catch (error) {
     console.error("Error parsing address:", error);
   }
