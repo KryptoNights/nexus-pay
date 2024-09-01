@@ -17,16 +17,17 @@ import axios from "axios";
 import { useKeylessAccounts } from "@/core/useKeylessAccounts";
 import mixpanel from "mixpanel-browser";
 import { setUserBalance } from "@/redux/reducers/authReducer";
+import React from "react";
 
 const Home: NextPage = () => {
-  const [recipientAddress, setRecipientAddress] = useState("");
+  const [recipientAddress, setRecipientAddress]: any = useState("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isReceiveModalOpen, setIsReceiveModalOpen] = useState(false);
   // const [balance, setBalance] = useState(0);
   const [isTransferModalOpen, setIsTransferModalOpen] = useState(false);
-  const [transferAmount, setTransferAmount] = useState("");
+  const [transferAmount, setTransferAmount]: any = useState("");
   const [transferError, setTransferError] = useState("");
 
   const { activeAccountAdress, idToken, balance } = useSelector(
@@ -107,6 +108,23 @@ const Home: NextPage = () => {
     router.push("/login");
   };
 
+  React.useEffect(() => {
+    const search = window.location.search;
+    const params = new URLSearchParams(search);
+    const address = params.get("address");
+    const amount = params.get("amount");
+    // console.log(address);
+    // console.log(amount);
+    setRecipientAddress(address);
+    if (Number(amount) > 0) {
+      setTransferAmount(amount);
+      setIsTransferModalOpen(true);
+    } else {
+      setIsTransferModalOpen(false);
+      setRecipientAddress("");
+      setTransferAmount(0);
+    }
+  }, [router]);
   const handleInputChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -226,7 +244,10 @@ const Home: NextPage = () => {
 
         {isTransferModalOpen && (
           <TransferModal
-            onClose={() => setIsTransferModalOpen(false)}
+            onClose={async () => {
+              router.push("/dashboard");
+              await setIsTransferModalOpen(false);
+            }}
             balance={balance}
             transferAmount={transferAmount}
             setTransferAmount={setTransferAmount}
