@@ -14,7 +14,7 @@ const ReceiveModal = ({
 
   const nexusId = selfNexusId || "Can't find Nexus ID";
   const [copyFeedback, setCopyFeedback] = useState("");
-  const [amount, setAmount] = useState("");
+  const [amount, setAmount] = useState(0);
   const [qrString, setQrString] = useState("");
 
   const handleCopy = (text: string, type: string) => {
@@ -63,7 +63,7 @@ const ReceiveModal = ({
                 type="number"
                 className="bg-gray-700 rounded w-full"
                 value={amount}
-                onChange={(e) => setAmount(e.target.value)}
+                onChange={(e) => setAmount(Number(e.target.value))}
               />
             </div>
           </div>
