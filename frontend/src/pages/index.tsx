@@ -68,7 +68,7 @@ const LandingPage: React.FC = () => {
     {
       title: "3. Start Paying",
       description: "Use NexusPay for your everyday transactions",
-      icon: "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z",
+      icon: "M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08 .402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z",
     },
   ];
 
@@ -193,37 +193,69 @@ const LandingPage: React.FC = () => {
 
           <section
             ref={featuresRef}
-            className="mb-32 min-h-[34vh]"
+            className="mb-32 min-h-[24vh] relative"
             data-aos="fade-up"
           >
             <h2 className="text-4xl md:text-5xl font-semibold text-center mb-16 text-blue-200">
               Features
             </h2>
-            <div className="grid md:grid-cols-3 gap-12">
-              {features.map((feature, index) => (
-                <div
-                  key={index}
-                  className="bg-gray-800 rounded-xl p-8 text-center hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
-                  data-aos="fade-up"
-                >
-                  <div className="bg-blue-600 rounded-full p-4 inline-block mb-6">
-                    <svg
-                      className="w-8 h-8 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M5 13l4 4L19 7"
-                      />
-                    </svg>
+            <div className="flex flex-col md:flex-row">
+              <div className="md:w-2/3 grid grid-cols-1 gap-12">
+                {features.map((feature, index) => (
+                  <div
+                    key={index}
+                    className="bg-gray-800 rounded-xl p-8 text-center hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
+                    data-aos="fade-up"
+                  >
+                    <div className="bg-blue-600 rounded-full p-4 inline-block mb-6">
+                      <svg
+                        className="w-8 h-8 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        {index === 0 && (
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"
+                          />
+                        )}
+                        {index === 1 && (
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"
+                          />
+                        )}
+                        {index === 2 && (
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                          />
+                        )}
+                      </svg>
+                    </div>
+                    <p className="text-lg text-gray-300">{feature}</p>
                   </div>
-                  <p className="text-lg text-gray-300">{feature}</p>
-                </div>
-              ))}
+                ))}
+              </div>
+              <div className="md:w-1/3 relative h-full">
+                <img
+                  src="https://framerusercontent.com/images/mTk6WQ1TJOjaV2L09BwQUpCD27Y.png"
+                  alt="Feature illustration 1"
+                  className="absolute top-10 right-0 w-2/3 h-auto z-10"
+                />
+                {/* <img
+                  src="https://framerusercontent.com/images/ZEk3VF9zfwucz1HFLy1iDCSSl00.png"
+                  alt="Feature illustration 2"
+                  className="absolute bottom-0 left-0 w-2/5 h-auto"
+                /> */}
+              </div>
             </div>
           </section>
 
