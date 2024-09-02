@@ -1,5 +1,4 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import QRCode from "react-qr-code";
 
 const ReceiveModal = ({
@@ -11,11 +10,11 @@ const ReceiveModal = ({
   activeAccount: any;
   selfNexusId: any;
 }) => {
-
   const nexusId = selfNexusId || "Can't find Nexus ID";
   const [copyFeedback, setCopyFeedback] = useState("");
-  const [amount, setAmount] = useState("");
+  const [amount, setAmount] = useState<string>(""); // Initialize as an empty string
   const [qrString, setQrString] = useState("");
+  const [currency, setCurrency] = useState<string>("APT"); // Currency selector state
 
   const handleCopy = (text: string, type: string) => {
     navigator.clipboard
@@ -30,13 +29,21 @@ const ReceiveModal = ({
       });
   };
 
-  React.useEffect(() => {
-    let actualAmount = amount;
-    const baseUrl = `http://localhost:3000/dashboard?address=${activeAccount}&amount=${actualAmount}`;
+  useEffect(() => {
+    const actualAmount = amount || ""; // Ensure amount is a valid string for URL
+    const baseUrl = `https://nexuspay.vercel.app/dashboard?address=${activeAccount}&amount=${actualAmount}`;
     setQrString(baseUrl);
   }, [activeAccount, amount]);
 
-  console.log(qrString);
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    if (/^\d*\.?\d*$/.test(newValue)) {
+      // Allow only numbers and one decimal point
+      setAmount(newValue);
+    }
+  };
+
+  const clearAmount = () => setAmount("");
 
   return (
     <div
@@ -52,19 +59,42 @@ const ReceiveModal = ({
         </button>
         <h3 className="font-bold text-lg mb-4">Receive Funds</h3>
         <div className="flex flex-col items-center gap-4">
-          <div className="relative">
+          <div className="relative p-[5px] bg-white">
             {/* QR generator */}
             <QRCode value={qrString} size={200} />
           </div>
           <div className="text-sm w-full">
             <p>Amount :</p>
-            <div className="flex items-center bg-gray-700 rounded">
+            <div className="flex items-center bg-gray-700 rounded relative">
               <input
                 type="number"
-                className="bg-gray-700 rounded w-full"
+                className="bg-gray-700 rounded w-full pr-10"
                 value={amount}
-                onChange={(e) => setAmount(e.target.value)}
+                onChange={handleAmountChange}
+                placeholder={`Enter amount to receive in ${currency}`}
               />
+              {amount && (
+                <button
+                  onClick={clearAmount}
+                  className="absolute right-3 text-gray-500 hover:text-gray-300"
+                  title="Clear amount"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+            <div className="flex gap-2 mt-2">
+              {/* Quick amount buttons */}
+              {[5, 10, 20].map((amt) => (
+                <button
+                  key={amt}
+                  // className="btn btn-xs bg-primary hover:bg-primary-focus"
+                  className="btn btn-xs border-primary bg-transparent text-white"
+                  onClick={() => setAmount(String(amt))}
+                >
+                  {amt} {currency}
+                </button>
+              ))}
             </div>
           </div>
           <div className="text-sm w-full">
@@ -92,6 +122,11 @@ const ReceiveModal = ({
                 </svg>
               </button>
             </div>
+            {copyFeedback === "Address copied!" && (
+              <div className="text-sm text-secondary animate-fade-in-out mt-1">
+                {copyFeedback}
+              </div>
+            )}
           </div>
           <div className="text-sm w-full">
             <p>Or use your Nexus username:</p>
@@ -118,13 +153,12 @@ const ReceiveModal = ({
                 </svg>
               </button>
             </div>
+            {copyFeedback === "Username copied!" && (
+              <div className="text-sm text-secondary animate-fade-in-out mt-1">
+                {copyFeedback}
+              </div>
+            )}
           </div>
-          
-          {copyFeedback && (
-            <div className="text-sm text-secondary animate-fade-in-out">
-              {copyFeedback}
-            </div>
-          )}
         </div>
       </div>
     </div>

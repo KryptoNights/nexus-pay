@@ -94,7 +94,10 @@ const Home: NextPage = () => {
         activeAccountAdress &&
         idToken?.state?.accounts[0]?.idToken?.raw
       ) {
-        const response = await get_nexus_id_from_wallet(idToken?.state?.accounts[0]?.idToken?.raw, activeAccountAdress);
+        const response = await get_nexus_id_from_wallet(
+          idToken?.state?.accounts[0]?.idToken?.raw,
+          activeAccountAdress
+        );
         setselfNexusId(response.ids[0]);
         // .post(
         //   'https://nexus-fetch-id-for-wallet-876401151866.us-central1.run.app',
@@ -108,7 +111,6 @@ const Home: NextPage = () => {
         //     },
         //   }
         // );
-        console.log("FETCH RESPONSE", response);
       } else {
         console.log("No active account address");
       }
@@ -134,28 +136,38 @@ const Home: NextPage = () => {
     const params = new URLSearchParams(search);
     const address = params.get("address");
     const amount = params.get("amount");
-    // console.log(address);
-    // console.log(amount);
-    setRecipientAddress(address);
+
+    if (Number(amount) === 0) {
+      console.log("in 0");
+      setRecipientAddress(address);
+      // setTransferAmount(amount);
+      setIsTransferModalOpen(true);
+      setPaymentviaDynamicQR(false);
+    }
     if (Number(amount) > 0) {
+      setRecipientAddress(address);
       setTransferAmount(amount);
       setIsTransferModalOpen(true);
       setPaymentviaDynamicQR(true);
     } else {
       setIsTransferModalOpen(false);
       setRecipientAddress("");
-      setTransferAmount(0);
+      setTransferAmount("");
     }
   }, [router]);
   const handleInputChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const value = event.target.value;
+    let value = event.target.value;
     setRecipientAddress(value);
 
     if (value.length > 2) {
       try {
         const id_token = idToken?.state?.accounts[0]?.idToken?.raw;
+        //make first letter smallcase and then search for id
+        if (value.length > 0 && value[0] === value[0].toUpperCase()) {
+          value = value[0].toLowerCase() + value.slice(1);
+        }
         const results: string[] = await get_nexus_ids_starting_with(
           id_token,
           value

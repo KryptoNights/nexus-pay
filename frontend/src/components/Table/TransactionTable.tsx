@@ -68,7 +68,7 @@ const TransactionTable: NextPage = () => {
 
   return (
     <main className="flex-grow px-4 text-center">
-      <h1 className="mb-8 text-4xl font-bold text-primary">Transactions</h1>
+      <h1 className="mt-3 mb-8 text-4xl font-bold text-primary">Transactions</h1>
 
       <div className="mb-6">
         <input
@@ -158,8 +158,9 @@ const TransactionTable: NextPage = () => {
         </table>
       </div>
 
-      <div className="flex justify-center mt-4 space-x-2">
-        {Array.from({ length: 10 }, (_, i) => i + 1).map((page) => (
+      {/* Responsive Pagination */}
+      <div className="flex flex-wrap justify-center mt-4 space-x-2">
+        {Array.from({ length: totalpages }, (_, i) => i + 1).map((page) => (
           <button
             key={page}
             onClick={() => handlePageChange(page)}
