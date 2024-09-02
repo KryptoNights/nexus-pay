@@ -136,19 +136,16 @@ const Home: NextPage = () => {
     const params = new URLSearchParams(search);
     const address = params.get("address");
     const amount = params.get("amount");
-
-    if (Number(amount) === 0) {
-      console.log("in 0");
+    console.log(address);
+    if (address) {
       setRecipientAddress(address);
-      // setTransferAmount(amount);
       setIsTransferModalOpen(true);
-      setPaymentviaDynamicQR(false);
-    }
-    if (Number(amount) > 0) {
-      setRecipientAddress(address);
-      setTransferAmount(amount);
-      setIsTransferModalOpen(true);
-      setPaymentviaDynamicQR(true);
+      if (Number(amount) > 0) {
+        console.log(amount);
+        setIsTransferModalOpen(true);
+        setTransferAmount(amount);
+        setPaymentviaDynamicQR(true);
+      }
     } else {
       setIsTransferModalOpen(false);
       setRecipientAddress("");

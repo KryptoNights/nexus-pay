@@ -29,7 +29,7 @@ const TransferModal = ({
     (state: any) => state.authSlice
   );
 
-  console.log(activeAccountAdress);
+  // console.log(activeAccountAdress);
 
   const handleTransferAmountChange = (e: any) => {
     const amount = e.target.value;
