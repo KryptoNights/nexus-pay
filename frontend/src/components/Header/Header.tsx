@@ -1,18 +1,15 @@
-"use client";
-
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import SidebarToggle from "@/components/Header/SidebarToggle";
 import { getBalances } from "@/core/transactions";
 import { useKeylessAccounts } from "@/core/useKeylessAccounts";
 import { collapseAddress, convertOctaToApt } from "@/core/utils";
 import { setUserBalance } from "@/redux/reducers/authReducer";
-import { AccountAddress } from "@aptos-labs/ts-sdk";
-import dynamic from "next/dynamic";
 import Image from "next/image";
 import DropdownIcon from "public/assets/svgs/DropdownIcon";
-import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import Popup from "../Popup/Popup";
 import { TransakConfig, Transak } from "@transak/transak-sdk";
+import Popup from "../Popup/Popup";
+import AddFundsModal from "../AddFundsModal/AddFundsModal";
 
 interface HeaderProps {
   title?: string;
@@ -20,13 +17,12 @@ interface HeaderProps {
 
 const Header = ({ title }: HeaderProps) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [isAddFundsModalOpen, setIsAddFundsModalOpen] = useState(false); // State to manage Add Funds modal
   const { disconnectKeylessAccount } = useKeylessAccounts();
-  // const [balance, setBalance] = useState(0);
   const { idToken, activeAccountAdress, balance } = useSelector(
     (state: any) => state.authSlice
   );
 
-  console.log(idToken);
   const dispatch = useDispatch();
 
   const handlePopupOpen = () => {
@@ -35,6 +31,19 @@ const Header = ({ title }: HeaderProps) => {
 
   const handlePopupClose = () => {
     setIsPopupOpen(false);
+  };
+
+  const handleAddFundsClick = () => {
+    setIsAddFundsModalOpen(true); // Open the modal when "Add Funds" is clicked
+  };
+
+  const handleAddFundsModalClose = () => {
+    setIsAddFundsModalOpen(false); // Close the modal
+  };
+
+  const handleDepositViaCard = () => {
+    const email = idToken?.state?.accounts[0]?.idToken?.decoded?.email;
+    handleAddFunds(activeAccountAdress, email);
   };
 
   const handleAddFunds = (wallet: string, email: string) => {
@@ -92,7 +101,6 @@ const Header = ({ title }: HeaderProps) => {
     const fetchBalances = async () => {
       if (activeAccountAdress) {
         const getBalancesResponse = await getBalances(activeAccountAdress);
-
         dispatch(
           setUserBalance(convertOctaToApt(getBalancesResponse[0]?.amount))
         );
@@ -118,12 +126,7 @@ const Header = ({ title }: HeaderProps) => {
           <div className="sm:hidden flex items-center gap-2">
             {activeAccountAdress.length > 0 && (
               <button
-                onClick={() =>
-                  handleAddFunds(
-                    activeAccountAdress,
-                    idToken?.state?.accounts[0]?.idToken?.decoded?.email
-                  )
-                }
+                onClick={handleAddFundsClick}
                 className="btn btn-primary p-0 bg-[rgb(0,0,0)] rounded-xl hover:bg-transparent"
               >
                 <div className="block pt-[8px] pr-[12px] pb-[8px] pl-[12px]">
@@ -156,12 +159,7 @@ const Header = ({ title }: HeaderProps) => {
           {activeAccountAdress.length > 0 &&
           idToken?.state?.accounts[0]?.idToken?.decoded?.email ? (
             <button
-              onClick={() =>
-                handleAddFunds(
-                  activeAccountAdress,
-                  idToken?.state?.accounts[0]?.idToken?.decoded?.email
-                )
-              }
+              onClick={handleAddFundsClick}
               className="btn btn-primary p-0 bg-[rgb(0,0,0)] rounded-xl hover:bg-transparent"
             >
               <div className="hidden sm:block pt-[8px] pr-[12px] pb-[8px] pl-[12px]">
@@ -215,6 +213,13 @@ const Header = ({ title }: HeaderProps) => {
           onClose={handlePopupClose}
           balance={balance}
           handlePopupClose={handlePopupClose}
+        />
+      )}
+      {isAddFundsModalOpen && (
+        <AddFundsModal
+          onClose={handleAddFundsModalClose}
+          handleDepositViaCard={handleDepositViaCard}
+          activeAccountAdress={activeAccountAdress}
         />
       )}
     </div>
