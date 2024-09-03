@@ -27,6 +27,7 @@ const Layout = ({ title, children, className }: Props) => {
     try {
       return JSON.parse(atob(token.split(".")[1]));
     } catch (e) {
+      console.error("Failed to parse JWT:", e);
       return null;
     }
   };
