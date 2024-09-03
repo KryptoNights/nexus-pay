@@ -289,6 +289,7 @@ const Home: NextPage = () => {
               router.push("/dashboard");
               await setIsTransferModalOpen(false);
               setPaymentviaDynamicQR(false);
+              mixpanel.track("transfer_modal_closed")
             }}
             balance={balance}
             transferAmount={transferAmount}

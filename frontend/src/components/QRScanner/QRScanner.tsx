@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import styles from "./QRScanner.module.css";
 import { isValidCustomText, isValidWalletAddress } from "@/core/utils";
 import { useRouter } from "next/router";
+import mixpanel from "mixpanel-browser";
 
 const QRScanner = ({ setRecipientAddress, handlePopupClose }: any) => {
   const videoElementRef = useRef<HTMLVideoElement>(null);
@@ -26,11 +27,13 @@ const QRScanner = ({ setRecipientAddress, handlePopupClose }: any) => {
           const amount = params.get("amount");
 
           if (scannedResult) {
+            mixpanel.track("scanner_succesfully");
             setRecipientAddress(address);
             handlePopupClose();
           } else {
             console.error("Invalid QR code scanned");
             setError("Please scan a valid QR code");
+            mixpanel.track("invalid_qr_scanned");
           }
         },
         {

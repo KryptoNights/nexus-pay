@@ -9,6 +9,7 @@ import {
   isValidWalletAddress,
 } from "@/core/utils";
 import { setUserBalance } from "@/redux/reducers/authReducer";
+import mixpanel from "mixpanel-browser";
 
 const TransferModal = ({
   onClose,
@@ -43,6 +44,7 @@ const TransferModal = ({
   };
 
   const sendMoney = async (recipientAddress: any) => {
+    mixpanel.track("send_money_initiated");
     setIsLoading(true);
     try {
       if (!recipientAddress) {
@@ -66,9 +68,13 @@ const TransferModal = ({
       );
 
       setIsSuccess(true);
+      mixpanel.track("successful_transaction");
     } catch (error) {
       console.error("Failed to send money:", error);
       setTransferError("Transaction failed. Please try again.");
+      mixpanel.track("failed to send money", {
+        error: error,
+      });
     } finally {
       setIsLoading(false);
     }
