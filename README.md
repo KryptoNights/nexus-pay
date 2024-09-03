@@ -18,4 +18,4 @@
 3. **Start Paying**: Use your Nexus ID or scan QR codes to pay at merchants or send money to friends.
 4. **Withdraw Funds**: Need your money back in your bank? No problem, you can withdraw it anytime.
 
-Enjoy the seamless experience of Nexus Pay, where blockchain technology meets everyday convenience!
+Sign in with Google and bring your own money. Pay anyone, anywhere from any device. One wallet, all of the world.
