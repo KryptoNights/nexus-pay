@@ -54,7 +54,6 @@ const TransferModal = ({
         setUserBalance(convertOctaToApt(getBalancesResponse[0]?.amount))
       );
 
-      console.log(activeAccount);
       const transactionHash = await testSendMoneyToAccount(
         recipientAddress,
         activeAccount!,
@@ -65,8 +64,6 @@ const TransferModal = ({
       dispatch(
         setUserBalance(convertOctaToApt(getBalancesRespons2[0]?.amount))
       );
-
-      console.log(`Transaction successful: ${transactionHash}`);
 
       setIsSuccess(true);
     } catch (error) {

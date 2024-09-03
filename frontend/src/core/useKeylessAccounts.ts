@@ -149,7 +149,6 @@ export const useKeylessAccounts = create<
           const storedAccount = get().accounts.find(
             (a) => a.idToken.decoded.sub === decodedToken.sub
           );
-          console.log(storedAccount)
           let activeAccount: KeylessAccount | undefined;
           try {
             activeAccount = await testnetClient.deriveKeylessAccount({
@@ -187,7 +186,6 @@ export const useKeylessAccounts = create<
               ],
             activeAccount,
           });
-          console.log(activeAccount);
 
           return activeAccount;
         },

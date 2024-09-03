@@ -6,8 +6,6 @@ import axios from 'axios';
 const aptos = new Aptos(new AptosConfig({ network: Network.TESTNET }));
 
 export const testSendMoneyToAccount = async (address: string, signer: KeylessAccount, amount: number): Promise<string> => {
-    console.log("Address: ", address);
-    console.log("Amount: ", amount);
     if (address.includes("@") || address.includes(".")) {
         return testSendMoneyToId(address, "", signer, amount);
     }
@@ -78,7 +76,6 @@ export const sendCoinToAddres = async (recipient: AccountAddress, amount: number
 
     const committedTxn = await aptos.signAndSubmitTransaction({ signer: signer, transaction });
     const committedTransactionResponse = await aptos.waitForTransaction({ transactionHash: committedTxn.hash });
-    console.log("HASH: ", committedTransactionResponse);
 
     return committedTransactionResponse.hash;
 }
@@ -104,7 +101,6 @@ export const get_nexus_ids_starting_with = async (id_token: string, raw_query_st
             },
         }
     );
-    console.log(response);
 
     return response.data.emails;
 };
@@ -122,13 +118,10 @@ export const get_wallet_from_nexus_id = async (id_token: string, nexus_id: strin
             },
         }
     );
-    console.log(response);
     return response.data.wallet;
 }
 
 export const get_nexus_id_from_wallet = async (id_token: string, wallet: string): Promise<any> => {
-    console.log("FETCHING NEXUS ID FOR WALLET: ", wallet);
-    console.log(id_token);
     const response = await axios.post(
         'https://nexus-fetch-id-for-wallet-876401151866.us-central1.run.app',
         {
@@ -141,7 +134,6 @@ export const get_nexus_id_from_wallet = async (id_token: string, wallet: string)
             },
         }
     );
-    console.log(response);
     return response.data;
 }
 
@@ -216,10 +208,8 @@ export const get_transaction_history = async (address: string, offset: number): 
             }
         );
 
-        console.log(response)
 
         const raw_fungible_asset_activities: FungibleAssetActivity[] = response.data.data.fungible_asset_activities;
-        console.log("raw", raw_fungible_asset_activities);
         
         const raw_account_transactions: AccountTransaction[] = response.data.data.account_transactions;
 

@@ -13,7 +13,6 @@ const SidebarNavigation = ({ navigation, linkClicked, className }: IProps) => {
   const { pathname } = useRouter();
   const router = useRouter();
   const pushtoRoute = (item: any) => {
-    console.log(item);
     router.push(item);
   };
   return (

@@ -14,7 +14,6 @@ function CallbackPage() {
   const { activeAccount } = useKeylessAccounts();
   const dispatch = useDispatch();
   const address = getAddressAsString(activeAccount?.accountAddress.toString());
-  console.log("hehe", address);
 
   localStorage.setItem("activeAccount", address);
 
@@ -33,7 +32,6 @@ function CallbackPage() {
         await switchKeylessAccount(idToken);
         router.push("/dashboard");
       } catch (error) {
-        console.log("error", error);
         router.push("/");
       }
     }

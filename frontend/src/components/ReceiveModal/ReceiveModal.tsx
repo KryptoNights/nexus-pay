@@ -32,7 +32,6 @@ const ReceiveModal = ({
   useEffect(() => {
     const actualAmount = amount || ""; // Ensure amount is a valid string for URL
     const baseUrl = `https://nexuspay.vercel.app/dashboard/?address=${activeAccount}&amount=${actualAmount}`;
-    console.log(baseUrl);
     setQrString(baseUrl);
   }, [activeAccount, amount]);
 

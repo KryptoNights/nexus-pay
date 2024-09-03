@@ -25,9 +25,6 @@ const QRScanner = ({ setRecipientAddress, handlePopupClose }: any) => {
           const address = params.get("address");
           const amount = params.get("amount");
 
-          console.log("Address:", address);
-          console.log("Amount:", amount);
-
           if (scannedResult) {
             setRecipientAddress(address);
             handlePopupClose();
@@ -46,7 +43,6 @@ const QRScanner = ({ setRecipientAddress, handlePopupClose }: any) => {
       qrScanner.start();
 
       return () => {
-        console.log(qrScanner);
         qrScanner.stop();
         qrScanner.destroy();
       };

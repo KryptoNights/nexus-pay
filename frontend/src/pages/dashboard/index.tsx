@@ -54,7 +54,6 @@ const Home: NextPage = () => {
     const fetchBalances = async () => {
       if (activeAccountAdress) {
         const getBalancesResponse = await getBalances(activeAccountAdress);
-        console.log(convertOctaToApt(getBalancesResponse[0]?.amount));
 
         dispatch(
           setUserBalance(convertOctaToApt(getBalancesResponse[0]?.amount))
@@ -82,7 +81,8 @@ const Home: NextPage = () => {
           }
         );
       } catch (error) {
-        console.log(error);
+        // console.log(error);
+        mixpanel.track("link_mailId_to_wallet_failed")
         //add mixpanel event here
       }
     }
@@ -104,7 +104,7 @@ const Home: NextPage = () => {
         dispatch(setSelfNexusId(response?.ids[0]));
         setselfNexusId(response?.ids[0]);
       } else {
-        console.log("No active account address");
+        // console.log("No active account address");
       }
     };
     fetchNexusId();

@@ -33,13 +33,10 @@ const Layout = ({ title, children, className }: Props) => {
   React.useEffect(() => {
     const checkIfExpired = () => {
       const JwtToken = idToken?.state?.accounts[0]?.idToken.raw;
-      console.log(JwtToken);
       if (JwtToken) {
         // const expirationSec = 1724998249;
         const expirationSec = parseJwt(JwtToken)?.exp;
-        console.log(expirationSec);
         const currentTime = Math.floor(Date.now() / 1000);
-        console.log(currentTime);
         if (expirationSec < currentTime) {
           localStorage.removeItem("@aptos-connect/keyless-accounts");
           localStorage.removeItem("activeAccount");
@@ -71,7 +68,6 @@ const Layout = ({ title, children, className }: Props) => {
   React.useEffect(() => {
     // if active account is  {} push to /login
     if (Object.keys(activeAccountAdress).length === 0) {
-      console.log(activeAccountAdress);
       router.push("/login");
     }
   }, [activeAccountAdress]);

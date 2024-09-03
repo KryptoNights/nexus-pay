@@ -66,12 +66,12 @@ const Header = ({ title }: HeaderProps) => {
 
     // To get all the events
     Transak.on("*", (data) => {
-      console.log(data);
+      // console.log(data);
     });
 
     // This will trigger when the user closed the widget
     Transak.on(Transak.EVENTS.TRANSAK_WIDGET_CLOSE, () => {
-      console.log("Transak SDK closed!");
+      // console.log("Transak SDK closed!");
     });
 
     /*
@@ -80,7 +80,7 @@ const Header = ({ title }: HeaderProps) => {
      * If you want to close/navigate away, use the TRANSAK_ORDER_SUCCESSFUL event
      */
     Transak.on(Transak.EVENTS.TRANSAK_ORDER_CREATED, (orderData) => {
-      console.log(orderData);
+      // console.log(orderData);
     });
 
     /*
@@ -88,7 +88,7 @@ const Header = ({ title }: HeaderProps) => {
      * You can close/navigate away at this event
      */
     Transak.on(Transak.EVENTS.TRANSAK_ORDER_SUCCESSFUL, (orderData) => {
-      console.log(orderData);
+      // console.log(orderData);
       transak.close();
     });
 

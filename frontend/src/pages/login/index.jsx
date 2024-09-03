@@ -43,7 +43,7 @@ function LoginPage() {
 
   const router = useRouter();
   const openPopup = () => {
-    const popup = window.open(redirectUrl, "popup");
+    const popup = window.open(redirectUrl, "popup", "popup=true");
     if (!popup) {
       alert("Popup blocked! Please allow popups for this site.");
       return;
@@ -62,7 +62,6 @@ function LoginPage() {
             idToken = JSON.parse(
               popup.localStorage.getItem("@aptos-connect/keyless-accounts")
             );
-            console.log("id", idToken);
 
             dispatch(setAuthData(idToken));
           } else {
