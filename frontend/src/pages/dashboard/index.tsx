@@ -115,8 +115,8 @@ const Home: NextPage = () => {
       idToken?.state?.accounts[0]?.idToken?.decoded?.name &&
       idToken?.state?.accounts[0]?.idToken?.decoded?.email
     ) {
-      mixpanel.reset();
       mixpanel.identify(`${activeAccountAdress}`);
+      console.log(idToken?.state?.accounts[0]?.idToken?.decoded?.name);
       mixpanel.people.set({
         $name: `${idToken?.state?.accounts[0]?.idToken?.decoded?.name}`,
         $email: `${idToken?.state?.accounts[0]?.idToken?.decoded?.email}`,

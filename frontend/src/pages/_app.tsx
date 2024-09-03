@@ -12,6 +12,7 @@ mixpanel.init("90e1bef61bd9e8539fe7fed160938e58", {
   debug: true,
   track_pageview: true,
   persistence: "localStorage",
+  ignore_dnt: true
 });
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
