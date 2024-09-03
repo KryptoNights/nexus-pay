@@ -115,7 +115,22 @@ const Header = ({ title }: HeaderProps) => {
               {title}
             </h1>
           </div>
-          <div className="sm:hidden">
+          <div className="sm:hidden flex items-center gap-2">
+            {activeAccountAdress.length > 0 && (
+              <button
+                onClick={() =>
+                  handleAddFunds(
+                    activeAccountAdress,
+                    idToken?.state?.accounts[0]?.idToken?.decoded?.email
+                  )
+                }
+                className="btn btn-primary p-0 bg-[rgb(0,0,0)] rounded-xl hover:bg-transparent"
+              >
+                <div className="block pt-[8px] pr-[12px] pb-[8px] pl-[12px]">
+                  + Add Funds
+                </div>
+              </button>
+            )}
             {activeAccountAdress.length > 0 && (
               <button
                 onClick={handlePopupOpen}
