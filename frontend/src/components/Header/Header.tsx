@@ -10,6 +10,7 @@ import DropdownIcon from "public/assets/svgs/DropdownIcon";
 import { TransakConfig, Transak } from "@transak/transak-sdk";
 import Popup from "../Popup/Popup";
 import AddFundsModal from "../AddFundsModal/AddFundsModal";
+import mixpanel from "mixpanel-browser";
 
 interface HeaderProps {
   title?: string;
@@ -100,10 +101,16 @@ const Header = ({ title }: HeaderProps) => {
   useEffect(() => {
     const fetchBalances = async () => {
       if (activeAccountAdress) {
-        const getBalancesResponse = await getBalances(activeAccountAdress);
-        dispatch(
-          setUserBalance(convertOctaToApt(getBalancesResponse[0]?.amount))
-        );
+        try {
+          const getBalancesResponse = await getBalances(activeAccountAdress);
+          dispatch(
+            setUserBalance(convertOctaToApt(getBalancesResponse[0]?.amount))
+          );
+        } catch (error) {
+          mixpanel.track("error_fetching_balance", {
+            user: activeAccountAdress,
+          });
+        }
       }
     };
     if (activeAccountAdress.length > 0) {
