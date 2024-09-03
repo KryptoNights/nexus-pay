@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useEffect, useRef } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -7,12 +9,19 @@ import AOS from "aos";
 import "aos/dist/aos.css"; // Import AOS styles
 import mixpanel from "mixpanel-browser";
 
-mixpanel.identify(`guest`);
-mixpanel.people.set({
-  '$name': "anon",
-  '$email': "anon@mail",
-  '$address': `guest`,
+// Near entry of your product, init Mixpanel
+mixpanel.init("90e1bef61bd9e8539fe7fed160938e58", {
+  debug: true,
+  track_pageview: true,
+  persistence: "localStorage",
 });
+
+// mixpanel.identify(`guest`);
+// mixpanel.people.set({
+//   '$name': "anon",
+//   '$email': "anon@mail",
+//   '$address': `guest`,
+// });
 
 const LandingPage: React.FC = () => {
   const router = useRouter();

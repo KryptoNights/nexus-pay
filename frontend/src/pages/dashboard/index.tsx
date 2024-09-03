@@ -19,6 +19,12 @@ import mixpanel from "mixpanel-browser";
 import { setSelfNexusId, setUserBalance } from "@/redux/reducers/authReducer";
 import React from "react";
 
+mixpanel.init("90e1bef61bd9e8539fe7fed160938e58", {
+  debug: true,
+  track_pageview: true,
+  persistence: "localStorage",
+});
+
 const Home: NextPage = () => {
   const [recipientAddress, setRecipientAddress]: any = useState("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
@@ -44,6 +50,7 @@ const Home: NextPage = () => {
   };
 
   const handlePopupClose = () => {
+    mixpanel.track("close_qr_code_scanner");
     setIsPopupOpen(false);
   };
 
@@ -107,14 +114,18 @@ const Home: NextPage = () => {
     fetchNexusId();    
   }, [activeAccountAdress]);
 
-  mixpanel.identify(`${activeAccountAdress}`);
-  mixpanel.people.set({
-    '$name': "kavish shah",
-    '$email': "kavishshah30@gmail.com",
-    '$address': `${activeAccountAdress}`,
-  });
+  useEffect(() => {
+    mixpanel.reset();
+    mixpanel.identify(`${activeAccountAdress}`);
+    mixpanel.people.set({
+      '$name': "kavish shah",
+      '$email': "kavishshah30@gmail.com",
+      '$address': `${activeAccountAdress}`,
+    });
 
-  // mixpanel.track("page_view");
+  }, []);
+
+  mixpanel.track("dashboard_view");
   const handleGoogleSignIn = () => {
     router.push("/login");
   };
@@ -191,7 +202,10 @@ const Home: NextPage = () => {
             />
             <button
               className="absolute right-0 top-0 bottom-0 btn btn-secondary rounded-r-full flex items-center px-2 sm:px-4 tooltip tooltip-left text-xs sm:text-sm"
-              onClick={() => handlePopupOpen()}
+              onClick={() => {
+                mixpanel.track("scan_qr_code");
+                handlePopupOpen()
+              }}
               data-tip="Scan QR Code"
             >
               <svg
@@ -218,6 +232,7 @@ const Home: NextPage = () => {
                     key={index}
                     className="p-2 hover:bg-gray-500 cursor-pointer text-sm sm:text-base bg-[#0D0D0D]"
                     onClick={() => {
+                      mixpanel.track("suggestion_clicked");
                       setRecipientAddress(suggestion);
                       setSuggestions([]);
                     }}
@@ -249,13 +264,19 @@ const Home: NextPage = () => {
           <div className="mt-6 flex justify-center gap-4">
             <button
               className="btn btn-primary"
-              onClick={() => setIsReceiveModalOpen(true)}
+              onClick={() => {
+                mixpanel.track("receive_modal_opened");
+                setIsReceiveModalOpen(true)}
+              }
             >
               Receive
             </button>
             <button
               className="btn btn-secondary"
-              onClick={() => setIsTransferModalOpen(true)}
+              onClick={() => {
+                mixpanel.track("transfer_modal_opened");
+                setIsTransferModalOpen(true)
+              }}
             >
               Transfer
             </button>
