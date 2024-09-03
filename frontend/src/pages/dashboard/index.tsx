@@ -16,7 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { useKeylessAccounts } from "@/core/useKeylessAccounts";
 import mixpanel from "mixpanel-browser";
-import { setUserBalance } from "@/redux/reducers/authReducer";
+import { setSelfNexusId, setUserBalance } from "@/redux/reducers/authReducer";
 import React from "react";
 
 const Home: NextPage = () => {
@@ -98,19 +98,8 @@ const Home: NextPage = () => {
           idToken?.state?.accounts[0]?.idToken?.raw,
           activeAccountAdress
         );
-        setselfNexusId(response.ids[0]);
-        // .post(
-        //   'https://nexus-fetch-id-for-wallet-876401151866.us-central1.run.app',
-        //   {
-        //     wallet: activeAccountAdress
-        //   },
-        //   {
-        //     headers: {
-        //       'Content-Type': 'application/json',
-        //       Authorization: `Bearer ${idToken?.state?.accounts[0]?.idToken?.raw}`
-        //     },
-        //   }
-        // );
+        dispatch(setSelfNexusId(response?.ids[0]));
+        setselfNexusId(response?.ids[0]);
       } else {
         console.log("No active account address");
       }

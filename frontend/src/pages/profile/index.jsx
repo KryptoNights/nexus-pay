@@ -7,7 +7,7 @@ import Head from "next/head";
 const Profile = () => {
   const { nexusId } = useSelector((state) => state.authSlice);
   const [customNexusId, setCustomNexusId] = useState("");
-  const { idToken, activeAccountAdress } = useSelector(
+  const { idToken, activeAccountAdress, selfNexusId } = useSelector(
     (state) => state.authSlice
   );
 
@@ -77,7 +77,7 @@ const Profile = () => {
                 "Not provided"
               }
             />
-            <InfoField label="Nexus ID" value={nexusId || "Not set"} />
+            <InfoField label="Nexus ID" value={selfNexusId || "Not set"} />
           </div>
         </div>
 
