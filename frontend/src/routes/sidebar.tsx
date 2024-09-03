@@ -85,7 +85,7 @@ const bottomIcons: IBottomIcons[] = [
   // },
   {
     name: "Twitter",
-    href: "https://twitter.com/kavishshahh",
+    href: "https://x.com/paywithnexus",
     icon: TbBrandTwitter,
   },
   // {
