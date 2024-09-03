@@ -5,6 +5,14 @@ import Image from "next/image";
 import { useSelector } from "react-redux";
 import AOS from "aos";
 import "aos/dist/aos.css"; // Import AOS styles
+import mixpanel from "mixpanel-browser";
+
+mixpanel.identify(`guest`);
+mixpanel.people.set({
+  '$name': "anon",
+  '$email': "anon@mail",
+  '$address': `guest`,
+});
 
 const LandingPage: React.FC = () => {
   const router = useRouter();

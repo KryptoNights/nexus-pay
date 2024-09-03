@@ -104,16 +104,15 @@ const Home: NextPage = () => {
         console.log("No active account address");
       }
     };
-    fetchNexusId();
+    fetchNexusId();    
   }, [activeAccountAdress]);
 
-  // mixpanel.identify(`${activeAccount}`);
-
-  // mixpanel.people.set({
-  //   $name: "kavish shah",
-  //   $email: "kavishshah30@gmail.com",
-  //   $address: `${activeAccount}`,
-  // });
+  mixpanel.identify(`${activeAccountAdress}`);
+  mixpanel.people.set({
+    '$name': "kavish shah",
+    '$email': "kavishshah30@gmail.com",
+    '$address': `${activeAccountAdress}`,
+  });
 
   // mixpanel.track("page_view");
   const handleGoogleSignIn = () => {
