@@ -18,12 +18,7 @@ import { useKeylessAccounts } from "@/core/useKeylessAccounts";
 import mixpanel from "mixpanel-browser";
 import { setSelfNexusId, setUserBalance } from "@/redux/reducers/authReducer";
 import React from "react";
-
-mixpanel.init("90e1bef61bd9e8539fe7fed160938e58", {
-  debug: true,
-  track_pageview: true,
-  persistence: "localStorage",
-});
+import { id } from "ethers";
 
 const Home: NextPage = () => {
   const [recipientAddress, setRecipientAddress]: any = useState("");
@@ -46,6 +41,7 @@ const Home: NextPage = () => {
   const router = useRouter();
 
   const handlePopupOpen = () => {
+    mixpanel.track("open_qr_code_scanner");
     setIsPopupOpen(true);
   };
 
@@ -111,21 +107,25 @@ const Home: NextPage = () => {
         console.log("No active account address");
       }
     };
-    fetchNexusId();    
+    fetchNexusId();
   }, [activeAccountAdress]);
 
   useEffect(() => {
-    mixpanel.reset();
-    mixpanel.identify(`${activeAccountAdress}`);
-    mixpanel.people.set({
-      '$name': "kavish shah",
-      '$email': "kavishshah30@gmail.com",
-      '$address': `${activeAccountAdress}`,
-    });
+    if (
+      idToken?.state?.accounts[0]?.idToken?.decoded?.name &&
+      idToken?.state?.accounts[0]?.idToken?.decoded?.email
+    ) {
+      mixpanel.reset();
+      mixpanel.identify(`${activeAccountAdress}`);
+      mixpanel.people.set({
+        $name: `${idToken?.state?.accounts[0]?.idToken?.decoded?.name}`,
+        $email: `${idToken?.state?.accounts[0]?.idToken?.decoded?.email}`,
+        $address: `${activeAccountAdress}`,
+      });
+    }
+    mixpanel.track("dashboard_view");
+  }, [idToken?.state?.accounts[0]?.idToken?.decoded?.name]);
 
-  }, []);
-
-  mixpanel.track("dashboard_view");
   const handleGoogleSignIn = () => {
     router.push("/login");
   };
@@ -204,7 +204,7 @@ const Home: NextPage = () => {
               className="absolute right-0 top-0 bottom-0 btn btn-secondary rounded-r-full flex items-center px-2 sm:px-4 tooltip tooltip-left text-xs sm:text-sm"
               onClick={() => {
                 mixpanel.track("scan_qr_code");
-                handlePopupOpen()
+                handlePopupOpen();
               }}
               data-tip="Scan QR Code"
             >
@@ -266,8 +266,8 @@ const Home: NextPage = () => {
               className="btn btn-primary"
               onClick={() => {
                 mixpanel.track("receive_modal_opened");
-                setIsReceiveModalOpen(true)}
-              }
+                setIsReceiveModalOpen(true);
+              }}
             >
               Receive
             </button>
@@ -275,7 +275,7 @@ const Home: NextPage = () => {
               className="btn btn-secondary"
               onClick={() => {
                 mixpanel.track("transfer_modal_opened");
-                setIsTransferModalOpen(true)
+                setIsTransferModalOpen(true);
               }}
             >
               Transfer

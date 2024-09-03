@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import React, { useEffect, useRef } from "react";
 import Head from "next/head";
@@ -10,11 +10,6 @@ import "aos/dist/aos.css"; // Import AOS styles
 import mixpanel from "mixpanel-browser";
 
 // Near entry of your product, init Mixpanel
-mixpanel.init("90e1bef61bd9e8539fe7fed160938e58", {
-  debug: true,
-  track_pageview: true,
-  persistence: "localStorage",
-});
 
 // mixpanel.identify(`guest`);
 // mixpanel.people.set({
@@ -45,6 +40,7 @@ const LandingPage: React.FC = () => {
   ];
 
   const handleRedirect = () => {
+    mixpanel.track("OnClick Login Button");
     router.push("/dashboard");
   };
 
@@ -112,7 +108,10 @@ const LandingPage: React.FC = () => {
         <nav className="sticky top-0 z-50  bg-opacity-90 backdrop-filter backdrop-blur-lg bg-[#0D0D0D]">
           <div className="container mx-auto px-6 py-4 flex justify-between items-center">
             <div
-              onClick={() => handleScroll(headerRef)}
+              onClick={() => {
+                handleScroll(headerRef);
+                mixpanel.track("OnClick NexusPay Logo");
+              }}
               className="text-3xl font-bold text-blue-400 hover:text-blue-300 transition-colors duration-300 hover:cursor-pointer"
             >
               NexusPay
@@ -163,7 +162,7 @@ const LandingPage: React.FC = () => {
             </p>
             <button
               className="py-3 px-8 bg-blue-600 text-white rounded-full text-lg font-semibold hover:bg-blue-700 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 shadow-xl hover:shadow-blue-500/30"
-              onClick={() => router.push("/login")}
+              onClick={handleRedirect}
             >
               Start Paying now
             </button>
@@ -209,68 +208,67 @@ const LandingPage: React.FC = () => {
           </section>
 
           <section
-  ref={featuresRef}
-  className="mb-32 min-h-[24vh] relative"
-  data-aos="fade-up"
->
-  <h2 className="text-4xl md:text-5xl font-semibold text-center mb-16 text-blue-200">
-    Features
-  </h2>
-  <div className="flex flex-col md:flex-row md:space-x-12 space-y-12 md:space-y-0">
-    <div className="md:w-2/3 flex flex-col space-y-12">
-      {features.map((feature, index) => (
-        <div
-          key={index}
-          className="bg-gray-800 rounded-xl p-8 text-center hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
-          data-aos="fade-up"
-        >
-          <div className="bg-blue-600 rounded-full p-4 inline-block mb-6">
-            <svg
-              className="w-8 h-8 text-white"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              {index === 0 && (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"
+            ref={featuresRef}
+            className="mb-32 min-h-[24vh] relative"
+            data-aos="fade-up"
+          >
+            <h2 className="text-4xl md:text-5xl font-semibold text-center mb-16 text-blue-200">
+              Features
+            </h2>
+            <div className="flex flex-col md:flex-row md:space-x-12 space-y-12 md:space-y-0">
+              <div className="md:w-2/3 flex flex-col space-y-12">
+                {features.map((feature, index) => (
+                  <div
+                    key={index}
+                    className="bg-gray-800 rounded-xl p-8 text-center hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
+                    data-aos="fade-up"
+                  >
+                    <div className="bg-blue-600 rounded-full p-4 inline-block mb-6">
+                      <svg
+                        className="w-8 h-8 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        {index === 0 && (
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"
+                          />
+                        )}
+                        {index === 1 && (
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"
+                          />
+                        )}
+                        {index === 2 && (
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                          />
+                        )}
+                      </svg>
+                    </div>
+                    <p className="text-lg text-gray-300">{feature}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="md:w-1/3 relative flex items-center justify-center">
+                <img
+                  src="https://framerusercontent.com/images/mTk6WQ1TJOjaV2L09BwQUpCD27Y.png"
+                  alt="Feature illustration 1"
+                  className="w-full h-auto max-w-[300px] md:max-w-full z-10"
                 />
-              )}
-              {index === 1 && (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"
-                />
-              )}
-              {index === 2 && (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                />
-              )}
-            </svg>
-          </div>
-          <p className="text-lg text-gray-300">{feature}</p>
-        </div>
-      ))}
-    </div>
-    <div className="md:w-1/3 relative flex items-center justify-center">
-      <img
-        src="https://framerusercontent.com/images/mTk6WQ1TJOjaV2L09BwQUpCD27Y.png"
-        alt="Feature illustration 1"
-        className="w-full h-auto max-w-[300px] md:max-w-full z-10"
-      />
-    </div>
-  </div>
-</section>
-
+              </div>
+            </div>
+          </section>
 
           <section ref={faqRef} className="mb-32" data-aos="fade-up">
             <h2 className="text-4xl md:text-5xl font-semibold text-center mb-16 text-blue-200">
