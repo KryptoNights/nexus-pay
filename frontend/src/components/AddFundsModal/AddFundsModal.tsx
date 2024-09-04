@@ -20,9 +20,7 @@ const AddFundsModal = ({
   };
 
   const handleDepositClick = () => {
-    if (selectedOption === "card") {
-      handleDepositViaCard();
-    }
+    handleDepositViaCard();
   };
 
   const handleCopy = (text: string, type: string) => {
@@ -55,30 +53,16 @@ const AddFundsModal = ({
           {!selectedOption && (
             <div className="flex flex-col items-center gap-4 w-full">
               <button
-                onClick={() => handleOptionSelect("card")}
+                onClick={handleDepositClick}
                 className="btn btn-primary w-full"
               >
-                Deposit via Card
+                Deposit via Fiat
               </button>
               <button
                 onClick={() => handleOptionSelect("crypto")}
                 className="btn btn-secondary w-full"
               >
                 Deposit via Crypto Wallet
-              </button>
-            </div>
-          )}
-
-          {selectedOption === "card" && (
-            <div className="text-center mt-4">
-              <p className="text-sm text-gray-400 mb-4">
-                Proceed with card deposit through Transak.
-              </p>
-              <button
-                onClick={handleDepositClick}
-                className="btn btn-primary w-full"
-              >
-                Proceed
               </button>
             </div>
           )}
@@ -96,7 +80,7 @@ const AddFundsModal = ({
                 <option value="USDT">USDT</option>
                 <option value="APT">APT</option>
               </select>
-              <p className="text-gray-400 mb-2">Deposit to this address:</p>
+              <p className="text-gray-400 mb-2">Deposit to this address: (testnet)</p>
               <div className="flex items-center bg-gray-700 p-2 rounded">
                 <p className="font-mono flex-grow truncate text-white">
                   {activeAccountAdress}
@@ -129,13 +113,6 @@ const AddFundsModal = ({
               {copyFeedback}
             </div>
           )}
-
-          {/* <button
-            onClick={onClose}
-            className="btn btn-outline w-full mt-6"
-          >
-            Close
-          </button> */}
         </div>
       </div>
     </div>
