@@ -8,8 +8,6 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import mixpanel from "mixpanel-browser";
 
-console.log(process.env.NEXT_PUBLIC_MIXPANEL_TOKEN);
-
 mixpanel.init(process.env.NEXT_PUBLIC_MIXPANEL_TOKEN as string, {
   debug: true,
   track_pageview: true,
