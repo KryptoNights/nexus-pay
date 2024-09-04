@@ -142,6 +142,14 @@ const LandingPage: React.FC = () => {
                 Login
               </button>
             </div>
+            <div className="md:hidden">
+              <button
+                className="text-sm py-2 px-6 bg-blue-600 rounded-full font-medium hover:bg-blue-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 shadow-xl shadow-blue-500/30"
+                onClick={handleRedirect}
+              >
+                Login
+              </button>
+            </div>
           </div>
         </nav>
 
@@ -242,7 +250,6 @@ const LandingPage: React.FC = () => {
               ))}
             </div>
           </section>
-
 
           <section ref={faqRef} className="mb-32" data-aos="fade-up">
             <h2 className="text-4xl md:text-5xl font-semibold text-center mb-16 text-blue-200">
