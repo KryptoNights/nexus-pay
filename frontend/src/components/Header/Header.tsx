@@ -46,10 +46,11 @@ const Header = ({ title }: HeaderProps) => {
     const email = idToken?.state?.accounts[0]?.idToken?.decoded?.email;
     handleAddFunds(activeAccountAdress, email);
   };
+  
 
   const handleAddFunds = (wallet: string, email: string) => {
     const transakConfig: TransakConfig = {
-      apiKey: "563eea58-1a53-4237-9ce2-949187d72a23", // (Required)
+      apiKey: process.env.TRANSAK_API_KEY as string, // (Required)
       environment: Transak.ENVIRONMENTS.STAGING, // (Required)
       defaultNetwork: "aptos",
       cryptoCurrencyList: "APT",

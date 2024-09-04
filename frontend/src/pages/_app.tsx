@@ -8,11 +8,13 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import mixpanel from "mixpanel-browser";
 
-mixpanel.init("90e1bef61bd9e8539fe7fed160938e58", {
+console.log(process.env.MIXPANEL_TOKEN);
+
+mixpanel.init(process.env.MIXPANEL_TOKEN as string, {
   debug: true,
   track_pageview: true,
   persistence: "localStorage",
-  ignore_dnt: true
+  ignore_dnt: true,
 });
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
