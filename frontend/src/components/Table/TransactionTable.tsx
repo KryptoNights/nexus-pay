@@ -68,7 +68,9 @@ const TransactionTable: NextPage = () => {
 
   return (
     <main className="flex-grow px-4 text-center">
-      <h1 className="mt-3 mb-8 text-4xl font-bold text-primary">Transactions</h1>
+      <h1 className="mt-3 mb-8 text-4xl font-bold text-primary">
+        Transactions
+      </h1>
 
       <div className="mb-6">
         <input
@@ -102,7 +104,9 @@ const TransactionTable: NextPage = () => {
                 >
                   <td>{transaction.action}</td>
                   <td className="text-center">
-                    {convertOctaToApt(transaction?.amount)} APT
+                    {transaction.action === "Sent"
+                      ? `- ${convertOctaToApt(transaction?.amount)} APT`
+                      : `+ ${convertOctaToApt(transaction?.amount)} APT`}
                   </td>
                   <td className="truncate max-w-[200px]">
                     {collapseAddress(transaction?.sender || "") || "N/A"}

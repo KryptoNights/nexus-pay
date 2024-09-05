@@ -46,7 +46,6 @@ const Header = ({ title }: HeaderProps) => {
     const email = idToken?.state?.accounts[0]?.idToken?.decoded?.email;
     handleAddFunds(activeAccountAdress, email);
   };
-  
 
   const handleAddFunds = (wallet: string, email: string) => {
     const transakConfig: TransakConfig = {
@@ -104,9 +103,11 @@ const Header = ({ title }: HeaderProps) => {
       if (activeAccountAdress) {
         try {
           const getBalancesResponse = await getBalances(activeAccountAdress);
-          dispatch(
-            setUserBalance(convertOctaToApt(getBalancesResponse[0]?.amount))
-          );
+          if (getBalancesResponse[0].amount !== 0) {
+            dispatch(
+              setUserBalance(convertOctaToApt(getBalancesResponse[0]?.amount))
+            );
+          }
         } catch (error) {
           mixpanel.track("error_fetching_balance", {
             user: activeAccountAdress,
