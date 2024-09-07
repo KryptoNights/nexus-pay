@@ -67,6 +67,12 @@ const navigation: INavigation[] = [
     icon: UsersIcon,
     current: false,
   },
+  {
+    name: "Insights",
+    href: "/insights",
+    icon: UsersIcon,
+    current: false,
+  },
   // { name: '404', href: '/404', icon: FolderIcon, current: false },
   // { name: '500', href: '/500', icon: CalendarIcon, current: false },
   // { name: "Keyless", href: "/login", icon: InboxIcon, current: false },
