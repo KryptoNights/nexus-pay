@@ -10,12 +10,13 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { get_transaction_history } from "@/core/transactions";
-import { convertOctaToApt } from "@/core/utils";
+import { convertOctaToApt, formatDate } from "@/core/utils";
 
 // Interface for the transaction history response
 interface TransactionHistory {
   version: string; // Assuming 'version' is a date string or timestamp
   action: string;
+  transaction_timestamp: string;
   amount: number;
   gas_fee?: number;
   success: boolean;
@@ -70,7 +71,7 @@ const InsightsGraph = ({
             const newBalance = convertOctaToApt(prevBalance + tx.amount); // Update balance based on transaction amount
             acc.push({
               // Assuming 'version' can be treated as a timestamp or version identifier for simplicity
-              date: "02/03", // Replace 'version' with actual date if available
+              date: formatDate(tx.transaction_timestamp), // Replace 'version' with actual date if available
               balance: newBalance,
             });
             return acc;
