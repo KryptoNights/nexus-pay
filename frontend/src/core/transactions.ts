@@ -143,7 +143,8 @@ interface FungibleAssetActivity {
     is_gas_fee: boolean;
     is_transaction_success: boolean;
     asset_type: string;
-    transaction_version: string;
+    transaction_version: number;
+    transaction_timestamp: string;
 }
 
 interface AccountTransaction {
@@ -164,54 +165,86 @@ interface TransactionHistory {
 
 export const get_transaction_history = async (address: string, offset: number): Promise<TransactionHistory[]> => {
     try {
-        const response = await axios.post(
+        const raw_fungible_asset_activities_response = await axios.post(
             'https://api.testnet.aptoslabs.com/v1/graphql',
-            {
+            { 
                 query: `
-            query User_transactions($where: fungible_asset_activities_bool_exp, $orderBy: [fungible_asset_activities_order_by!], $accountTransactionsWhere2: account_transactions_bool_exp, $accountTransactionsOrderBy2: [account_transactions_order_by!], $limit: Int, $fungibleAssetActivitiesLimit2: Int, $offset: Int, $accountTransactionsOffset2: Int) {
-              fungible_asset_activities(where: $where, order_by: $orderBy, limit: $fungibleAssetActivitiesLimit2, offset: $offset) {
-                amount
-                type
-                is_gas_fee
-                is_transaction_success
-                asset_type
-                transaction_version
-              }
-              account_transactions(where: $accountTransactionsWhere2, order_by: $accountTransactionsOrderBy2, limit: $limit, offset: $accountTransactionsOffset2) {
-                transaction_version
-               
-                user_transaction {
-                  
-                  sender
+            query Fungible_asset_activities($orderBy: [fungible_asset_activities_order_by!], $where: fungible_asset_activities_bool_exp, $offset: Int, $limit: Int) {
+                fungible_asset_activities(order_by: $orderBy, where: $where, offset: $offset, limit: $limit) {
+                    transaction_timestamp
+                    transaction_version
+                    asset_type
+                    amount
+                    type
+                    is_transaction_success
+                    is_gas_fee
                 }
-              }
             }
           `,
                 variables: {
-                    where: {
-                        owner_address: { _eq: address }
+                    "orderBy": [
+                      {
+                        "transaction_timestamp": "desc"
+                      }
+                    ],
+                    "where": {
+                      "owner_address": {
+                        "_eq": "0x957b9f946799355080caafc7194378c60355588b6e2640181f0a7e613dd00629"
+                      }
                     },
-                    orderBy: [{ transaction_timestamp: 'desc' }],
-                    accountTransactionsWhere2: {
-                        account_address: { _eq: address }
-                    },
-                    accountTransactionsOrderBy2: [{ transaction_version: 'desc' }],
-                    limit: 15,
-                    fungibleAssetActivitiesLimit2: 15,
-                    offset: offset,
-                    accountTransactionsOffset2: 0
-                },
-                operationName: 'User_transactions'
+                    "offset": offset,
+                    "limit": 15
+                  },
+                operationName: 'Fungible_asset_activities'
             },
             {
                 headers: { 'content-type': 'application/json' }
             }
         );
+        const raw_fungible_asset_activities: FungibleAssetActivity[] = raw_fungible_asset_activities_response.data.data.fungible_asset_activities;
 
+        const highest_tx_version = raw_fungible_asset_activities[0].transaction_version;
 
-        const raw_fungible_asset_activities: FungibleAssetActivity[] = response.data.data.fungible_asset_activities;
+        const raw_account_transactions_response = await axios.post(
+            'https://aptos-testnet.nodit.io/dveErbILsNrQJDb4i~SkzM0GyxAPn3p0/v1/graphql',
+            {
+                query: `
+            query Fungible_asset_activities($where: account_transactions_bool_exp, $orderBy: [account_transactions_order_by!]) {
+                account_transactions(where: $where, order_by: $orderBy) {
+                    transaction_version
+                    user_transaction {
+                    sender
+                    }
+                }
+            }
+          `,
+                variables: {
+                    "where": {
+                      "_and": [
+                        {
+                          "transaction_version": {
+                            "_lte": highest_tx_version
+                          },
+                          "account_address": {
+                            "_eq": address
+                          }
+                        }
+                      ]
+                    },
+                    "orderBy": [
+                      {
+                        "transaction_version": "desc"
+                      }
+                    ]
+                  },
+                operationName: 'Fungible_asset_activities'
+            },
+            {
+                headers: { 'content-type': 'application/json' }
+            }
+        ); 
         
-        const raw_account_transactions: AccountTransaction[] = response.data.data.account_transactions;
+        const raw_account_transactions: AccountTransaction[] = raw_account_transactions_response.data.data.account_transactions;
 
         const version_sender_map = new Map<string, string>();
         for (const transaction of raw_account_transactions) {
@@ -220,8 +253,9 @@ export const get_transaction_history = async (address: string, offset: number): 
 
         const version_activity_map = new Map<string, TransactionHistory>();
         for (const activity of raw_fungible_asset_activities) {
-            const existingActivity: any = version_activity_map.get(activity.transaction_version) || {
+            const existingActivity: any = version_activity_map.get(activity.transaction_version as any as string) || {
                 version: activity.transaction_version,
+                transaction_timestamp: activity.transaction_timestamp,
                 success: false,
                 amount: 0,
             };
@@ -240,13 +274,23 @@ export const get_transaction_history = async (address: string, offset: number): 
                 existingActivity.amount = activity.amount;
             }
 
-            existingActivity.sender = version_sender_map.get(activity.transaction_version);
+            existingActivity.sender = version_sender_map.get(activity.transaction_version as any as string);
 
-            version_activity_map.set(activity.transaction_version, existingActivity);
+            version_activity_map.set(activity.transaction_version as any as string, existingActivity);
         }
 
         const history: TransactionHistory[] = Array.from(version_activity_map.values());
         history.sort((a, b) => parseInt(b.version) - parseInt(a.version));
+
+        return history.map((transaction) => {
+            if (transaction.action === "Sent") {
+                return {
+                    ...transaction,
+                    sender: "You",
+                };
+            }
+            return transaction;
+        });
 
         return history;
     } catch (error) {

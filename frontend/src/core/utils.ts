@@ -1,4 +1,7 @@
 export const collapseAddress = (address: any): string => {
+  if (address.length < 10) {
+    return address;
+  }
   if (typeof address === 'string') {
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
   } else {
