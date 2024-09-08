@@ -73,3 +73,11 @@ export const isValidCustomText = (text: string): boolean => {
   const customTextPattern = /^[a-zA-Z0-9+_.-]+@nexus$/;
   return customTextPattern.test(text);
 };
+
+export const formatDate = (timestamp: string): string => {
+  const date = new Date(timestamp);
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
+};
