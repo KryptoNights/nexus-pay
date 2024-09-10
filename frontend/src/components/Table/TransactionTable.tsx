@@ -7,6 +7,7 @@ import type { NextPage } from "next";
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { Info } from "lucide-react";
+import debounce from "lodash/debounce"; // Add this import
 
 interface Transaction {
   version: string;
@@ -22,6 +23,7 @@ const TransactionTable: NextPage = () => {
   const totalpages = 10;
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
@@ -45,6 +47,17 @@ const TransactionTable: NextPage = () => {
   const { activeAccountAdress, balance } = useSelector(
     (state: any) => state.authSlice
   );
+
+  const debouncedSearch = useCallback(
+    debounce((value: string) => {
+      setDebouncedSearchTerm(value);
+    }, 400),
+    []
+  );
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+    debouncedSearch(e.target.value);
+  };
 
   useEffect(() => {
     const fetchTransactionHistory = async () => {
@@ -77,9 +90,9 @@ const TransactionTable: NextPage = () => {
     }
   }, [activeAccountAdress, currentPage, balance, isInitialLoad, hasMore]);
 
-  // Fix for search functionality
+  // Update filteredTransactions to use debouncedSearchTerm
   const filteredTransactions = transactions.filter((transaction) => {
-    const searchLower = searchTerm.toLowerCase();
+    const searchLower = debouncedSearchTerm.toLowerCase();
 
     // Handle empty search term case (return all transactions if search is empty)
     if (!searchTerm) {
@@ -110,7 +123,7 @@ const TransactionTable: NextPage = () => {
           type="text"
           placeholder="Search transactions..."
           className="input input-bordered w-full max-w-md rounded-full bg-gray-800 text-white"
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={handleSearchChange}
           value={searchTerm} // Controlled input
         />
       </div>
