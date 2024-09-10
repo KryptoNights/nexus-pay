@@ -49,7 +49,7 @@ const Header = ({ title }: HeaderProps) => {
 
   const handleAddFunds = (wallet: string, email: string) => {
     const transakConfig: TransakConfig = {
-      apiKey: process.env.TRANSAK_API_KEY as string, // (Required)
+      apiKey: process.env.NEXT_PUBLIC_TRANSAK_API_KEY as string, // (Required)
       environment: Transak.ENVIRONMENTS.STAGING, // (Required)
       defaultNetwork: "aptos",
       cryptoCurrencyList: "APT",
