@@ -2,11 +2,8 @@
 
 import Layout from "@/components/Layout/Layout";
 import { get_transaction_history } from "@/core/transactions";
-import { useKeylessAccounts } from "@/core/useKeylessAccounts";
 import { collapseAddress, convertOctaToApt, formatDate } from "@/core/utils";
 import type { NextPage } from "next";
-import Head from "next/head";
-import { useRouter } from "next/router";
 import { useEffect, useState, useRef, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { Info } from "lucide-react";
@@ -45,14 +42,12 @@ const TransactionTable: NextPage = () => {
     [loading, hasMore, isInitialLoad]
   );
 
-  const router = useRouter();
   const { activeAccountAdress, balance } = useSelector(
     (state: any) => state.authSlice
   );
 
   useEffect(() => {
     const fetchTransactionHistory = async () => {
-      console.log("Hit:");
       try {
         setLoading(true);
         const offset = (currentPage - 1) * totalpages;
@@ -60,9 +55,7 @@ const TransactionTable: NextPage = () => {
           activeAccountAdress,
           offset
         );
-        console.log("Transaction history details:", response);
         if (response.length === 0) {
-          console.log("No more transactions to fetch");
           setHasMore(false);
         } else {
           setTransactions((prevTransactions) => [
@@ -84,13 +77,25 @@ const TransactionTable: NextPage = () => {
     }
   }, [activeAccountAdress, currentPage, balance, isInitialLoad, hasMore]);
 
+  // Fix for search functionality
   const filteredTransactions = transactions.filter((transaction) => {
-    const searchLower = searchTerm?.toLowerCase();
+    const searchLower = searchTerm.toLowerCase();
+
+    // Handle empty search term case (return all transactions if search is empty)
+    if (!searchTerm) {
+      return true;
+    }
+
+    // Convert fields to lowercase for case-insensitive search
+    const sender = transaction.sender?.toLowerCase() || ""; // Handle undefined sender
+    const action = transaction.action?.toLowerCase() || "";
+    const status = transaction.success ? "success" : "failed"; // Success/failed status
+
+    // Check if any field contains the search term
     return (
-      (transaction?.sender &&
-        transaction?.sender?.toLowerCase().includes(searchLower)) ||
-      transaction?.action?.toLowerCase().includes(searchLower) ||
-      (transaction.success ? "success" : "failed").includes(searchLower)
+      sender.includes(searchLower) ||
+      action.includes(searchLower) ||
+      status.includes(searchLower)
     );
   });
 
@@ -106,6 +111,7 @@ const TransactionTable: NextPage = () => {
           placeholder="Search transactions..."
           className="input input-bordered w-full max-w-md rounded-full bg-gray-800 text-white"
           onChange={(e) => setSearchTerm(e.target.value)}
+          value={searchTerm} // Controlled input
         />
       </div>
 
@@ -128,7 +134,7 @@ const TransactionTable: NextPage = () => {
           <tbody>
             {filteredTransactions.map((transaction, index) => (
               <tr
-                key={transaction.version}
+                key={index}
                 ref={
                   index === filteredTransactions.length - 1
                     ? lastTransactionElementRef
@@ -177,10 +183,7 @@ const TransactionTable: NextPage = () => {
                   </span>
                 </td>
                 <td className="px-4 py-2">
-                  <button
-                    // onClick={() => setSelectedTransaction(transaction)}
-                    className="text-blue-400 hover:text-blue-300 transition-colors"
-                  >
+                  <button className="text-blue-400 hover:text-blue-300 transition-colors">
                     <Info className="h-5 w-5" />
                   </button>
                 </td>
@@ -201,14 +204,7 @@ const TransactionTable: NextPage = () => {
       </div>
 
       <div className="mt-6 flex justify-center gap-4 mb-10">
-        {/* <button
-          className="btn btn-primary"
-          onClick={() => {
-            router.push("/dashboard");
-          }}
-        >
-          New Transaction
-        </button> */}
+        {/* <button className="btn btn-primary">New Transaction</button> */}
         {/* <button className="btn btn-outline">Export</button> */}
       </div>
     </main>
