@@ -9,7 +9,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Info } from 'lucide-react';
+import { Info } from "lucide-react";
 
 interface Transaction {
   version: string;
@@ -33,10 +33,6 @@ const TransactionTable: NextPage = () => {
     (state: any) => state.authSlice
   );
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
-
   useEffect(() => {
     const fetchTransactionHistory = async () => {
       try {
@@ -47,7 +43,13 @@ const TransactionTable: NextPage = () => {
           offset
         );
         console.log("Transaction history details:", response);
-        setTransactions(response as Transaction[]);
+        if (response.length === 0) {
+          console.log('No more transactions to fetch');
+          // setHasMore(false);
+        } else {
+          setTransactions(prevTransactions => [...prevTransactions, ...response as Transaction[]]);
+          // setOffset(prevOffset => prevOffset + ITEMS_PER_PAGE);
+        }
         setLoading(false);
       } catch (error) {
         console.error("Error fetching transaction history:", error);
@@ -108,9 +110,17 @@ const TransactionTable: NextPage = () => {
                   className={index % 2 === 0 ? "bg-gray-900" : "bg-gray-800"}
                 >
                   <td className="px-4 py-2">{transaction.action}</td>
-                  <td className="px-4 py-2">{formatDate(transaction.transaction_timestamp)}</td>
+                  <td className="px-4 py-2">
+                    {formatDate(transaction.transaction_timestamp)}
+                  </td>
                   <td className="px-4 py-2 text-center">
-                    <span className={transaction.action === "Sent" ? "text-red-400" : "text-green-400"}>
+                    <span
+                      className={
+                        transaction.action === "Sent"
+                          ? "text-red-400"
+                          : "text-green-400"
+                      }
+                    >
                       {transaction.action === "Sent" ? "- " : "+ "}
                       {convertOctaToApt(transaction.amount)} APT
                     </span>
@@ -163,7 +173,7 @@ const TransactionTable: NextPage = () => {
       </div>
 
       {/* Responsive Pagination */}
-      <div className="flex flex-wrap justify-center mt-4 space-x-2">
+      {/* <div className="flex flex-wrap justify-center mt-4 space-x-2">
         {Array.from({ length: totalpages }, (_, i) => i + 1).map((page) => (
           <button
             key={page}
@@ -175,6 +185,14 @@ const TransactionTable: NextPage = () => {
             {page}
           </button>
         ))}
+      </div> */}
+      <div className="flex flex-wrap justify-center mt-4 space-x-2">
+        <button
+          onClick={() => setCurrentPage((prevPage) => prevPage + 1)}
+          className={`btn btn-sm btn-ghost `}
+        >
+          Load More
+        </button>
       </div>
 
       <div className="mt-6 flex justify-center gap-4 mb-10">
