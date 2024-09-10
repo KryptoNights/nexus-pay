@@ -189,7 +189,7 @@ export const get_transaction_history = async (address: string, offset: number): 
                     ],
                     "where": {
                       "owner_address": {
-                        "_eq": "0x957b9f946799355080caafc7194378c60355588b6e2640181f0a7e613dd00629"
+                        "_eq": address
                       }
                     },
                     "offset": offset,
