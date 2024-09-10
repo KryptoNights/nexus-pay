@@ -111,6 +111,7 @@ const Header = ({ title }: HeaderProps) => {
         } catch (error) {
           mixpanel.track("error_fetching_balance", {
             user: activeAccountAdress,
+            error: error
           });
         }
       }
