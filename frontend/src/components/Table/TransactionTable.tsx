@@ -7,7 +7,7 @@ import { collapseAddress, convertOctaToApt, formatDate } from "@/core/utils";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { useSelector } from "react-redux";
 import { Info } from "lucide-react";
 
@@ -27,7 +27,24 @@ const TransactionTable: NextPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(false);
-  // const [selectedTransaction, setSelectedTransaction] = useState<Transaction[]>([]);
+  const [hasMore, setHasMore] = useState(true);
+  const observer = useRef<IntersectionObserver | null>(null);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
+
+  const lastTransactionElementRef = useCallback(
+    (node: HTMLTableRowElement | null) => {
+      if (loading) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore && !isInitialLoad) {
+          setCurrentPage((prevPage) => prevPage + 1);
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [loading, hasMore, isInitialLoad]
+  );
+
   const router = useRouter();
   const { activeAccountAdress, balance } = useSelector(
     (state: any) => state.authSlice
@@ -35,6 +52,7 @@ const TransactionTable: NextPage = () => {
 
   useEffect(() => {
     const fetchTransactionHistory = async () => {
+      console.log("Hit:");
       try {
         setLoading(true);
         const offset = (currentPage - 1) * totalpages;
@@ -44,22 +62,27 @@ const TransactionTable: NextPage = () => {
         );
         console.log("Transaction history details:", response);
         if (response.length === 0) {
-          console.log('No more transactions to fetch');
-          // setHasMore(false);
+          console.log("No more transactions to fetch");
+          setHasMore(false);
         } else {
-          setTransactions(prevTransactions => [...prevTransactions, ...response as Transaction[]]);
-          // setOffset(prevOffset => prevOffset + ITEMS_PER_PAGE);
+          setTransactions((prevTransactions) => [
+            ...prevTransactions,
+            ...(response as Transaction[]),
+          ]);
         }
         setLoading(false);
+        setIsInitialLoad(false);
       } catch (error) {
         console.error("Error fetching transaction history:", error);
+        setLoading(false);
+        setIsInitialLoad(false);
       }
     };
 
-    if (activeAccountAdress) {
+    if (activeAccountAdress && (isInitialLoad || hasMore)) {
       fetchTransactionHistory();
     }
-  }, [activeAccountAdress, currentPage, balance]);
+  }, [activeAccountAdress, currentPage, balance, isInitialLoad, hasMore]);
 
   const filteredTransactions = transactions.filter((transaction) => {
     const searchLower = searchTerm?.toLowerCase();
@@ -88,7 +111,7 @@ const TransactionTable: NextPage = () => {
 
       <div
         className="overflow-x-auto"
-        style={{ overflowY: "scroll", height: "400px" }}
+        style={{ overflowY: "scroll", height: "800px" }}
       >
         <table className="table w-full">
           <thead className="sticky top-0 bg-gray-800 z-10">
@@ -102,108 +125,90 @@ const TransactionTable: NextPage = () => {
               <th className="px-4 py-2">Details</th>
             </tr>
           </thead>
-          {!loading ? (
-            <tbody>
-              {filteredTransactions.map((transaction, index) => (
-                <tr
-                  key={index}
-                  className={index % 2 === 0 ? "bg-gray-900" : "bg-gray-800"}
-                >
-                  <td className="px-4 py-2">{transaction.action}</td>
-                  <td className="px-4 py-2">
-                    {formatDate(transaction.transaction_timestamp)}
-                  </td>
-                  <td className="px-4 py-2 text-center">
-                    <span
-                      className={
-                        transaction.action === "Sent"
-                          ? "text-red-400"
-                          : "text-green-400"
-                      }
-                    >
-                      {transaction.action === "Sent" ? "- " : "+ "}
-                      {convertOctaToApt(transaction.amount)} APT
-                    </span>
-                  </td>
-                  <td className="px-4 py-2 hidden md:table-cell truncate max-w-[150px]">
-                    {collapseAddress(transaction.sender || "") || "N/A"}
-                  </td>
-                  <td className="px-4 py-2 hidden md:table-cell">
-                    <a
-                      href={`https://explorer.aptoslabs.com/txn/${transaction.version}?network=testnet`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-400 hover:underline"
-                    >
-                      {transaction.version}
-                    </a>
-                  </td>
-                  <td className="px-4 py-2">
-                    <span
-                      className={`px-2 py-1 rounded-full text-xs ${
-                        transaction.success
-                          ? "bg-green-800 text-green-200"
-                          : "bg-red-800 text-red-200"
-                      }`}
-                    >
-                      {transaction.success ? "Success" : "Failed"}
-                    </span>
-                  </td>
-                  <td className="px-4 py-2">
-                    <button
-                      // onClick={() => setSelectedTransaction(transaction)}
-                      className="text-blue-400 hover:text-blue-300 transition-colors"
-                    >
-                      <Info className="h-5 w-5" />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          ) : (
-            <tbody>
-              <tr>
-                <td colSpan={7} className="text-center py-4">
-                  <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
+          <tbody>
+            {filteredTransactions.map((transaction, index) => (
+              <tr
+                key={transaction.version}
+                ref={
+                  index === filteredTransactions.length - 1
+                    ? lastTransactionElementRef
+                    : null
+                }
+                className={index % 2 === 0 ? "bg-gray-900" : "bg-gray-800"}
+              >
+                <td className="px-4 py-2">{transaction.action}</td>
+                <td className="px-4 py-2">
+                  {formatDate(transaction.transaction_timestamp)}
+                </td>
+                <td className="px-4 py-2 text-center">
+                  <span
+                    className={
+                      transaction.action === "Sent"
+                        ? "text-red-400"
+                        : "text-green-400"
+                    }
+                  >
+                    {transaction.action === "Sent" ? "- " : "+ "}
+                    {convertOctaToApt(transaction.amount)} APT
+                  </span>
+                </td>
+                <td className="px-4 py-2 hidden md:table-cell truncate max-w-[150px]">
+                  {collapseAddress(transaction.sender || "") || "N/A"}
+                </td>
+                <td className="px-4 py-2 hidden md:table-cell">
+                  <a
+                    href={`https://explorer.aptoslabs.com/txn/${transaction.version}?network=testnet`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-400 hover:underline"
+                  >
+                    {transaction.version}
+                  </a>
+                </td>
+                <td className="px-4 py-2">
+                  <span
+                    className={`px-2 py-1 rounded-full text-xs ${
+                      transaction.success
+                        ? "bg-green-800 text-green-200"
+                        : "bg-red-800 text-red-200"
+                    }`}
+                  >
+                    {transaction.success ? "Success" : "Failed"}
+                  </span>
+                </td>
+                <td className="px-4 py-2">
+                  <button
+                    // onClick={() => setSelectedTransaction(transaction)}
+                    className="text-blue-400 hover:text-blue-300 transition-colors"
+                  >
+                    <Info className="h-5 w-5" />
+                  </button>
                 </td>
               </tr>
-            </tbody>
-          )}
+            ))}
+          </tbody>
         </table>
-      </div>
-
-      {/* Responsive Pagination */}
-      {/* <div className="flex flex-wrap justify-center mt-4 space-x-2">
-        {Array.from({ length: totalpages }, (_, i) => i + 1).map((page) => (
-          <button
-            key={page}
-            onClick={() => handlePageChange(page)}
-            className={`btn btn-sm ${
-              currentPage === page ? "btn-primary" : "btn-ghost"
-            }`}
-          >
-            {page}
-          </button>
-        ))}
-      </div> */}
-      <div className="flex flex-wrap justify-center mt-4 space-x-2">
-        <button
-          onClick={() => setCurrentPage((prevPage) => prevPage + 1)}
-          className={`btn btn-sm btn-ghost `}
-        >
-          Load More
-        </button>
+        {loading && (
+          <div className="text-center py-4">
+            <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary"></div>
+          </div>
+        )}
+        {!loading && !hasMore && (
+          <div className="text-center py-4 text-gray-500">
+            No more transactions to load
+          </div>
+        )}
       </div>
 
       <div className="mt-6 flex justify-center gap-4 mb-10">
-        <button
+        {/* <button
           className="btn btn-primary"
           onClick={() => {
             router.push("/dashboard");
           }}
         >
           New Transaction
-        </button>
+        </button> */}
         {/* <button className="btn btn-outline">Export</button> */}
       </div>
     </main>
