@@ -35,7 +35,6 @@ const Layout = ({ title, children, className }: Props) => {
     const checkIfExpired = () => {
       const JwtToken = idToken?.state?.accounts[0]?.idToken.raw;
       if (JwtToken) {
-        // const expirationSec = 1724998249;
         const expirationSec = parseJwt(JwtToken)?.exp;
         const currentTime = Math.floor(Date.now() / 1000);
         if (expirationSec < currentTime) {

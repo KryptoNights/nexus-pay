@@ -201,7 +201,13 @@ export const get_transaction_history = async (address: string, offset: number): 
                 headers: { 'content-type': 'application/json' }
             }
         );
+
         const raw_fungible_asset_activities: FungibleAssetActivity[] = raw_fungible_asset_activities_response.data.data.fungible_asset_activities;
+
+        if (!raw_fungible_asset_activities || raw_fungible_asset_activities.length === 0) {
+            console.log('No fungible asset activities found for the given address');
+            return [];
+        }
 
         const highest_tx_version = raw_fungible_asset_activities[0].transaction_version;
 
@@ -295,6 +301,10 @@ export const get_transaction_history = async (address: string, offset: number): 
         return history;
     } catch (error) {
         console.error('Error fetching transaction history:', error);
+        if (axios.isAxiosError(error)) {
+            console.error('Response data:', error.response?.data);
+            console.error('Response status:', error.response?.status);
+        }
         throw new Error('Failed to fetch transaction history');
     }
 };
