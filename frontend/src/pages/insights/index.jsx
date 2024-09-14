@@ -3,9 +3,11 @@ import Layout from "@/components/Layout/Layout";
 import mixpanel from "mixpanel-browser";
 import Head from "next/head";
 import React, { useEffect, useRef } from "react";
+import { useSelector } from "react-redux";
 
 const index = () => {
   const tracked = useRef(false);
+  const { activeAccountAdress } = useSelector((state) => state.authSlice);
 
   useEffect(() => {
     if (!tracked.current) {
@@ -19,7 +21,7 @@ const index = () => {
         <title>Transfer | NexusPay</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <InsightsGraph activeAccountAdress="0xede634cb984f2897df0d3630257d3707202f85187ae9c8e51bcef102235981d0" />
+      <InsightsGraph activeAccountAdress={activeAccountAdress} />
     </Layout>
   );
 };
