@@ -1,9 +1,19 @@
-import Layout from '@/components/Layout/Layout'
-import TransactionTable from '@/components/Table/TransactionTable'
-import Head from 'next/head'
-import React from 'react'
+import Layout from "@/components/Layout/Layout";
+import TransactionTable from "@/components/Table/TransactionTable";
+import mixpanel from "mixpanel-browser";
+import Head from "next/head";
+import React, { useEffect, useRef } from "react";
 
 const Transactions = () => {
+  const tracked = useRef(false);
+
+  useEffect(() => {
+    if (!tracked.current) {
+      mixpanel.track("transaction_page_viewed");
+      tracked.current = true;
+    }
+  }, []);
+
   return (
     <Layout>
       <Head>
@@ -13,7 +23,7 @@ const Transactions = () => {
 
       <TransactionTable />
     </Layout>
-  )
-}
+  );
+};
 
-export default Transactions
+export default Transactions;

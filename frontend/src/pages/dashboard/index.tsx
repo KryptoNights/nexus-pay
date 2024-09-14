@@ -11,7 +11,7 @@ import { convertOctaToApt } from "@/core/utils";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { useKeylessAccounts } from "@/core/useKeylessAccounts";
@@ -31,6 +31,7 @@ const Home: NextPage = () => {
   const [transferAmount, setTransferAmount]: any = useState("");
   const [transferError, setTransferError] = useState("");
   const [paymentviaDynamicQR, setPaymentviaDynamicQR] = useState(false);
+  const tracked = useRef(false);
 
   const [selfNexusId, setselfNexusId] = useState("");
 
@@ -82,7 +83,7 @@ const Home: NextPage = () => {
         );
       } catch (error) {
         // console.log(error);
-        mixpanel.track("link_mailId_to_wallet_failed")
+        mixpanel.track("link_mailId_to_wallet_failed");
         //add mixpanel event here
       }
     }
@@ -123,7 +124,10 @@ const Home: NextPage = () => {
         $address: `${activeAccountAdress}`,
       });
     }
-    mixpanel.track("dashboard_view");
+    if (!tracked.current) {
+      mixpanel.track("dashboard_viewed");
+      tracked.current = true;
+    }
   }, [idToken?.state?.accounts[0]?.idToken?.decoded?.name]);
 
   const handleGoogleSignIn = () => {
@@ -151,6 +155,7 @@ const Home: NextPage = () => {
       setTransferAmount("");
     }
   }, [router]);
+
   const handleInputChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -289,7 +294,7 @@ const Home: NextPage = () => {
               router.push("/dashboard");
               await setIsTransferModalOpen(false);
               setPaymentviaDynamicQR(false);
-              mixpanel.track("transfer_modal_closed")
+              mixpanel.track("transfer_modal_closed");
             }}
             balance={balance}
             transferAmount={transferAmount}
