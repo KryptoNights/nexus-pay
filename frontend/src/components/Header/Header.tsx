@@ -35,14 +35,17 @@ const Header = ({ title }: HeaderProps) => {
   };
 
   const handleAddFundsClick = () => {
+    mixpanel.track("Add_dunds_modal_opened");
     setIsAddFundsModalOpen(true); // Open the modal when "Add Funds" is clicked
   };
 
   const handleAddFundsModalClose = () => {
+    mixpanel.track("Add_funds_modal_closed");
     setIsAddFundsModalOpen(false); // Close the modal
   };
 
   const handleDepositViaCard = () => {
+    mixpanel.track("deposit_via_card_clicked");
     const email = idToken?.state?.accounts[0]?.idToken?.decoded?.email;
     handleAddFunds(activeAccountAdress, email);
   };
@@ -101,8 +104,9 @@ const Header = ({ title }: HeaderProps) => {
   useEffect(() => {
     const fetchBalances = async () => {
       if (activeAccountAdress) {
+        let getBalancesResponse;
         try {
-          const getBalancesResponse = await getBalances(activeAccountAdress);
+          getBalancesResponse = await getBalances(activeAccountAdress);
           if (getBalancesResponse[0].amount !== 0) {
             dispatch(
               setUserBalance(convertOctaToApt(getBalancesResponse[0]?.amount))
@@ -111,7 +115,8 @@ const Header = ({ title }: HeaderProps) => {
         } catch (error) {
           mixpanel.track("error_fetching_balance", {
             user: activeAccountAdress,
-            error: error
+            error: error,
+            getBalancesResponse: getBalancesResponse,
           });
         }
       }
