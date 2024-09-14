@@ -35,7 +35,7 @@ const Header = ({ title }: HeaderProps) => {
   };
 
   const handleAddFundsClick = () => {
-    mixpanel.track("Add_dunds_modal_opened");
+    mixpanel.track("Add_funds_modal_opened");
     setIsAddFundsModalOpen(true); // Open the modal when "Add Funds" is clicked
   };
 
