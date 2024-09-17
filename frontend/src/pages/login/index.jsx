@@ -9,12 +9,14 @@ import Layout from "@/components/Layout/Layout";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import Image from "next/image";
+import mixpanel from "mixpanel-browser";
 
 function LoginPage() {
   const dispatch = useDispatch();
   const ephemeralKeyPair = useEphemeralKeyPair();
 
   const redirectUrl = new URL("https://accounts.google.com/o/oauth2/v2/auth");
+  mixpanel.track("on_login_page");
 
   // if (typeof window === "undefined") return;
 
