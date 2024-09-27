@@ -64,6 +64,7 @@ const TransactionTable: NextPage = () => {
       try {
         setLoading(true);
         const offset = (currentPage - 1) * totalpages;
+        console.log("debug", activeAccountAdress);
         const response = await get_transaction_history(
           activeAccountAdress,
           offset

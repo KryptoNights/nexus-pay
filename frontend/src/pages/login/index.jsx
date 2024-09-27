@@ -53,32 +53,35 @@ function LoginPage() {
     }
     if (popup) {
       const checkPopup = setInterval(() => {
-        if (
-          popup &&
-          popup?.window &&
-          popup.window?.location &&
-          popup?.window?.location?.href &&
-          popup?.window?.location?.href?.includes("id_token")
-        ) {
-          let idToken;
-          if (popup?.localStorage?.getItem("@aptos-connect/keyless-accounts")) {
-            idToken = JSON.parse(
-              popup.localStorage.getItem("@aptos-connect/keyless-accounts")
-            );
+        if (popup && popup.window && popup.window.location) {
+          try {
+            const fullUrl = popup.window.location.href;
+            if (fullUrl.includes("id_token")) {
+              let idToken;
+              if (
+                popup?.localStorage?.getItem("@aptos-connect/keyless-accounts")
+              ) {
+                idToken = JSON.parse(
+                  popup.localStorage.getItem("@aptos-connect/keyless-accounts")
+                );
+                // console.log(idToken);
+                dispatch(setAuthData(idToken));
+                // console.log("done");
+              } else {
+                console.log("No auth data found in localStorage.");
+              }
 
-            dispatch(setAuthData(idToken));
-          } else {
-            console.log("No auth data found in localStorage.");
+              const path = `${fullUrl}${fullUrl.search}${fullUrl.hash}`;
+
+              popup.close();
+              console.log(path);
+
+              // Use router.push instead of window.location.replace
+              router.push(path);
+            }
+          } catch (error) {
+            console.error("Error accessing popup location:", error);
           }
-
-          const fullUrl = popup.window.location.href;
-          const url = new URL(fullUrl);
-          const path = `${url.pathname}${url.search}${url.hash}`;
-
-          popup.close();
-
-          router.push(path);
-          // window.location.replace(popup.window.location.href);
         }
         if (!popup || !popup.closed) return;
         clearInterval(checkPopup);

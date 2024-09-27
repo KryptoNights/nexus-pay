@@ -54,6 +54,7 @@ const InsightsGraph = ({
     const fetchTransactionHistory = async () => {
       try {
         setLoading(true);
+        console.log("debug", activeAccountAdress);
         const offset = 0;
         const response = await get_transaction_history(
           activeAccountAdress,
@@ -65,19 +66,22 @@ const InsightsGraph = ({
         setTransactions(response as TransactionHistory[]);
 
         // Calculate balance insights
-        const balanceHistory = (response as TransactionHistory[]).reduce(
-          (acc: BalanceData[], tx: TransactionHistory, index: number) => {
-            const prevBalance = convertOctaToApt(acc[index - 1]?.balance) || 0;
-            const newBalance = convertOctaToApt(prevBalance + tx.amount); // Update balance based on transaction amount
-            acc.push({
-              // Assuming 'version' can be treated as a timestamp or version identifier for simplicity
-              date: formatDate(tx.transaction_timestamp), // Replace 'version' with actual date if available
-              balance: newBalance,
-            });
-            return acc;
-          },
-          []
-        ).reverse();;
+        const balanceHistory = (response as TransactionHistory[])
+          .reduce(
+            (acc: BalanceData[], tx: TransactionHistory, index: number) => {
+              const prevBalance =
+                convertOctaToApt(acc[index - 1]?.balance) || 0;
+              const newBalance = convertOctaToApt(prevBalance + tx.amount); // Update balance based on transaction amount
+              acc.push({
+                // Assuming 'version' can be treated as a timestamp or version identifier for simplicity
+                date: formatDate(tx.transaction_timestamp), // Replace 'version' with actual date if available
+                balance: newBalance,
+              });
+              return acc;
+            },
+            []
+          )
+          .reverse();
 
         setBalanceData(balanceHistory);
         setLoading(false);
