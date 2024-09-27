@@ -139,7 +139,7 @@ const Home: NextPage = () => {
     const params = new URLSearchParams(search);
     const address = params.get("address");
     const amount = params.get("amount");
-    console.log(address);
+    // console.log(address);
     if (address) {
       setRecipientAddress(address);
       setIsTransferModalOpen(true);

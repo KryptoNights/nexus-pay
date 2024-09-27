@@ -106,11 +106,15 @@ const Header = ({ title }: HeaderProps) => {
       if (activeAccountAdress) {
         let getBalancesResponse;
         try {
+          // console.log(activeAccountAdress);
           getBalancesResponse = await getBalances(activeAccountAdress);
+          // console.log(getBalancesResponse);
           if (getBalancesResponse[0].amount !== 0) {
             dispatch(
               setUserBalance(convertOctaToApt(getBalancesResponse[0]?.amount))
             );
+          } else {
+            setUserBalance(convertOctaToApt(0));
           }
         } catch (error) {
           mixpanel.track("error_fetching_balance", {
@@ -178,19 +182,7 @@ const Header = ({ title }: HeaderProps) => {
               className="btn btn-primary p-0 bg-[rgb(0,0,0)] rounded-xl hover:bg-transparent"
             >
               <div className="hidden sm:block pt-[8px] pr-[12px] pb-[8px] pl-[12px]">
-                + Add Funds
-              </div>
-            </button>
-          ) : (
-            <button></button>
-          )}
-          {activeAccountAdress.length > 0 ? (
-            <button
-              onClick={handlePopupOpen}
-              className="text-white btn btn-primary p-0 bg-[rgb(0,0,0)] rounded-xl hover:bg-transparent ml-2"
-            >
-              <div className="hidden sm:block pt-[8px] pr-[8px] pb-[8px] pl-[12px]">
-                {balance} APT
+                {isNaN(balance) ? 0 : balance} APT
               </div>
               <div className="bg-custom-gradient pt-[6px] pr-[8px] pl-[8px] pb-[8px] font-bold rounded-xl flex items-center h-[100%]">
                 <div className="gap-[6px] flex items-center">
