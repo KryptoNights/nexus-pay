@@ -55,6 +55,7 @@ const Home: NextPage = () => {
     const fetchBalances = async () => {
       if (activeAccountAdress) {
         const getBalancesResponse = await getBalances(activeAccountAdress);
+        console.log(`getBalancesResponse`, getBalancesResponse);
 
         dispatch(
           setUserBalance(convertOctaToApt(getBalancesResponse[0]?.amount))
@@ -283,7 +284,7 @@ const Home: NextPage = () => {
                 setIsTransferModalOpen(true);
               }}
             >
-              Transfer
+              Send
             </button>
           </div>
         </div>

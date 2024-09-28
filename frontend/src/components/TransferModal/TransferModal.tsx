@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { getBalances, testSendMoneyToAccount } from "@/core/transactions";
+import { getBalances, testSendMoneyToAccount, sendStablePayment } from "@/core/transactions";
 import { useKeylessAccounts } from "@/core/useKeylessAccounts";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -79,6 +79,25 @@ const TransferModal = ({
       setIsLoading(false);
     }
   };
+
+  // THIS IS JUST A SAMPLE EXAMPLE // NEEDS TO BE COMMENTED OUT
+  const sendStableMoney = async (recipientAddress: any) => {
+    try {
+      if (!recipientAddress) {
+        throw new Error("Active account is not provided.");
+      }
+
+      const hash = await sendStablePayment(
+        recipientAddress,
+        0.1,
+        activeAccount!
+      )
+      console.log(hash);
+    } catch (error) {
+      console.error("Failed to send money:", error);
+    }
+  };
+  // ENDS HERE
 
   const isTransferDisabled =
     transferError !== "" ||
@@ -186,6 +205,13 @@ const TransferModal = ({
               )}
             </button>
           )}
+          {/* THIS IS JUST A SAMPLE EXAMPLE // NEEDS TO BE COMMENTED OUT */}
+          <button className="btn btn-primary w-full"
+            onClick={() => sendStableMoney(recipientAddress)}
+            >
+            Send Stable
+            </button>
+          {/* ENDS HERE */}
         </div>
       </div>
     </div>
