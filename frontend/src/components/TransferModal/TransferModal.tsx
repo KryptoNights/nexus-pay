@@ -1,5 +1,9 @@
 import { useState } from "react";
-import { getBalances, testSendMoneyToAccount, sendStablePayment } from "@/core/transactions";
+import {
+  getBalances,
+  testSendMoneyToAccount,
+  sendStablePayment,
+} from "@/core/transactions";
 import { useKeylessAccounts } from "@/core/useKeylessAccounts";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -36,7 +40,7 @@ const TransferModal = ({
     const amount = e.target.value;
     setTransferAmount(amount);
 
-    if (parseFloat(amount) > balance) {
+    if (parseFloat(amount) > balance[0]?.amount) {
       setTransferError("Insufficient balance");
     } else {
       setTransferError("");
@@ -52,19 +56,12 @@ const TransferModal = ({
       }
 
       const getBalancesResponse = await getBalances(activeAccountAdress);
-      dispatch(
-        setUserBalance(convertOctaToApt(getBalancesResponse[0]?.amount))
-      );
+      dispatch(setUserBalance(getBalancesResponse));
 
       const transactionHash = await testSendMoneyToAccount(
         recipientAddress,
         activeAccount!,
         convertAptToOcta(transferAmount)
-      );
-
-      const getBalancesRespons2 = await getBalances(activeAccountAdress);
-      dispatch(
-        setUserBalance(convertOctaToApt(getBalancesRespons2[0]?.amount))
       );
 
       setIsSuccess(true);
@@ -91,7 +88,7 @@ const TransferModal = ({
         recipientAddress,
         0.1,
         activeAccount!
-      )
+      );
       console.log(hash);
     } catch (error) {
       console.error("Failed to send money:", error);
@@ -109,6 +106,10 @@ const TransferModal = ({
       !isValidWalletAddress(recipientAddress) ||
       !isValidCustomText(recipientAddress)
     );
+
+  const formatBalance = (amount: number, decimals: number = 6) => {
+    return (amount / 1e8).toFixed(decimals);
+  };
 
   return (
     <div
@@ -152,7 +153,9 @@ const TransferModal = ({
               <p className="text-error text-sm mt-1">{transferError}</p>
             )}
           </div>
-          <p className="text-sm">Balance: {balance} APT</p>
+          <p className="text-sm">
+            Balance: {formatBalance(balance[0]?.amount)} APT
+          </p>
 
           {!recipientAddress && (
             <p className="text-sm text-red-500">
@@ -206,11 +209,12 @@ const TransferModal = ({
             </button>
           )}
           {/* THIS IS JUST A SAMPLE EXAMPLE // NEEDS TO BE COMMENTED OUT */}
-          <button className="btn btn-primary w-full"
+          <button
+            className="btn btn-primary w-full"
             onClick={() => sendStableMoney(recipientAddress)}
-            >
+          >
             Send Stable
-            </button>
+          </button>
           {/* ENDS HERE */}
         </div>
       </div>

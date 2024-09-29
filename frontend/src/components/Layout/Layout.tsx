@@ -40,7 +40,7 @@ const Layout = ({ title, children, className }: Props) => {
         if (expirationSec < currentTime) {
           localStorage.removeItem("@aptos-connect/keyless-accounts");
           localStorage.removeItem("activeAccount");
-          dispatch(setUserBalance(0));
+          dispatch(setUserBalance({}));
           dispatch(setAuthData({}));
           dispatch(setActiveAccountAddress(""));
         }

@@ -18,7 +18,7 @@ interface HeaderProps {
 
 const Header = ({ title }: HeaderProps) => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [isAddFundsModalOpen, setIsAddFundsModalOpen] = useState(false); // State to manage Add Funds modal
+  const [isAddFundsModalOpen, setIsAddFundsModalOpen] = useState(false);
   const { disconnectKeylessAccount } = useKeylessAccounts();
   const { idToken, activeAccountAdress, balance } = useSelector(
     (state: any) => state.authSlice
@@ -36,12 +36,12 @@ const Header = ({ title }: HeaderProps) => {
 
   const handleAddFundsClick = () => {
     mixpanel.track("Add_funds_modal_opened");
-    setIsAddFundsModalOpen(true); // Open the modal when "Add Funds" is clicked
+    setIsAddFundsModalOpen(true);
   };
 
   const handleAddFundsModalClose = () => {
     mixpanel.track("Add_funds_modal_closed");
-    setIsAddFundsModalOpen(false); // Close the modal
+    setIsAddFundsModalOpen(false);
   };
 
   const handleDepositViaCard = () => {
@@ -104,23 +104,18 @@ const Header = ({ title }: HeaderProps) => {
   useEffect(() => {
     const fetchBalances = async () => {
       if (activeAccountAdress) {
-        let getBalancesResponse;
         try {
-          // console.log(activeAccountAdress);
-          getBalancesResponse = await getBalances(activeAccountAdress);
-          // console.log(getBalancesResponse);
-          if (getBalancesResponse[0].amount !== 0) {
-            dispatch(
-              setUserBalance(convertOctaToApt(getBalancesResponse[0]?.amount))
-            );
-          } else {
-            setUserBalance(convertOctaToApt(0));
+          const getBalancesResponse = await getBalances(activeAccountAdress);
+          if (
+            getBalancesResponse[0].amount !== 0 ||
+            getBalancesResponse[1].amount !== 0
+          ) {
+            dispatch(setUserBalance(getBalancesResponse));
           }
         } catch (error) {
           mixpanel.track("error_fetching_balance", {
             user: activeAccountAdress,
             error: error,
-            getBalancesResponse: getBalancesResponse,
           });
         }
       }
@@ -128,7 +123,11 @@ const Header = ({ title }: HeaderProps) => {
     if (activeAccountAdress.length > 0) {
       fetchBalances();
     }
-  }, [activeAccountAdress]);
+  }, [activeAccountAdress, dispatch]);
+
+  const formatBalance = (amount: number, decimals: number = 6) => {
+    return (amount / 1e8).toFixed(decimals);
+  };
 
   return (
     <div className="navbar sticky top-0 z-50 bg-[#0D0D0D] bg-opacity-90 p-2 sm:p-4">
@@ -192,7 +191,8 @@ const Header = ({ title }: HeaderProps) => {
               className="btn btn-primary p-0 bg-[rgb(0,0,0)] rounded-xl hover:bg-transparent"
             >
               <div className="hidden sm:block pt-[8px] pr-[12px] pb-[8px] pl-[12px]">
-                {isNaN(balance) ? 0 : balance} APT
+                {formatBalance(balance[0]?.amount)} APT |{" "}
+                {formatBalance(balance[1]?.amount)} USDT
               </div>
               <div className="bg-custom-gradient pt-[6px] pr-[8px] pl-[8px] pb-[8px] font-bold rounded-xl flex items-center h-[100%]">
                 <div className="gap-[6px] flex items-center">
@@ -212,9 +212,7 @@ const Header = ({ title }: HeaderProps) => {
                     className="hidden sm:block"
                     style={{ textTransform: "none" }}
                   >
-                    {collapseAddress(
-                      activeAccountAdress ?? activeAccountAdress
-                    )}
+                    {collapseAddress(activeAccountAdress)}
                   </div>
                   <DropdownIcon />
                 </div>
@@ -230,6 +228,7 @@ const Header = ({ title }: HeaderProps) => {
           onClose={handlePopupClose}
           balance={balance}
           handlePopupClose={handlePopupClose}
+          formatBalance={formatBalance}
         />
       )}
       {isAddFundsModalOpen && (

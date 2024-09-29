@@ -6,7 +6,7 @@ const address = getStoredAddress();
 const initialState = {
   idToken: preloadedState || {},
   activeAccountAdress: address || "",
-  balance: 0,
+  balance: {},
   selfNexusId: ""
 };
 

@@ -57,9 +57,7 @@ const Home: NextPage = () => {
         const getBalancesResponse = await getBalances(activeAccountAdress);
         console.log(`getBalancesResponse`, getBalancesResponse);
 
-        dispatch(
-          setUserBalance(convertOctaToApt(getBalancesResponse[0]?.amount))
-        );
+        dispatch(setUserBalance(getBalancesResponse));
       }
     };
 

@@ -12,10 +12,12 @@ const Popup = ({
   onClose,
   balance,
   handlePopupClose,
+  formatBalance,
 }: {
   onClose: () => void;
   balance: any;
   handlePopupClose: any;
+  formatBalance: any;
 }) => {
   const [copyFeedback, setCopyFeedback] = useState("");
 
@@ -74,7 +76,8 @@ const Popup = ({
           <h3 className="font-bold text-lg mt-4">
             {collapseAddress(activeAccountAdress)}
           </h3>
-          <p className="text-gray-400">{balance} APT</p>
+          <p className="text-gray-400">{formatBalance(balance[0]?.amount)} APT</p>
+          <p className="text-gray-400">{formatBalance(balance[1]?.amount)} USDT</p>
           <div className="modal-action flex justify-between w-full mt-6">
             <div className="relative">
               <button
