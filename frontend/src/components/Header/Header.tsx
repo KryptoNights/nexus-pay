@@ -175,10 +175,20 @@ const Header = ({ title }: HeaderProps) => {
           </div>
         </div>
         <div className="hidden sm:flex items-center justify-end mt-2 sm:mt-0">
+          {activeAccountAdress.length > 0 && (
+            <button
+              onClick={handleAddFundsClick}
+              className="btn btn-primary p-0 bg-[rgb(0,0,0)] rounded-xl hover:bg-transparent mr-2"
+            >
+              <div className="block pt-[8px] pr-[12px] pb-[8px] pl-[12px]">
+                + Add Funds
+              </div>
+            </button>
+          )}
           {activeAccountAdress.length > 0 &&
           idToken?.state?.accounts[0]?.idToken?.decoded?.email ? (
             <button
-              onClick={handleAddFundsClick}
+              onClick={handlePopupOpen}
               className="btn btn-primary p-0 bg-[rgb(0,0,0)] rounded-xl hover:bg-transparent"
             >
               <div className="hidden sm:block pt-[8px] pr-[12px] pb-[8px] pl-[12px]">
