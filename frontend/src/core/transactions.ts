@@ -85,46 +85,53 @@ export const sendStablePayment = async (recipient: AccountAddress, amount_usd: n
     const aptos_balance = await getBalances(signer.accountAddress.toString());
     const aptos_amount = aptos_balance.find((balance) => balance.asset_type === "0x1::aptos_coin::AptosCoin")?.amount;
     console.log(`Aptos balance: ${aptos_amount}`);
-    if (!aptos_amount) {
-        throw new Error("No Aptos balance found");
-    }
-    const tx = await aptos.transaction.build.simple({
-        sender: signer.accountAddress,
-        data: {
-            function: "0x19b400ef28270cdd00ff826412a13b2e7d82a8a0762c46bed34a6e8d52f0275a::entry::swap_y_for_exact_x",
-            typeArguments: [
-                "0x43417434fd869edee76cca2a4d2301e528a1551b1d719b75c350c3c97d15b8b9::coins::USDT",
-                "0x1::aptos_coin::AptosCoin",
-                "0x19b400ef28270cdd00ff826412a13b2e7d82a8a0762c46bed34a6e8d52f0275a::bin_steps::X20"
-            ],
-            functionArguments: [
-                aptos_amount - 1000000,
-                (1000000 * amount_usd).toString(),
-            ]
+    const usdt_amount = aptos_balance.find((balance) => balance.asset_type === "0x43417434fd869edee76cca2a4d2301e528a1551b1d719b75c350c3c97d15b8b9::coins::USDT")?.amount;
+    console.log(`USDT balance: ${usdt_amount}`);
+    // return Promise.resolve("0x0");
+
+    if (usdt_amount < 1000000 * amount_usd) {
+        console.log(`Aptos balance: ${aptos_amount}`);
+        if (!aptos_amount) {
+            throw new Error("No Aptos balance found");
         }
-    })
+        const tx = await aptos.transaction.build.simple({
+            sender: signer.accountAddress,
+            data: {
+                function: "0x19b400ef28270cdd00ff826412a13b2e7d82a8a0762c46bed34a6e8d52f0275a::entry::swap_y_for_exact_x",
+                typeArguments: [
+                    "0x43417434fd869edee76cca2a4d2301e528a1551b1d719b75c350c3c97d15b8b9::coins::USDT",
+                    "0x1::aptos_coin::AptosCoin",
+                    "0x19b400ef28270cdd00ff826412a13b2e7d82a8a0762c46bed34a6e8d52f0275a::bin_steps::X20"
+                ],
+                functionArguments: [
+                    aptos_amount - 1000000,
+                    (1000000 * amount_usd).toString(),
+                ]
+            }
+        })
 
-    const [userTransactionResponse] = await aptos.transaction.simulate.simple({
-        signerPublicKey: signer.publicKey,
-        transaction: tx
-    });
+        const [userTransactionResponse] = await aptos.transaction.simulate.simple({
+            signerPublicKey: signer.publicKey,
+            transaction: tx
+        });
 
-    console.log(`step 0:`)
-    console.log(userTransactionResponse);
+        console.log(`step 0:`)
+        console.log(userTransactionResponse);
 
-    const senderAuthenticator = aptos.transaction.sign({
-        signer: signer,
-        transaction: tx,
-    });
+        const senderAuthenticator = aptos.transaction.sign({
+            signer: signer,
+            transaction: tx,
+        });
 
-    const committedTransaction = await aptos.transaction.submit.simple({
-        transaction: tx,
-        senderAuthenticator,
-    });
+        const committedTransaction = await aptos.transaction.submit.simple({
+            transaction: tx,
+            senderAuthenticator,
+        });
 
-    const executedTransaction = await aptos.waitForTransaction({ transactionHash: committedTransaction.hash });
-    console.log(`step 1`);
-    console.log(executedTransaction);
+        const executedTransaction = await aptos.waitForTransaction({ transactionHash: committedTransaction.hash });
+        console.log(`step 1`);
+        console.log(executedTransaction);
+    }
 
     // const hash = await sendCoinToAddres(recipient, amount_usd, "0x43417434fd869edee76cca2a4d2301e528a1551b1d719b75c350c3c97d15b8b9::coins::USDT", signer);
     const hash = await testSendMoneyToAccount(recipient.toString(), signer, 1000000 * amount_usd, "0x43417434fd869edee76cca2a4d2301e528a1551b1d719b75c350c3c97d15b8b9::coins::USDT");
