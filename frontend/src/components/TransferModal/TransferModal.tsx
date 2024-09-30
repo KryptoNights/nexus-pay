@@ -28,6 +28,7 @@ const TransferModal = ({
 }: any) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isApt, setIsApt] = useState(true); // New state for currency toggle
   const { activeAccount } = useKeylessAccounts();
   const dispatch = useDispatch();
   const { idToken, activeAccountAdress } = useSelector(
@@ -45,6 +46,17 @@ const TransferModal = ({
     } else {
       setTransferError("");
     }
+  };
+
+  const handleCurrencyToggle = () => {
+    setIsApt(!isApt);
+    setTransferAmount("");
+  };
+
+  const getEquivalentValue = (amount: number) => {
+    const conversionRate = 7.99;
+    if (isNaN(amount) || amount < 0) return 0;
+    return isApt ? amount * conversionRate : amount / conversionRate;
   };
 
   const sendMoney = async (recipientAddress: any) => {
@@ -128,8 +140,8 @@ const TransferModal = ({
         <div className="flex flex-col items-center gap-4">
           {/* Show recipient address and gas fees */}
           {recipientAddress && (
-            <>
-              <p className="text-sm text-white">Recipient:</p>
+            <div className="flex-col gap-4 items-center w-full">
+              <p className="text-md text-white text-left mb-2">Recipient:</p>
               <input
                 type=""
                 placeholder="Receipient"
@@ -137,23 +149,39 @@ const TransferModal = ({
                 value={recipientAddress}
                 disabled={true}
               />
-              {/* gas fees currently hardcoded */}
-              <p className="text-sm text-white">Gas Fee: 0.01 APT</p>
-            </>
+            </div>
           )}
-          <div className="w-full">
+
+          <div className="flex items-center justify-between w-full">
+            <label className="text-sm">
+              {isApt ? "Switch to USDT" : "Switch to APT"}
+            </label>
             <input
-              type="number"
-              placeholder="Enter amount of APT"
-              className="input input-bordered input-primary w-full"
+              type="checkbox"
+              checked={!isApt}
+              onChange={handleCurrencyToggle}
+              className={`toggle ${!isApt ? "toggle-primary" : "toggle-secondary"}`} // Updated class for color change
+            />
+          </div>
+          <div className="w-full relative">
+            <input
+              type="text"
+              inputMode="numeric"
+              placeholder={`Enter amount of ${isApt ? "APT" : "USDT"}`}
+              className="input input-bordered input-primary w-full text-left"
               value={transferAmount}
               onChange={handleTransferAmountChange}
               disabled={isLoading || isSuccess || paymentviaDynamicQR}
             />
-            {transferError && (
-              <p className="text-error text-sm mt-1">{transferError}</p>
-            )}
+            <span className="absolute right-3 top-2 text-gray-500 border-l pl-2">
+              {" "}
+              {getEquivalentValue(parseFloat(transferAmount)).toFixed(2)}{" "}
+              {isApt ? "USDT" : "APT"}
+            </span>
           </div>
+          {transferError && (
+            <p className="text-error text-sm mt-1">{transferError}</p>
+          )}
           <p className="text-sm">
             Balance: {formatBalance(balance[0]?.amount)} APT
           </p>
@@ -216,7 +244,6 @@ const TransferModal = ({
           >
             Send Stable
           </button>
-          {/* ENDS HERE */}
         </div>
       </div>
     </div>
