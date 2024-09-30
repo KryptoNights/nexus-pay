@@ -125,8 +125,8 @@ const Header = ({ title }: HeaderProps) => {
     }
   }, [activeAccountAdress, dispatch]);
 
-  const formatBalance = (amount: number, decimals: number = 6) => {
-    return (amount / 1e8).toFixed(decimals);
+  const formatBalance = (amount: number, exp: number, decimals: number = 3) => {
+    return (amount / 10**exp).toFixed(decimals);
   };
 
   return (
@@ -191,8 +191,8 @@ const Header = ({ title }: HeaderProps) => {
               className="btn btn-primary p-0 bg-[rgb(0,0,0)] rounded-xl hover:bg-transparent"
             >
               <div className="hidden sm:block pt-[8px] pr-[12px] pb-[8px] pl-[12px]">
-                {formatBalance(balance[0]?.amount)} APT |{" "}
-                {formatBalance(balance[1]?.amount)} USDT
+                {formatBalance(balance[0]?.amount, 8)} APT |{" "}
+                {formatBalance(balance[1]?.amount, 6)} USDT
               </div>
               <div className="bg-custom-gradient pt-[6px] pr-[8px] pl-[8px] pb-[8px] font-bold rounded-xl flex items-center h-[100%]">
                 <div className="gap-[6px] flex items-center">
