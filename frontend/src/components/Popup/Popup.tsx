@@ -46,6 +46,8 @@ const Popup = ({
       });
   };
 
+  console.log(balance[0]?.amount);
+
   return (
     <div
       id="modal"
@@ -76,8 +78,15 @@ const Popup = ({
           <h3 className="font-bold text-lg mt-4">
             {collapseAddress(activeAccountAdress)}
           </h3>
-          <p className="text-gray-400">{formatBalance(balance[0]?.amount)} APT</p>
-          <p className="text-gray-400">{formatBalance(balance[1]?.amount)} USDT</p>
+          <p className="text-gray-400">
+            {formatBalance(balance[0]?.amount, 8)} APT
+          </p>
+          <p className="text-gray-400">
+            {isNaN(balance[1]?.amount)
+              ? "0"
+              : formatBalance(balance[1]?.amount, 6)}{" "}
+            USDT
+          </p>
           <div className="modal-action flex justify-between w-full mt-6">
             <div className="relative">
               <button
