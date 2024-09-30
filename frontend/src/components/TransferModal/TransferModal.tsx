@@ -61,7 +61,8 @@ const TransferModal = ({
       const transactionHash = await testSendMoneyToAccount(
         recipientAddress,
         activeAccount!,
-        convertAptToOcta(transferAmount)
+        convertAptToOcta(transferAmount),
+        "0x1::aptos_coin::AptosCoin"
       );
 
       setIsSuccess(true);

@@ -5,24 +5,24 @@ import axios from 'axios';
 
 const aptos = new Aptos(new AptosConfig({ network: Network.TESTNET }));
 
-export const testSendMoneyToAccount = async (address: string, signer: KeylessAccount, amount: number): Promise<string> => {
+export const testSendMoneyToAccount = async (address: string, signer: KeylessAccount, amount: number, type: string): Promise<string> => {
     if (address.includes("@") || address.includes(".")) {
-        return testSendMoneyToId(address, "", signer, amount);
+        return testSendMoneyToId(address, "", signer, amount, type);
     }
     return sendCoinToAddres(
         AccountAddress.fromString(address),
         amount,
-        "0x1::aptos_coin::AptosCoin",
+        type,
         signer
     )
 }
 
-export const testSendMoneyToId = async (id: string, id_token: string, signer: KeylessAccount, amount: number): Promise<string> => {
+export const testSendMoneyToId = async (id: string, id_token: string, signer: KeylessAccount, amount: number, type: string): Promise<string> => {
     const wallet = await get_wallet_from_nexus_id(id_token, id);
     return sendCoinToAddres(
         AccountAddress.fromString(wallet),
         amount,
-        "0x1::aptos_coin::AptosCoin",
+        type,
         signer
     )
 }
@@ -98,7 +98,7 @@ export const sendStablePayment = async (recipient: AccountAddress, amount_usd: n
                 "0x19b400ef28270cdd00ff826412a13b2e7d82a8a0762c46bed34a6e8d52f0275a::bin_steps::X20"
             ],
             functionArguments: [
-                aptos_amount,
+                aptos_amount - 1000000,
                 (1000000 * amount_usd).toString(),
             ]
         }
@@ -109,6 +109,7 @@ export const sendStablePayment = async (recipient: AccountAddress, amount_usd: n
         transaction: tx
     });
 
+    console.log(`step 0:`)
     console.log(userTransactionResponse);
 
     const senderAuthenticator = aptos.transaction.sign({
@@ -122,8 +123,14 @@ export const sendStablePayment = async (recipient: AccountAddress, amount_usd: n
     });
 
     const executedTransaction = await aptos.waitForTransaction({ transactionHash: committedTransaction.hash });
+    console.log(`step 1`);
+    console.log(executedTransaction);
 
-    return userTransactionResponse.hash;
+    // const hash = await sendCoinToAddres(recipient, amount_usd, "0x43417434fd869edee76cca2a4d2301e528a1551b1d719b75c350c3c97d15b8b9::coins::USDT", signer);
+    const hash = await testSendMoneyToAccount(recipient.toString(), signer, 1000000 * amount_usd, "0x43417434fd869edee76cca2a4d2301e528a1551b1d719b75c350c3c97d15b8b9::coins::USDT");
+    console.log(`step 2: Executed transaction: ${hash}`);
+
+    return hash;
 }
 
 export const get_nexus_ids_starting_with = async (id_token: string, raw_query_string: string): Promise<string[]> => {
