@@ -87,7 +87,7 @@ const TransferModal = ({
 
       const hash = await sendStablePayment(
         recipientAddress,
-        0.1,
+        transferAmount,
         activeAccount!
       );
       console.log(hash);
