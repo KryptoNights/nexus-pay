@@ -141,7 +141,9 @@ const TransferModal = ({
           {/* Show recipient address and gas fees */}
           {recipientAddress && (
             <div className="flex-col gap-4 items-center w-full">
-              <p className="text-md text-white text-left mb-2">Recipient:</p>
+              <h4 className="font-bold text-lg mb-3 text-left w-full">
+                Recipient:
+              </h4>
               <input
                 type=""
                 placeholder="Receipient"
@@ -151,47 +153,87 @@ const TransferModal = ({
               />
             </div>
           )}
-
-          <div className="flex items-center justify-between w-full">
-            <label className="text-sm">
-              {isApt ? "Switch to USDT" : "Switch to APT"}
-            </label>
-            <input
-              type="checkbox"
-              checked={!isApt}
-              onChange={handleCurrencyToggle}
-              className={`toggle ${!isApt ? "toggle-primary" : "toggle-secondary"}`} // Updated class for color change
-            />
-          </div>
-          <div className="w-full relative">
+          <h4 className="font-bold text-lg mb-0 text-left w-full">
+            Select Amount
+          </h4>{" "}
+          <div className="w-full relative flex items-center justify-between">
+            <select
+              value={isApt ? "APT" : "USDT"}
+              onChange={(e) => setIsApt(e.target.value === "APT")}
+              className="select select-bordered w-3/8"
+            >
+              <option value="APT">APT</option>
+              <option value="USDT">USDT</option>
+            </select>
             <input
               type="text"
               inputMode="numeric"
-              placeholder={`Enter amount of ${isApt ? "APT" : "USDT"}`}
-              className="input input-bordered input-primary w-full text-left"
+              placeholder={`Enter amount in ${isApt ? "APT" : "USDT"}`}
+              className="input input-bordered input-primary w-full text-left ml-2"
               value={transferAmount}
               onChange={handleTransferAmountChange}
               disabled={isLoading || isSuccess || paymentviaDynamicQR}
             />
-            <span className="absolute right-3 top-2 text-gray-500 border-l pl-2">
-              {" "}
-              {getEquivalentValue(parseFloat(transferAmount)).toFixed(2)}{" "}
-              {isApt ? "USDT" : "APT"}
-            </span>
+          </div>
+          <div className="text-sm mt-2 w-full border border-gray-600 rounded-lg p-4 bg-gray-700 flex-col">
+            <div className="flex flex-row justify-between w-full">
+              <div>{isApt ? "1 USDT :" : "1 APT :"} </div>
+              <div className="font-bold">
+                {isApt
+                  ? getEquivalentValue(1).toFixed(3) + " APT"
+                  : getEquivalentValue(1).toFixed(3) + " USDT"}
+              </div>
+            </div>
+            <div className="flex flex-row justify-between w-full">
+              <p>Amount:</p>
+              <p>
+                <span className="font-bold">
+                  {getEquivalentValue(parseFloat(transferAmount)).toFixed(3)}{" "}
+                </span>
+                <span className="font-bold">{isApt ? "USDT" : "APT"}</span>
+              </p>
+            </div>
+            <div className="flex flex-row justify-between w-full">
+              <p>Estimated Gas Fees:</p>
+              <p>
+                <span className="font-bold">
+                  {" "}
+                  0.010 {isApt ? "APT" : "APT"}
+                </span>
+              </p>
+              {isLoading && (
+                <div className="flex justify-center mt-2">
+                  <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                    <circle
+                      className="opacity-25"
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      stroke="currentColor"
+                      strokeWidth="4"
+                    ></circle>
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    ></path>
+                  </svg>
+                </div>
+              )}
+            </div>
           </div>
           {transferError && (
             <p className="text-error text-sm mt-1">{transferError}</p>
           )}
+          {/* Move balance display here */}
           <p className="text-sm">
             Balance: {formatBalance(balance[0]?.amount)} APT
           </p>
-
           {!recipientAddress && (
             <p className="text-sm text-red-500">
               Please enter address or Nexus id
             </p>
           )}
-
           {isSuccess ? (
             <div className="text-green-500 flex items-center">
               <svg
