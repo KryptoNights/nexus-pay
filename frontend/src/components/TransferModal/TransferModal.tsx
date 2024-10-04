@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   getBalances,
   testSendMoneyToAccount,
   sendStablePayment,
+  testSendMoneyToAccountSimulate,
 } from "@/core/transactions";
 import { useKeylessAccounts } from "@/core/useKeylessAccounts";
 import { useDispatch, useSelector } from "react-redux";
@@ -89,6 +90,45 @@ const TransferModal = ({
       setIsLoading(false);
     }
   };
+  const sendMoneySimulalte = async (recipientAddress: any) => {
+    setIsLoading(true);
+    try {
+      if (!recipientAddress) {
+        throw new Error("Active account is not provided.");
+      }
+      const getBalancesResponse = await getBalances(activeAccountAdress);
+      dispatch(setUserBalance(getBalancesResponse));
+      const transactionHash = await testSendMoneyToAccountSimulate(
+        recipientAddress,
+        activeAccount!,
+        convertAptToOcta(transferAmount),
+        "0x1::aptos_coin::AptosCoin"
+      );
+      console.log(JSON.parse(transactionHash));
+      setIsSuccess(true);
+    } catch (error) {
+      console.error("Failed to send money:", error);
+      setTransferError("sendMoneySimulalte failed. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const sendMoneyDebounced = async (recipientAddress: any) => {
+    await sendMoneySimulalte(recipientAddress);
+  };
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      if (transferAmount) {
+        sendMoneyDebounced(recipientAddress);
+      }
+    }, 3000);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [transferAmount, recipientAddress]); // Dependencies for useEffect
 
   // THIS IS JUST A SAMPLE EXAMPLE // NEEDS TO BE COMMENTED OUT
   const sendStableMoney = async (recipientAddress: any) => {
