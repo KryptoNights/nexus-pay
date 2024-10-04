@@ -16,10 +16,32 @@ export const testSendMoneyToAccount = async (address: string, signer: KeylessAcc
         signer
     )
 }
+export const testSendMoneyToAccountSimulate = async (address: string, signer: KeylessAccount, amount: number, type: string): Promise<string> => {
+    if (address.includes("@") || address.includes(".")) {
+        return testSendMoneyToIdSimulate(address, "", signer, amount, type);
+    }
+    return sendCoinToAddresSimulation(
+        AccountAddress.fromString(address),
+        amount,
+        type,
+        signer
+    )
+}
+
 
 export const testSendMoneyToId = async (id: string, id_token: string, signer: KeylessAccount, amount: number, type: string): Promise<string> => {
     const wallet = await get_wallet_from_nexus_id(id_token, id);
     return sendCoinToAddres(
+        AccountAddress.fromString(wallet),
+        amount,
+        type,
+        signer
+    )
+}
+
+export const testSendMoneyToIdSimulate = async (id: string, id_token: string, signer: KeylessAccount, amount: number, type: string): Promise<string> => {
+    const wallet = await get_wallet_from_nexus_id(id_token, id);
+    return sendCoinToAddresSimulation(
         AccountAddress.fromString(wallet),
         amount,
         type,
@@ -63,6 +85,8 @@ export const getBalances = async (address: string): Promise<{
 }
 
 export const sendCoinToAddres = async (recipient: AccountAddress, amount: number, type: string, signer: KeylessAccount): Promise<string> => {
+   
+   
     const parts = type.split("::");
     if (parts.length !== 3) {
         throw new Error("Invalid coin type, should be in the format of '0x1::aptos_coin::AptosCoin'");
@@ -73,13 +97,38 @@ export const sendCoinToAddres = async (recipient: AccountAddress, amount: number
         recipient: recipient,
         amount: amount,
         coinType: `${parts[0]}::${parts[1]}::${parts[2]}`,
-    });
+    });   
 
     const committedTxn = await aptos.signAndSubmitTransaction({ signer: signer, transaction });
     const committedTransactionResponse = await aptos.waitForTransaction({ transactionHash: committedTxn.hash });
 
     return committedTransactionResponse.hash;
 }
+
+
+export const sendCoinToAddresSimulation = async (recipient: AccountAddress, amount: number, type: string, signer: KeylessAccount): Promise<string> => {
+   
+    const parts = type.split("::");
+    console.log('inside')
+    if (parts.length !== 3) {
+        throw new Error("Invalid coin type, should be in the format of '0x1::aptos_coin::AptosCoin'");
+    }
+    const transaction = await aptos.transferCoinTransaction({
+        sender: signer.accountAddress,
+        recipient: recipient,
+        amount: amount,
+        coinType: `${parts[0]}::${parts[1]}::${parts[2]}`,
+    });   
+    const [userTransactionResponse] = await aptos.transaction.simulate.simple({
+        signerPublicKey: signer.publicKey,
+        transaction,
+    });
+    console.log('as',userTransactionResponse)
+    return JSON.stringify(userTransactionResponse)
+}
+
+
+
 
 export const sendStablePayment = async (recipient: AccountAddress, amount_usd: number, signer: KeylessAccount): Promise<string> => {
     const aptos_balance = await getBalances(signer.accountAddress.toString());
