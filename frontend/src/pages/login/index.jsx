@@ -1,15 +1,14 @@
 "use client";
 
+import { setAuthData } from "@/redux/reducers/authReducer";
+import mixpanel from "mixpanel-browser";
+import Head from "next/head";
+import Image from "next/image";
+import { useRouter } from "next/router";
+import { useDispatch } from "react-redux";
+import GoogleLogo from "../../../public/assets/GoogleLogo";
 import { GOOGLE_CLIENT_ID } from "../../core/constants";
 import useEphemeralKeyPair from "../../core/useEphemeralKeyPair";
-import GoogleLogo from "../../../public/assets/GoogleLogo";
-import { useDispatch } from "react-redux";
-import { setAuthData } from "@/redux/reducers/authReducer";
-import Layout from "@/components/Layout/Layout";
-import Head from "next/head";
-import { useRouter } from "next/router";
-import Image from "next/image";
-import mixpanel from "mixpanel-browser";
 
 function LoginPage() {
   const dispatch = useDispatch();

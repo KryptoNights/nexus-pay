@@ -2,7 +2,7 @@ import InsightsGraph from "@/components/InsightsGraph/InsightsGraph";
 import Layout from "@/components/Layout/Layout";
 import mixpanel from "mixpanel-browser";
 import Head from "next/head";
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 
 const index = () => {

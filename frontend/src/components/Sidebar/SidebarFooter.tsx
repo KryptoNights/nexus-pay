@@ -1,4 +1,4 @@
-import { bottomIcons, bottomDisclaimer } from "@/routes/sidebar";
+import { bottomDisclaimer, bottomIcons } from "@/routes/sidebar";
 import Link from "next/link";
 
 import styles from "@/components/Sidebar/SidebarFooter.module.css";

@@ -1,15 +1,15 @@
-import { Sidebar } from "@/components/Sidebar/Sidebar";
 import Header from "@/components/Header/Header";
+import { Sidebar } from "@/components/Sidebar/Sidebar";
 import { SidebarProvider } from "@/context/SidebarContext";
-import clsx from "clsx";
-import { useDispatch, useSelector } from "react-redux";
-import React from "react";
-import { useRouter } from "next/router";
 import {
   setActiveAccountAddress,
   setAuthData,
   setUserBalance,
 } from "@/redux/reducers/authReducer";
+import clsx from "clsx";
+import { useRouter } from "next/router";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 interface Props {
   title?: string;

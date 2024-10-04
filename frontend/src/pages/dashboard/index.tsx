@@ -7,18 +7,14 @@ import {
   get_nexus_ids_starting_with,
   getBalances,
 } from "@/core/transactions";
-import { convertOctaToApt } from "@/core/utils";
+import { setSelfNexusId, setUserBalance } from "@/redux/reducers/authReducer";
+import axios from "axios";
+import mixpanel from "mixpanel-browser";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import axios from "axios";
-import { useKeylessAccounts } from "@/core/useKeylessAccounts";
-import mixpanel from "mixpanel-browser";
-import { setSelfNexusId, setUserBalance } from "@/redux/reducers/authReducer";
-import React from "react";
-import { id } from "ethers";
 
 const Home: NextPage = () => {
   const [recipientAddress, setRecipientAddress]: any = useState("");

@@ -1,13 +1,12 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
-import Head from "next/head";
-import { useRouter } from "next/router";
-import Image from "next/image";
-import { useSelector } from "react-redux";
 import AOS from "aos";
 import "aos/dist/aos.css"; // Import AOS styles
 import mixpanel from "mixpanel-browser";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import React, { useEffect, useRef } from "react";
+import { useSelector } from "react-redux";
 
 // Near entry of your product, init Mixpanel
 

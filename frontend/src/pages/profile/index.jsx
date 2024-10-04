@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { useSelector } from "react-redux";
 import Layout from "@/components/Layout/Layout";
-import Image from "next/image";
 import Head from "next/head";
+import Image from "next/image";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const Profile = () => {
   const { nexusId } = useSelector((state) => state.authSlice);

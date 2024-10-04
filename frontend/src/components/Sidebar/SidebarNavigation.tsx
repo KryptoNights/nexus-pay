@@ -1,6 +1,6 @@
 import { useRouter } from "next/router";
 
-import { routeIsActive, INavigation } from "@/routes/sidebar";
+import { INavigation, routeIsActive } from "@/routes/sidebar";
 import clsx from "clsx";
 
 interface IProps {

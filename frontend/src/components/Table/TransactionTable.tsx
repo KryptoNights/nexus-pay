@@ -1,13 +1,12 @@
 "use client";
 
-import Layout from "@/components/Layout/Layout";
 import { get_transaction_history } from "@/core/transactions";
 import { collapseAddress, convertOctaToApt, formatDate } from "@/core/utils";
-import type { NextPage } from "next";
-import { useEffect, useState, useRef, useCallback } from "react";
-import { useSelector } from "react-redux";
-import { Info } from "lucide-react";
 import debounce from "lodash/debounce"; // Add this import
+import { Info } from "lucide-react";
+import type { NextPage } from "next";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 
 interface Transaction {
   version: string;

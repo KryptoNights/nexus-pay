@@ -1,20 +1,19 @@
-import { useState, useEffect } from "react";
 import {
   getBalances,
-  testSendMoneyToAccount,
   sendStablePayment,
+  testSendMoneyToAccount,
   testSendMoneyToAccountSimulate,
 } from "@/core/transactions";
 import { useKeylessAccounts } from "@/core/useKeylessAccounts";
-import { useDispatch, useSelector } from "react-redux";
 import {
   convertAptToOcta,
-  convertOctaToApt,
   isValidCustomText,
   isValidWalletAddress,
 } from "@/core/utils";
 import { setUserBalance } from "@/redux/reducers/authReducer";
 import mixpanel from "mixpanel-browser";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 const TransferModal = ({
   onClose,
@@ -28,7 +27,9 @@ const TransferModal = ({
   paymentviaDynamicQR,
 }: any) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [simulationIsLoading, setSimulationIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [estimateGasFee, setEstimateGasFee] = useState(0);
   const [isApt, setIsApt] = useState(true); // New state for currency toggle
   const { activeAccount } = useKeylessAccounts();
   const dispatch = useDispatch();
@@ -90,8 +91,33 @@ const TransferModal = ({
       setIsLoading(false);
     }
   };
-  const sendMoneySimulalte = async (recipientAddress: any) => {
+
+  // THIS IS JUST A SAMPLE EXAMPLE // NEEDS TO BE COMMENTED OUT
+  const sendStableMoney = async (recipientAddress: any) => {
+    mixpanel.track("send_stable_money_initiated");
     setIsLoading(true);
+    try {
+      if (!recipientAddress) {
+        throw new Error("Active account is not provided.");
+      }
+
+      const hash = await sendStablePayment(
+        recipientAddress,
+        transferAmount,
+        activeAccount!
+      );
+      setIsSuccess(true);
+      console.log(hash);
+    } catch (error) {
+      console.error("Failed to send money:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  // ENDS HERE
+
+  const sendMoneySimulalte = async (recipientAddress: any) => {
+    setSimulationIsLoading(true);
     try {
       if (!recipientAddress) {
         throw new Error("Active account is not provided.");
@@ -104,13 +130,14 @@ const TransferModal = ({
         convertAptToOcta(transferAmount),
         "0x1::aptos_coin::AptosCoin"
       );
-      console.log(JSON.parse(transactionHash));
-      setIsSuccess(true);
+      setEstimateGasFee(JSON.parse(transactionHash).gas_used);
+      console.log("transactionHash", JSON.parse(transactionHash));
+      // setIsSuccess(true);
     } catch (error) {
       console.error("Failed to send money:", error);
       setTransferError("sendMoneySimulalte failed. Please try again.");
     } finally {
-      setIsLoading(false);
+      setSimulationIsLoading(false);
     }
   };
 
@@ -130,29 +157,11 @@ const TransferModal = ({
     };
   }, [transferAmount, recipientAddress]); // Dependencies for useEffect
 
-  // THIS IS JUST A SAMPLE EXAMPLE // NEEDS TO BE COMMENTED OUT
-  const sendStableMoney = async (recipientAddress: any) => {
-    try {
-      if (!recipientAddress) {
-        throw new Error("Active account is not provided.");
-      }
-
-      const hash = await sendStablePayment(
-        recipientAddress,
-        transferAmount,
-        activeAccount!
-      );
-      console.log(hash);
-    } catch (error) {
-      console.error("Failed to send money:", error);
-    }
-  };
-  // ENDS HERE
-
   const isTransferDisabled =
     transferError !== "" ||
     transferAmount === "" ||
     parseFloat(transferAmount) <= 0 ||
+    simulationIsLoading ||
     isLoading ||
     !recipientAddress ||
     !(
@@ -212,7 +221,12 @@ const TransferModal = ({
               className="input input-bordered input-primary w-full text-left ml-2"
               value={transferAmount}
               onChange={handleTransferAmountChange}
-              disabled={isLoading || isSuccess || paymentviaDynamicQR}
+              disabled={
+                isLoading ||
+                isSuccess ||
+                paymentviaDynamicQR ||
+                simulationIsLoading
+              }
             />
           </div>
           <div className="text-sm mt-2 w-full border border-gray-600 rounded-lg p-4 bg-gray-700 flex-col">
@@ -235,30 +249,41 @@ const TransferModal = ({
             </div>
             <div className="flex flex-row justify-between w-full">
               <p>Estimated Gas Fees:</p>
-              <p>
-                <span className="font-bold">
-                  {" "}
-                  0.010 {isApt ? "APT" : "APT"}
-                </span>
-              </p>
-              {isLoading && (
-                <div className="flex justify-center mt-2">
-                  <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
-                </div>
+
+              {simulationIsLoading ? (
+                <>
+                  {/* <p>
+                    <span className="font-bold">
+                      {" "}
+                      {estimateGasFee} {isApt ? "APT" : "APT"}
+                    </span>
+                  </p> */}
+
+                  <div className="flex justify-center mt-2">
+                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                  </div>
+                </>
+              ) : (
+                <p>
+                  <span className="font-bold">
+                    {" "}
+                    {estimateGasFee} {isApt ? "APT" : "APT"}
+                  </span>
+                </p>
               )}
             </div>
           </div>
@@ -295,7 +320,8 @@ const TransferModal = ({
           ) : (
             <button
               className="btn btn-primary w-full"
-              onClick={() => sendMoney(recipientAddress)}
+              // onClick={() => sendMoney(recipientAddress)}
+              onClick={() => sendStableMoney(recipientAddress)}
               disabled={isTransferDisabled}
             >
               {isLoading ? (
@@ -320,12 +346,12 @@ const TransferModal = ({
             </button>
           )}
           {/* THIS IS JUST A SAMPLE EXAMPLE // NEEDS TO BE COMMENTED OUT */}
-          <button
+          {/* <button
             className="btn btn-primary w-full"
             onClick={() => sendStableMoney(recipientAddress)}
           >
             Send Stable
-          </button>
+          </button> */}
         </div>
       </div>
     </div>

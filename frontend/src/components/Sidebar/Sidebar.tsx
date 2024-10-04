@@ -1,10 +1,9 @@
-import { Fragment, useRef, useContext } from "react";
+import { useContext, useRef } from "react";
 
-import navigation, { bottomNavigation } from "@/routes/sidebar";
 import SidebarContext from "@/context/SidebarContext";
+import navigation, { bottomNavigation } from "@/routes/sidebar";
 import SidebarFooter from "./SidebarFooter";
 import SidebarNavigation from "./SidebarNavigation";
-import { Logo } from "public/assets/Logo";
 
 export function Sidebar({ children }: any) {
   const sidebarRef = useRef(null);

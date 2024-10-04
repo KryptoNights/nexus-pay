@@ -1,12 +1,12 @@
 import "@/styles/globals.css";
-import React, { useEffect } from "react";
-import type { AppProps } from "next/app";
+import mixpanel from "mixpanel-browser";
 import { ThemeProvider } from "next-themes";
-import store from "../redux/store";
-import { Provider, useSelector } from "react-redux";
+import type { AppProps } from "next/app";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import mixpanel from "mixpanel-browser";
+import React, { useEffect } from "react";
+import { Provider } from "react-redux";
+import store from "../redux/store";
 
 mixpanel.init(process.env.NEXT_PUBLIC_MIXPANEL_TOKEN as string, {
   debug: true,

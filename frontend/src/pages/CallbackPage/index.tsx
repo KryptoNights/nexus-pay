@@ -1,10 +1,9 @@
-import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useRouter } from "next/router";
 import { useKeylessAccounts } from "@/core/useKeylessAccounts";
-import { useDispatch } from "react-redux";
-import { setActiveAccountAddress } from "@/redux/reducers/authReducer";
 import { getAddressAsString } from "@/core/utils";
+import { setActiveAccountAddress } from "@/redux/reducers/authReducer";
+import { useRouter } from "next/router";
+import { useEffect, useRef, useState } from "react";
+import { useDispatch } from "react-redux";
 
 function CallbackPage() {
   const isLoading = useRef(false);

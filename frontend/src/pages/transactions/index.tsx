@@ -2,7 +2,7 @@ import Layout from "@/components/Layout/Layout";
 import TransactionTable from "@/components/Table/TransactionTable";
 import mixpanel from "mixpanel-browser";
 import Head from "next/head";
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
 const Transactions = () => {
   const tracked = useRef(false);

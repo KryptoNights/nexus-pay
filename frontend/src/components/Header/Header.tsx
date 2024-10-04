@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import SidebarToggle from "@/components/Header/SidebarToggle";
 import { getBalances } from "@/core/transactions";
 import { useKeylessAccounts } from "@/core/useKeylessAccounts";
-import { collapseAddress, convertOctaToApt } from "@/core/utils";
+import { collapseAddress } from "@/core/utils";
 import { setUserBalance } from "@/redux/reducers/authReducer";
+import { Transak, TransakConfig } from "@transak/transak-sdk";
+import mixpanel from "mixpanel-browser";
 import Image from "next/image";
 import DropdownIcon from "public/assets/svgs/DropdownIcon";
-import { TransakConfig, Transak } from "@transak/transak-sdk";
-import Popup from "../Popup/Popup";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import AddFundsModal from "../AddFundsModal/AddFundsModal";
-import mixpanel from "mixpanel-browser";
+import Popup from "../Popup/Popup";
 
 interface HeaderProps {
   title?: string;

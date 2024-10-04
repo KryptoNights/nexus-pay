@@ -1,6 +1,4 @@
-import { Account, AccountAddress } from '@aptos-labs/ts-sdk';
-import { KeylessAccount } from "@aptos-labs/ts-sdk"
-import { Aptos, AptosConfig, Network } from '@aptos-labs/ts-sdk';
+import { AccountAddress, Aptos, AptosConfig, KeylessAccount, Network } from '@aptos-labs/ts-sdk';
 import axios from 'axios';
 
 const aptos = new Aptos(new AptosConfig({ network: Network.TESTNET }));
@@ -86,7 +84,6 @@ export const getBalances = async (address: string): Promise<{
 
 export const sendCoinToAddres = async (recipient: AccountAddress, amount: number, type: string, signer: KeylessAccount): Promise<string> => {
    
-   
     const parts = type.split("::");
     if (parts.length !== 3) {
         throw new Error("Invalid coin type, should be in the format of '0x1::aptos_coin::AptosCoin'");
@@ -126,8 +123,6 @@ export const sendCoinToAddresSimulation = async (recipient: AccountAddress, amou
     console.log('as',userTransactionResponse)
     return JSON.stringify(userTransactionResponse)
 }
-
-
 
 
 export const sendStablePayment = async (recipient: AccountAddress, amount_usd: number, signer: KeylessAccount): Promise<string> => {
@@ -407,7 +402,6 @@ export const get_transaction_history = async (address: string, offset: number): 
             return transaction;
         });
 
-        return history;
     } catch (error) {
         console.error('Error fetching transaction history:', error);
         if (axios.isAxiosError(error)) {

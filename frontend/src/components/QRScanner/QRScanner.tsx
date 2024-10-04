@@ -1,9 +1,8 @@
+import mixpanel from "mixpanel-browser";
+import { useRouter } from "next/router";
 import QrScanner from "qr-scanner";
 import { useEffect, useRef, useState } from "react";
 import styles from "./QRScanner.module.css";
-import { isValidCustomText, isValidWalletAddress } from "@/core/utils";
-import { useRouter } from "next/router";
-import mixpanel from "mixpanel-browser";
 
 const QRScanner = ({ setRecipientAddress, handlePopupClose }: any) => {
   const videoElementRef = useRef<HTMLVideoElement>(null);
