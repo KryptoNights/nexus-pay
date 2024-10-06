@@ -15,7 +15,7 @@ export const convertOctaToApt = (value: number) => {
 }
 
 export const convertAptToOcta = (transferAmount: number) => {
-  return transferAmount * 10e7;
+  return transferAmount * 1e8;
 }
 
 export const getAddressAsString = (address: any): any => {

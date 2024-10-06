@@ -124,14 +124,46 @@ export const sendCoinToAddresSimulation = async (recipient: AccountAddress, amou
     return JSON.stringify(userTransactionResponse)
 }
 
+export const sendCoinToAddresGas = async (recipient: AccountAddress, amount: number, type: string, signer: KeylessAccount): Promise<number> => {
+    const parts = type.split("::");
+    console.log('inside')
+    if (parts.length !== 3) {
+        throw new Error("Invalid coin type, should be in the format of '0x1::aptos_coin::AptosCoin'");
+    }
+    const transaction = await aptos.transferCoinTransaction({
+        sender: signer.accountAddress,
+        recipient: recipient,
+        amount: amount,
+        coinType: `${parts[0]}::${parts[1]}::${parts[2]}`,
+    });   
+    const [userTransactionResponse] = await aptos.transaction.simulate.simple({
+        signerPublicKey: signer.publicKey,
+        transaction,
+    });
+    console.log('as',userTransactionResponse)
+    return Number.parseInt(userTransactionResponse.gas_unit_price) * Number.parseInt(userTransactionResponse.gas_used);
+}
 
-export const sendStablePayment = async (recipient: AccountAddress, amount_usd: number, signer: KeylessAccount): Promise<string> => {
+// new type for simulation response
+export type SimulationResponse = {
+    gas_used: number;
+    usdt_deducted: number;
+    apt_deducted: number;
+    usdt_per_apt: number;
+}
+
+export const sendStablePayment = async (recipient: AccountAddress, amount_usd: number, signer: KeylessAccount, onlySimulate: boolean = false): Promise<string | SimulationResponse> => {
     const aptos_balance = await getBalances(signer.accountAddress.toString());
     const aptos_amount = aptos_balance.find((balance) => balance.asset_type === "0x1::aptos_coin::AptosCoin")?.amount;
     console.log(`Aptos balance: ${aptos_amount}`);
     const usdt_amount = aptos_balance.find((balance) => balance.asset_type === "0x43417434fd869edee76cca2a4d2301e528a1551b1d719b75c350c3c97d15b8b9::coins::USDT")?.amount;
     console.log(`USDT balance: ${usdt_amount}`);
     // return Promise.resolve("0x0");
+
+    let gas_used = 0;
+    let usdt_deducted = 0;
+    let apt_deducted = 0;
+    let usdt_per_apt = 0;
 
     if (usdt_amount < 1000000 * amount_usd) {
         console.log(`Aptos balance: ${aptos_amount}`);
@@ -162,26 +194,52 @@ export const sendStablePayment = async (recipient: AccountAddress, amount_usd: n
         console.log(`step 0:`)
         console.log(userTransactionResponse);
 
-        const senderAuthenticator = aptos.transaction.sign({
-            signer: signer,
-            transaction: tx,
-        });
+        gas_used += Number.parseInt(userTransactionResponse.gas_unit_price) * Number.parseInt(userTransactionResponse.gas_used);
 
-        const committedTransaction = await aptos.transaction.submit.simple({
-            transaction: tx,
-            senderAuthenticator,
-        });
+        const swap_event = userTransactionResponse.events.find((event: any) => event.type === "0x19b400ef28270cdd00ff826412a13b2e7d82a8a0762c46bed34a6e8d52f0275a::pool::SwapEvent");
+        if (swap_event) {
+            console.log("swap_event");
+            console.log(swap_event);
+            apt_deducted = Number.parseInt(swap_event.data.y_in[0]) / 1e8;
+            usdt_per_apt = Number.parseInt(swap_event.data.x_out[0]) / 1e6 / apt_deducted;
+        }
 
-        const executedTransaction = await aptos.waitForTransaction({ transactionHash: committedTransaction.hash });
-        console.log(`step 1`);
-        console.log(executedTransaction);
+        if (!onlySimulate) {
+            const senderAuthenticator = aptos.transaction.sign({
+                signer: signer,
+                transaction: tx,
+            });
+
+            const committedTransaction = await aptos.transaction.submit.simple({
+                transaction: tx,
+                senderAuthenticator,
+            });
+
+            const executedTransaction = await aptos.waitForTransaction({ transactionHash: committedTransaction.hash });
+            console.log(`step 1`);
+            console.log(executedTransaction);
+        }
     }
 
     // const hash = await sendCoinToAddres(recipient, amount_usd, "0x43417434fd869edee76cca2a4d2301e528a1551b1d719b75c350c3c97d15b8b9::coins::USDT", signer);
-    const hash = await testSendMoneyToAccount(recipient.toString(), signer, 1000000 * amount_usd, "0x43417434fd869edee76cca2a4d2301e528a1551b1d719b75c350c3c97d15b8b9::coins::USDT");
-    console.log(`step 2: Executed transaction: ${hash}`);
+    if (!onlySimulate) {
+        const hash = await testSendMoneyToAccount(recipient.toString(), signer, 1000000 * amount_usd, "0x43417434fd869edee76cca2a4d2301e528a1551b1d719b75c350c3c97d15b8b9::coins::USDT");
+        console.log(`step 2: Executed transaction: ${hash}`);
 
-    return hash;
+        return hash;
+    }
+
+    gas_used += await sendCoinToAddresGas(AccountAddress.fromString("0x43417434fd869edee76cca2a4d2301e528a1551b1d719b75c350c3c97d15b8b9"), 1000000 * amount_usd, "0x43417434fd869edee76cca2a4d2301e528a1551b1d719b75c350c3c97d15b8b9::coins::USDT", signer);
+    console.log("returning simulation response");
+    if (apt_deducted === 0) {
+        usdt_deducted = amount_usd;
+    }
+    return {
+        gas_used,
+        usdt_deducted,
+        apt_deducted,
+        usdt_per_apt
+    };
 }
 
 export const get_nexus_ids_starting_with = async (id_token: string, raw_query_string: string): Promise<string[]> => {
