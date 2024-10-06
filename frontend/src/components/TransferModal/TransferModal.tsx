@@ -106,7 +106,8 @@ const TransferModal = ({
       const hash = await sendStablePayment(
         recipientAddress,
         transferAmount,
-        activeAccount!
+        activeAccount!,
+        true
       );
       setIsSuccess(true);
       console.log(hash);
