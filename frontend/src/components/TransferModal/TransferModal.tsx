@@ -7,6 +7,7 @@ import {
 import { useKeylessAccounts } from "@/core/useKeylessAccounts";
 import {
   convertAptToOcta,
+  formatBalanceUtils,
   isValidCustomText,
   isValidWalletAddress,
 } from "@/core/utils";
@@ -18,7 +19,6 @@ import { useDispatch, useSelector } from "react-redux";
 const TransferModal = ({
   onClose,
   balance,
-  setRecipientAddress,
   transferAmount,
   setTransferAmount,
   setTransferError,
@@ -30,20 +30,22 @@ const TransferModal = ({
   const [simulationIsLoading, setSimulationIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [estimateGasFee, setEstimateGasFee] = useState(0);
-  const [isApt, setIsApt] = useState(true); // New state for currency toggle
+  const [isApt, setIsApt] = useState(false); // New state for currency toggle
   const { activeAccount } = useKeylessAccounts();
   const dispatch = useDispatch();
-  const { idToken, activeAccountAdress } = useSelector(
-    (state: any) => state.authSlice
-  );
-
-  // console.log(activeAccountAdress);
+  const { activeAccountAdress } = useSelector((state: any) => state.authSlice);
 
   const handleTransferAmountChange = (e: any) => {
     const amount = e.target.value;
     setTransferAmount(amount);
 
-    if (parseFloat(amount) > balance[0]?.amount) {
+    const showInsufficientBalanceMessage =
+      parseFloat(amount) >
+      (isApt
+        ? Number(formatBalanceUtils(balance[0]?.amount, 8))
+        : Number(formatBalanceUtils(balance[1]?.amount, 6)));
+
+    if (showInsufficientBalanceMessage) {
       setTransferError("Insufficient balance");
     } else {
       setTransferError("");
@@ -150,7 +152,7 @@ const TransferModal = ({
       if (transferAmount) {
         sendMoneyDebounced(recipientAddress);
       }
-    }, 3000);
+    }, 1000);
 
     return () => {
       clearTimeout(handler);
@@ -161,6 +163,10 @@ const TransferModal = ({
     transferError !== "" ||
     transferAmount === "" ||
     parseFloat(transferAmount) <= 0 ||
+    parseFloat(transferAmount) >
+      (isApt
+        ? Number(formatBalanceUtils(balance[0]?.amount, 8))
+        : Number(formatBalanceUtils(balance[1]?.amount, 6))) ||
     simulationIsLoading ||
     isLoading ||
     !recipientAddress ||
@@ -211,8 +217,8 @@ const TransferModal = ({
               onChange={(e) => setIsApt(e.target.value === "APT")}
               className="select select-bordered w-3/8"
             >
-              <option value="APT">APT</option>
               <option value="USDT">USDT</option>
+              <option value="APT">APT</option>
             </select>
             <input
               type="text"
@@ -252,13 +258,6 @@ const TransferModal = ({
 
               {simulationIsLoading ? (
                 <>
-                  {/* <p>
-                    <span className="font-bold">
-                      {" "}
-                      {estimateGasFee} {isApt ? "APT" : "APT"}
-                    </span>
-                  </p> */}
-
                   <div className="flex justify-center mt-2">
                     <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
                       <circle
@@ -321,7 +320,11 @@ const TransferModal = ({
             <button
               className="btn btn-primary w-full"
               // onClick={() => sendMoney(recipientAddress)}
-              onClick={() => sendStableMoney(recipientAddress)}
+              onClick={() =>
+                isApt
+                  ? sendMoney(recipientAddress)
+                  : sendStableMoney(recipientAddress)
+              }
               disabled={isTransferDisabled}
             >
               {isLoading ? (

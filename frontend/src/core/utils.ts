@@ -81,3 +81,7 @@ export const formatDate = (timestamp: string): string => {
   const year = date.getFullYear();
   return `${day}/${month}/${year}`;
 };
+
+export const formatBalanceUtils = (amount: number, exp: number, decimals: number = 3) => {
+  return (amount / 10 ** exp).toFixed(decimals);
+};
