@@ -109,6 +109,11 @@ const TransferModal = ({
         activeAccount!,
         true
       );
+      if (typeof hash === "string") {
+        console.log("tx has executed", hash);
+      } else if (typeof hash === "object") {
+        console.log("tx has only simulated", hash.apt_deducted, hash.usdt_deducted, hash.usdt_per_apt, hash.gas_used);
+      }
       setIsSuccess(true);
       console.log(hash);
     } catch (error) {
