@@ -28,6 +28,8 @@ const TransferModal = ({
 }: any) => {
   const [isLoading, setIsLoading] = useState(false);
   const [simulationIsLoading, setSimulationIsLoading] = useState(false);
+  const [conversionRate, setConversionRate] = useState(0);
+  const [usdtDeducted, setUSDTDeducted] = useState(0);
   const [isSuccess, setIsSuccess] = useState(false);
   const [estimateGasFee, setEstimateGasFee] = useState(0);
   const [isApt, setIsApt] = useState(false); // New state for currency toggle
@@ -38,7 +40,7 @@ const TransferModal = ({
   const handleTransferAmountChange = (e: any) => {
     const amount = e.target.value;
     setTransferAmount(amount);
-
+    console.log(amount);
     const showInsufficientBalanceMessage =
       parseFloat(amount) >
       (isApt
@@ -58,7 +60,7 @@ const TransferModal = ({
   };
 
   const getEquivalentValue = (amount: number) => {
-    const conversionRate = 7.99;
+    console.log(conversionRate);
     if (isNaN(amount) || amount < 0) return 0;
     return isApt ? amount * conversionRate : amount / conversionRate;
   };
@@ -112,7 +114,13 @@ const TransferModal = ({
       if (typeof hash === "string") {
         console.log("tx has executed", hash);
       } else if (typeof hash === "object") {
-        console.log("tx has only simulated", hash.apt_deducted, hash.usdt_deducted, hash.usdt_per_apt, hash.gas_used);
+        console.log(
+          "tx has only simulated",
+          hash.apt_deducted,
+          hash.usdt_deducted,
+          hash.usdt_per_apt,
+          hash.gas_used
+        );
       }
       setIsSuccess(true);
       console.log(hash);
@@ -132,15 +140,38 @@ const TransferModal = ({
       }
       const getBalancesResponse = await getBalances(activeAccountAdress);
       dispatch(setUserBalance(getBalancesResponse));
-      const transactionHash = await testSendMoneyToAccountSimulate(
-        recipientAddress,
-        activeAccount!,
-        convertAptToOcta(transferAmount),
-        "0x1::aptos_coin::AptosCoin"
-      );
-      setEstimateGasFee(JSON.parse(transactionHash).gas_used);
-      console.log("transactionHash", JSON.parse(transactionHash));
-      // setIsSuccess(true);
+
+      if (isApt) {
+        const hash = await testSendMoneyToAccountSimulate(
+          recipientAddress,
+          activeAccount!,
+          convertAptToOcta(transferAmount),
+          "0x1::aptos_coin::AptosCoin"
+        );
+        // console.log(JSON.parse(hash));
+        setEstimateGasFee(Number(JSON.parse(hash).max_gas_amount));
+      } else {
+        const hash: any = await sendStablePayment(
+          recipientAddress,
+          transferAmount,
+          activeAccount!,
+          true
+        );
+        console.log("transactionHash", hash);
+        setEstimateGasFee(hash.gas_used);
+        if (Number(hash.usdt_per_apt) != 0) {
+          setConversionRate(hash.usdt_per_apt);
+        } else {
+          setConversionRate(0);
+        }
+        if (Number(hash.usdt_deducted) != 0) {
+          setUSDTDeducted(hash.usdt_deducted);
+        } else {
+          setUSDTDeducted(0);
+        }
+      }
+
+      setSimulationIsLoading(false);
     } catch (error) {
       console.error("Failed to send money:", error);
       setTransferError("sendMoneySimulalte failed. Please try again.");
@@ -158,7 +189,7 @@ const TransferModal = ({
       if (transferAmount) {
         sendMoneyDebounced(recipientAddress);
       }
-    }, 1000);
+    }, 500);
 
     return () => {
       clearTimeout(handler);
@@ -219,17 +250,17 @@ const TransferModal = ({
           </h4>{" "}
           <div className="w-full relative flex items-center justify-between">
             <select
-              value={isApt ? "APT" : "USDT"}
+              value={isApt ? "APT" : "USD"}
               onChange={(e) => setIsApt(e.target.value === "APT")}
               className="select select-bordered w-3/8"
             >
-              <option value="USDT">USDT</option>
+              <option value="USD">USD</option>
               <option value="APT">APT</option>
             </select>
             <input
               type="text"
               inputMode="numeric"
-              placeholder={`Enter amount in ${isApt ? "APT" : "USDT"}`}
+              placeholder={`Enter amount in ${isApt ? "APT" : "USD"}`}
               className="input input-bordered input-primary w-full text-left ml-2"
               value={transferAmount}
               onChange={handleTransferAmountChange}
@@ -241,57 +272,86 @@ const TransferModal = ({
               }
             />
           </div>
-          <div className="text-sm mt-2 w-full border border-gray-600 rounded-lg p-4 bg-gray-700 flex-col">
-            <div className="flex flex-row justify-between w-full">
-              <div>{isApt ? "1 USDT :" : "1 APT :"} </div>
-              <div className="font-bold">
-                {isApt
-                  ? getEquivalentValue(1).toFixed(3) + " APT"
-                  : getEquivalentValue(1).toFixed(3) + " USDT"}
-              </div>
-            </div>
-            <div className="flex flex-row justify-between w-full">
-              <p>Amount:</p>
-              <p>
-                <span className="font-bold">
-                  {getEquivalentValue(parseFloat(transferAmount)).toFixed(3)}{" "}
-                </span>
-                <span className="font-bold">{isApt ? "USDT" : "APT"}</span>
-              </p>
-            </div>
-            <div className="flex flex-row justify-between w-full">
-              <p>Estimated Gas Fees:</p>
-
+          {transferAmount != 0 && (
+            <>
               {simulationIsLoading ? (
                 <>
-                  <div className="flex justify-center mt-2">
-                    <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
-                      <circle
-                        className="opacity-25"
-                        cx="12"
-                        cy="12"
-                        r="10"
-                        stroke="currentColor"
-                        strokeWidth="4"
-                      ></circle>
-                      <path
-                        className="opacity-75"
-                        fill="currentColor"
-                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                      ></path>
-                    </svg>
+                  <div className="text-sm mt-2 w-full border border-gray-600 rounded-lg p-4 bg-gray-700 flex-col">
+                    <div className="flex justify-between items-center mt-2">
+                      <span className="text-md text-left font-bold">
+                        Simulating Response
+                      </span>
+                      <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                    </div>
                   </div>
                 </>
               ) : (
-                <p>
-                  <span className="font-bold">
-                    {" "}
-                    {estimateGasFee} {isApt ? "APT" : "APT"}
-                  </span>
-                </p>
+                <div className="text-sm mt-2 w-full border border-gray-600 rounded-lg p-4 bg-gray-700 flex-col">
+                  {!isApt && conversionRate != 0 && (
+                    <div className="flex flex-row justify-between w-full">
+                      <div>{!isApt ? "1 USD :" : "1 APT :"} </div>
+                      <div className="font-bold">
+                        {!isApt
+                          ? getEquivalentValue(1).toFixed(3) + " APT"
+                          : getEquivalentValue(1).toFixed(3) + " USD"}
+                      </div>
+                    </div>
+                  )}
+                  {!isApt && conversionRate != 0 && (
+                    <div className="flex flex-row justify-between w-full">
+                      <p>Amount Deducted:</p>
+                      <p>
+                        <span className="font-bold">
+                          {" "}
+                          {getEquivalentValue(
+                            parseFloat(transferAmount)
+                          ).toFixed(3)}{" "}
+                        </span>
+                        <span className="font-bold">
+                          {isApt ? "USD" : "APT"}
+                        </span>
+                      </p>
+                    </div>
+                  )}
+                  {!isApt && usdtDeducted != 0 && (
+                    <div className="flex flex-row justify-between w-full">
+                      <p>Amount Deducted:</p>
+                      <p>
+                        <span className="font-bold"> {usdtDeducted} </span>
+                        <span className="font-bold">
+                          {isApt ? "USD" : "USD"}
+                        </span>
+                      </p>
+                    </div>
+                  )}
+
+                  <div className="flex flex-row justify-between w-full">
+                    <p>Estimated Gas Fees:</p>
+                    <p>
+                      <span className="font-bold">
+                        {Number(estimateGasFee / 1e8).toFixed(5)}{" "}
+                        {isApt ? "APT" : "APT"}
+                      </span>
+                    </p>
+                  </div>
+                </div>
               )}
-            </div>
-          </div>
+            </>
+          )}
           {transferError && (
             <p className="text-error text-sm mt-1">{transferError}</p>
           )}
