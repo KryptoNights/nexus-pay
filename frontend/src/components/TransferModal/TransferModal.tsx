@@ -37,21 +37,22 @@ const TransferModal = ({
   const dispatch = useDispatch();
   const { activeAccountAdress } = useSelector((state: any) => state.authSlice);
 
-  const handleTransferAmountChange = (e: any) => {
+  const handleTransferAmountChange = (e: any) => {  
     const amount = e.target.value;
     setTransferAmount(amount);
     console.log(amount);
-    const showInsufficientBalanceMessage =
-      parseFloat(amount) >
-      (isApt
-        ? Number(formatBalanceUtils(balance[0]?.amount, 8))
-        : Number(formatBalanceUtils(balance[1]?.amount, 6)));
+    // const showInsufficientBalanceMessage =
+    //   parseFloat(amount) >
+    //   (isApt
+    //     ? Number(formatBalanceUtils(balance[0]?.amount, 8))
+    //     : Number(formatBalanceUtils(balance[1]?.amount, 6)));
 
-    if (showInsufficientBalanceMessage) {
-      setTransferError("Insufficient balance");
-    } else {
-      setTransferError("");
-    }
+    // if (showInsufficientBalanceMessage) {
+    //   setTransferError("Insufficient balance");
+    // }
+    // else {
+    //   setTransferError("");
+    // }
   };
 
   const handleCurrencyToggle = () => {
@@ -189,7 +190,7 @@ const TransferModal = ({
       if (transferAmount) {
         sendMoneyDebounced(recipientAddress);
       }
-    }, 500);
+    }, 2000);
 
     return () => {
       clearTimeout(handler);
@@ -200,10 +201,10 @@ const TransferModal = ({
     transferError !== "" ||
     transferAmount === "" ||
     parseFloat(transferAmount) <= 0 ||
-    parseFloat(transferAmount) >
-      (isApt
-        ? Number(formatBalanceUtils(balance[0]?.amount, 8))
-        : Number(formatBalanceUtils(balance[1]?.amount, 6))) ||
+    // parseFloat(transferAmount) >
+    //   (isApt
+    //     ? Number(formatBalanceUtils(balance[0]?.amount, 8))
+    //     : Number(formatBalanceUtils(balance[1]?.amount, 6))) ||
     simulationIsLoading ||
     isLoading ||
     !recipientAddress ||
