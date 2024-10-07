@@ -43,21 +43,21 @@ const Index = () => {
 
   const handleApprove = async (id: string) => {
     try {
-      const response = await fetch(
-        "https://nexus-fill-request-876401151866.us-central1.run.app",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer 12345",
-          },
-          body: JSON.stringify({
-            id: id,
-            tx_hash: "0x00000000test000000000test0000000000test",
-            email: emailId,
-          }),
-        }
-      );
+      // const response = await fetch(
+      //   "https://nexus-fill-request-876401151866.us-central1.run.app",
+      //   {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //       Authorization: "Bearer 12345",
+      //     },
+      //     body: JSON.stringify({
+      //       id: id,
+      //       tx_hash: "0x00000000test000000000test0000000000test",
+      //       email: emailId,
+      //     }),
+      //   }
+      // );
     } catch (error) {
       console.log(error);
     }
