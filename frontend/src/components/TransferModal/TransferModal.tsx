@@ -118,7 +118,7 @@ const TransferModal = ({
         recipientAddress,
         transferAmount,
         activeAccount!,
-        true
+        false
       );
       if (typeof hash === "string") {
         console.log("tx has executed", hash);
