@@ -37,7 +37,7 @@ const TransferModal = ({
   const dispatch = useDispatch();
   const { activeAccountAdress } = useSelector((state: any) => state.authSlice);
 
-  const handleTransferAmountChange = (e: any) => {  
+  const handleTransferAmountChange = (e: any) => {
     const amount = e.target.value;
     setTransferAmount(amount);
     console.log(amount);
@@ -86,12 +86,20 @@ const TransferModal = ({
 
       setIsSuccess(true);
       mixpanel.track("successful_transaction");
-    } catch (error) {
-      console.error("Failed to send money:", error);
-      setTransferError("Transaction failed. Please try again.");
-      mixpanel.track("failed to send money", {
-        error: error,
-      });
+    } catch (error: any) {
+      const vmStatus = error?.transaction?.vm_status || "";
+
+      if (
+        vmStatus.includes("INSUFFICIENT_BALANCE") ||
+        vmStatus.includes("Not enough coins")
+      ) {
+        setTransferError("Not Enough Balance");
+      } else {
+        setTransferError("Transaction failed. Please try again.");
+      }
+
+      console.error("Failed to send money:", vmStatus);
+      mixpanel.track("failed to send money", { error });
     } finally {
       setIsLoading(false);
     }
