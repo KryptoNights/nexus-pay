@@ -1,4 +1,5 @@
 import Layout from "@/components/Layout/Layout";
+import { sendStableMoneyFunc } from "@/utils/apis";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -17,7 +18,11 @@ interface Approval {
 const Index = () => {
   const [approvals, setApprovals] = useState<Approval[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const { idToken } = useSelector((state: any) => state.authSlice);
+  const [paymentsLoading, setPaymentsLoading] = useState(false);
+  const [rejectLoading, setRejectLoading] = useState(false);
+  const { idToken, activeAccountAdress } = useSelector(
+    (state: any) => state.authSlice
+  );
   const emailId = idToken?.state?.accounts?.[0]?.idToken?.decoded?.email;
 
   useEffect(() => {
@@ -41,8 +46,21 @@ const Index = () => {
     fetchApprovals();
   }, []);
 
-  const handleApprove = async (id: string) => {
+  const handleApprove = async (
+    id: string,
+    recipientAddress: any,
+    transferAmount: any,
+    activeAccountAdress: any
+  ) => {
     try {
+      setPaymentsLoading(true);
+      const res = await sendStableMoneyFunc(
+        recipientAddress,
+        transferAmount,
+        activeAccountAdress
+      );
+      console.log("payment status", res);
+
       // const response = await fetch(
       //   "https://nexus-fill-request-876401151866.us-central1.run.app",
       //   {
@@ -58,14 +76,32 @@ const Index = () => {
       //     }),
       //   }
       // );
+      setPaymentsLoading(false);
     } catch (error) {
       console.log(error);
     }
     console.log(`Approved: ${id}`);
   };
 
-  const handleReject = (id: string) => {
+  const handleReject = async (id: string) => {
     console.log(`Rejected: ${id}`);
+    setRejectLoading(true);
+    const response = await fetch(
+      "https://nexus-fill-request-876401151866.us-central1.run.app",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer 12345",
+        },
+        body: JSON.stringify({
+          id: id,
+          tx_hash: "0x00000000test000000000test0000000000test",
+          email: emailId,
+        }),
+      }
+    );
+    setRejectLoading(false);
   };
 
   const getStatusInfo = (approval: Approval) => {
@@ -111,7 +147,14 @@ const Index = () => {
           <div className={styles.buttonGroup}>
             <button
               className={`${styles.button} ${styles.approveButton}`}
-              onClick={() => handleApprove(approval.id)}
+              onClick={() =>
+                handleApprove(
+                  approval.id,
+                  approval!,
+                  approval.amount,
+                  activeAccountAdress
+                )
+              }
             >
               Approve
             </button>
