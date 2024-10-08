@@ -27,6 +27,7 @@ const LandingPage: React.FC = () => {
   const stepsRef = useRef<HTMLElement>(null);
   const featuresRef = useRef<HTMLElement>(null);
   const faqRef = useRef<HTMLElement>(null);
+  const businessRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     AOS.init({ duration: 1000 }); // Initialize AOS with a duration of 1000ms for animations
@@ -84,6 +85,29 @@ const LandingPage: React.FC = () => {
     },
   ];
 
+  const businessSteps: Array<{
+    title: string;
+    description: string;
+    icon: string;
+  }> = [
+    {
+      title: "1. Integrate SDK",
+      description: "Add our SDK to your application",
+      icon: "M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4",
+    },
+    {
+      title: "2. Send Payment Request",
+      description: "Initiate a payment request with user's email.",
+      icon: "M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z",
+    },
+    {
+      title: "3. Receive Status",
+      description:
+        "Verify receive status about approval or rejection using our API.",
+      icon: "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z",
+    },
+  ];
+
   return (
     <>
       <Head>
@@ -133,6 +157,18 @@ const LandingPage: React.FC = () => {
                 className="text-white hover:text-blue-300 transition-colors duration-300 hover:cursor-pointer"
               >
                 FAQs
+              </a>
+              <a
+                onClick={() => handleScroll(businessRef)}
+                className="text-white hover:text-blue-300 transition-colors duration-300 hover:cursor-pointer"
+              >
+                For Businesses
+              </a>
+              <a
+                href="/docs"
+                className="text-white hover:text-blue-300 transition-colors duration-300 hover:cursor-pointer"
+              >
+                Documentation
               </a>
               <button
                 className="text-sm py-2 px-6 bg-blue-600 rounded-full font-medium hover:bg-blue-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 shadow-xl shadow-blue-500/30"
@@ -247,6 +283,53 @@ const LandingPage: React.FC = () => {
                   <p className="text-lg text-gray-300">{feature}</p>
                 </div>
               ))}
+            </div>
+          </section>
+
+          <section
+            ref={businessRef}
+            className="mb-32 min-h-[34vh]"
+            data-aos="fade-up"
+          >
+            <h2 className="text-4xl md:text-5xl font-semibold text-center mb-16 text-blue-200">
+              For Businesses
+            </h2>
+            <div className="grid md:grid-cols-3 gap-12">
+              {businessSteps.map((step, index) => (
+                <div
+                  key={index}
+                  className="bg-gray-800 rounded-xl p-8 text-center hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
+                  data-aos="fade-up"
+                >
+                  <div className="bg-blue-600 rounded-full p-4 inline-block mb-6">
+                    <svg
+                      className="w-8 h-8 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d={step.icon}
+                      />
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-semibold mb-4 text-blue-300">
+                    {step.title}
+                  </h3>
+                  <p className="text-gray-400">{step.description}</p>
+                </div>
+              ))}
+            </div>
+            <div className="text-center mt-12">
+              <a
+                href="/docs"
+                className="inline-block py-3 px-8 bg-blue-600 text-white rounded-full text-lg font-semibold hover:bg-blue-700 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 shadow-xl hover:shadow-blue-500/30"
+              >
+                View Integration Guide
+              </a>
             </div>
           </section>
 
