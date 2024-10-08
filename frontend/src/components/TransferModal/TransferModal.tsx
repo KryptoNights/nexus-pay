@@ -41,17 +41,18 @@ const TransferModal = ({
     const amount = e.target.value;
     setTransferAmount(amount);
     console.log(amount);
-    const showInsufficientBalanceMessage =
-      parseFloat(amount) >
-      (isApt
-        ? Number(formatBalanceUtils(balance[0]?.amount, 8))
-        : Number(formatBalanceUtils(balance[1]?.amount, 6)));
+    // const showInsufficientBalanceMessage =
+    //   parseFloat(amount) >
+    //   (isApt
+    //     ? Number(formatBalanceUtils(balance[0]?.amount, 8))
+    //     : Number(formatBalanceUtils(balance[1]?.amount, 6)));
 
-    if (showInsufficientBalanceMessage) {
-      setTransferError("Insufficient balance");
-    } else {
-      setTransferError("");
-    }
+    // if (showInsufficientBalanceMessage) {
+    //   setTransferError("Insufficient balance");
+    // }
+    // else {
+    //   setTransferError("");
+    // }
   };
 
   const handleCurrencyToggle = () => {
@@ -85,12 +86,20 @@ const TransferModal = ({
 
       setIsSuccess(true);
       mixpanel.track("successful_transaction");
-    } catch (error) {
-      console.error("Failed to send money:", error);
-      setTransferError("Transaction failed. Please try again.");
-      mixpanel.track("failed to send money", {
-        error: error,
-      });
+    } catch (error: any) {
+      const vmStatus = error?.transaction?.vm_status || "";
+
+      if (
+        vmStatus.includes("INSUFFICIENT_BALANCE") ||
+        vmStatus.includes("Not enough coins")
+      ) {
+        setTransferError("Not Enough Balance");
+      } else {
+        setTransferError("Transaction failed. Please try again.");
+      }
+
+      console.error("Failed to send money:", vmStatus);
+      mixpanel.track("failed to send money", { error });
     } finally {
       setIsLoading(false);
     }
@@ -109,7 +118,7 @@ const TransferModal = ({
         recipientAddress,
         transferAmount,
         activeAccount!,
-        true
+        false
       );
       if (typeof hash === "string") {
         console.log("tx has executed", hash);
@@ -189,7 +198,7 @@ const TransferModal = ({
       if (transferAmount) {
         sendMoneyDebounced(recipientAddress);
       }
-    }, 500);
+    }, 2000);
 
     return () => {
       clearTimeout(handler);
@@ -200,10 +209,10 @@ const TransferModal = ({
     transferError !== "" ||
     transferAmount === "" ||
     parseFloat(transferAmount) <= 0 ||
-    parseFloat(transferAmount) >
-      (isApt
-        ? Number(formatBalanceUtils(balance[0]?.amount, 8))
-        : Number(formatBalanceUtils(balance[1]?.amount, 6))) ||
+    // parseFloat(transferAmount) >
+    //   (isApt
+    //     ? Number(formatBalanceUtils(balance[0]?.amount, 8))
+    //     : Number(formatBalanceUtils(balance[1]?.amount, 6))) ||
     simulationIsLoading ||
     isLoading ||
     !recipientAddress ||

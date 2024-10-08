@@ -148,6 +148,7 @@ const Home: NextPage = () => {
       setIsTransferModalOpen(false);
       setRecipientAddress("");
       setTransferAmount("");
+      setTransferError("");
     }
   }, [router]);
 
@@ -290,6 +291,7 @@ const Home: NextPage = () => {
               await setIsTransferModalOpen(false);
               setPaymentviaDynamicQR(false);
               mixpanel.track("transfer_modal_closed");
+              setTransferError("");
             }}
             balance={balance}
             transferAmount={transferAmount}

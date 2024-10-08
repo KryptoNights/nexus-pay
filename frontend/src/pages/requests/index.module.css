@@ -1,0 +1,158 @@
+.container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 2.5rem;
+  color: #ffffff;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.loadingContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+}
+
+.loader {
+  border: 4px solid #333;
+  border-top: 4px solid #007bff;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.approvalGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.approvalCard {
+  background-color: #2a2a2a;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.approvalCard:hover {
+  transform: translateY(-5px);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.cardTitle {
+  font-size: 1.25rem;
+  color: #ffffff;
+  margin: 0;
+}
+
+.statusBadge {
+  font-size: 0.875rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+}
+
+.pending {
+  background-color: #fbbf24;
+  color: #000000;
+}
+
+.filled {
+  background-color: #34d399;
+  color: #000000;
+}
+
+.cardBody {
+  margin-bottom: 1rem;
+}
+
+.amount {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #60a5fa;
+  margin-bottom: 0.5rem;
+}
+
+.details {
+  color: #9ca3af;
+  font-size: 0.875rem;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.button {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.approveButton {
+  background-color: #10b981;
+  color: #ffffff;
+}
+
+.approveButton:hover {
+  background-color: #059669;
+}
+
+.rejectButton {
+  background-color: #ef4444;
+  color: #ffffff;
+}
+
+.rejectButton:hover {
+  background-color: #dc2626;
+}
+
+.statusMessage {
+  text-align: center;
+  font-weight: bold;
+  padding: 0.5rem;
+  border-radius: 4px;
+}
+
+.successful {
+  background-color: #10b981;
+  color: #ffffff;
+}
+
+.rejected {
+  background-color: #ef4444;
+  color: #ffffff;
+}
+
+.noRequests {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #666;
+  margin-top: 2rem;
+}

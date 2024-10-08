@@ -79,12 +79,12 @@ const Popup = ({
             {collapseAddress(activeAccountAdress)}
           </h3>
           <p className="text-gray-400">
-            {formatBalance(balance[0]?.amount, 8)} APT
+            {Number(formatBalance(balance[0]?.amount, 8))} APT
           </p>
           <p className="text-gray-400">
             {isNaN(balance[1]?.amount)
               ? "0"
-              : formatBalance(balance[1]?.amount, 6)}{" "}
+              : Number(formatBalance(balance[1]?.amount, 6))}{" "}
             USDT
           </p>
           <div className="modal-action flex justify-between w-full mt-6">

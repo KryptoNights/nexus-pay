@@ -1,19 +1,11 @@
 import {
-  BookOpenIcon,
-  CalendarIcon,
-  CogIcon,
-  FolderIcon,
+  ArrowCircleDownIcon,
   HomeIcon,
-  InboxIcon,
   UsersIcon,
 } from "@heroicons/react/outline";
+
 import UserProfile from "public/assets/svgs/UserProfile";
-import {
-  TbBrandGithub,
-  TbBrandTwitter,
-  TbBrandDiscord,
-  TbBrandMedium,
-} from "react-icons/tb";
+import { TbBrandTwitter } from "react-icons/tb";
 
 interface INavigation {
   name: string;
@@ -73,6 +65,12 @@ const navigation: INavigation[] = [
     icon: UsersIcon,
     current: false,
   },
+  {
+    name: "Requests",
+    href: "/requests",
+    icon: ArrowCircleDownIcon,
+    current: false,
+  },
   // { name: '404', href: '/404', icon: FolderIcon, current: false },
   // { name: '500', href: '/500', icon: CalendarIcon, current: false },
   // { name: "Keyless", href: "/login", icon: InboxIcon, current: false },
@@ -117,6 +115,6 @@ export function updateCurrentItem(route: INavigation) {
   route.current = true;
 }
 
-export type { INavigation, IBottomNavigation };
-export { bottomNavigation, bottomIcons, bottomDisclaimer };
+export { bottomDisclaimer, bottomIcons, bottomNavigation };
+export type { IBottomNavigation, INavigation };
 export default navigation;
