@@ -3,7 +3,6 @@ import { sendStableMoneyFunc } from "@/utils/apis";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import styles from "./index.module.css";
 
 // Define the Approval type
 interface Approval {
@@ -60,22 +59,7 @@ const Index = () => {
         activeAccountAdress
       );
       console.log("payment status", res);
-
-      // const response = await fetch(
-      //   "https://nexus-fill-request-876401151866.us-central1.run.app",
-      //   {
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //       Authorization: "Bearer 12345",
-      //     },
-      //     body: JSON.stringify({
-      //       id: id,
-      //       tx_hash: "0x00000000test000000000test0000000000test",
-      //       email: emailId,
-      //     }),
-      //   }
-      // );
+      // Implement the API call to update the approval status
       setPaymentsLoading(false);
     } catch (error) {
       console.log(error);
@@ -84,24 +68,8 @@ const Index = () => {
   };
 
   const handleReject = async (id: string) => {
-    // console.log(`Rejected: ${id}`);
-    // setRejectLoading(true);
-    // const response = await fetch(
-    //   "https://nexus-fill-request-876401151866.us-central1.run.app",
-    //   {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       Authorization: "Bearer 12345",
-    //     },
-    //     body: JSON.stringify({
-    //       id: id,
-    //       tx_hash: "0x00000000test000000000test0000000000test",
-    //       email: emailId,
-    //     }),
-    //   }
-    // );
-    // setRejectLoading(false);
+    // Implement the rejection logic here
+    console.log(`Rejected: ${id}`);
   };
 
   const getStatusInfo = (approval: Approval) => {
@@ -112,60 +80,77 @@ const Index = () => {
           approval.txn_hash === "0x00000000test000000000test0000000000test"
             ? "Rejected"
             : "Successful",
-        className: `${styles.statusMessage} ${approval.txn_hash === "0x00000000test000000000test0000000000test" ? styles.rejected : styles.successful}`,
+        className: approval.txn_hash === "0x00000000test000000000test0000000000test"
+          ? "bg-error text-error-content"
+          : "bg-success text-success-content",
+        badgeClass: "badge-success",
       };
     } else if (approval.txn_hash) {
       return {
         status: "Rejected",
         message: `Rejected - Transaction Hash: ${approval.txn_hash}`,
-        className: styles.rejected,
+        className: "bg-error text-error-content",
+        badgeClass: "badge-error",
       };
     } else {
       return {
         status: "Pending",
         message: null,
-        className: styles.pending,
+        className: "",
+        badgeClass: "badge-warning",
       };
     }
   };
 
   const renderApprovalCard = (approval: Approval) => {
-    const { status, message, className } = getStatusInfo(approval);
+    const { status, message, className, badgeClass } = getStatusInfo(approval);
 
     return (
-      <div key={approval.id} className={styles.approvalCard}>
-        <div className={styles.cardHeader}>
-          <h2 className={styles.cardTitle}>{approval.name}</h2>
-          <span className={`${styles.statusBadge} ${className}`}>{status}</span>
-        </div>
-        <div className={styles.cardBody}>
-          <p className={styles.amount}>${approval.amount}</p>
-          <p className={styles.details}>{approval.details}</p>
-        </div>
-        {message && <p className={className}>{message}</p>}
-        {status === "Pending" && (
-          <div className={styles.buttonGroup}>
-            <button
-              className={`${styles.button} ${styles.approveButton}`}
-              onClick={() =>
-                handleApprove(
-                  approval.id,
-                  approval!,
-                  approval.amount,
-                  activeAccountAdress
-                )
-              }
-            >
-              Approve
-            </button>
-            <button
-              className={`${styles.button} ${styles.rejectButton}`}
-              onClick={() => handleReject(approval.id)}
-            >
-              Reject
-            </button>
+      <div key={approval.id} className="card bg-base-200 shadow-xl hover:shadow-2xl transition-shadow duration-300">
+        <div className="card-body flex-initial">
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="card-title text-xl font-semibold">{approval.name}</h2>
+            <span className={`badge ${badgeClass}`}>{status}</span>
           </div>
-        )}
+          <div className="mb-4">
+            <p className="text-2xl font-bold text-primary">${approval.amount}</p>
+            <p className="text-base-content/70 text-sm">{approval.details}</p>
+          </div>
+          {message && <p className={`text-center font-bold p-2 rounded-md ${className}`}>{message}</p>}
+          {status === "Pending" && (
+            <div className="card-actions justify-end mt-4">
+              <button
+                className="btn btn-primary flex-1"
+                onClick={() =>
+                  handleApprove(
+                    approval.id,
+                    approval,
+                    approval.amount,
+                    activeAccountAdress
+                  )
+                }
+                disabled={paymentsLoading}
+              >
+                {paymentsLoading ? (
+                  <span className="loading loading-spinner"></span>
+                ) : (
+                  "Approve"
+                )}
+              </button>
+              <button
+                className="btn btn-outline btn-error flex-1"
+                onClick={() => handleReject(approval.id)}
+                disabled={rejectLoading}
+              >
+                {rejectLoading ? (
+                  <span className="loading loading-spinner"></span>
+                ) : (
+                  "Reject"
+                )}
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     );
   };
@@ -176,17 +161,20 @@ const Index = () => {
         <title>Requests | NexusPay</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className={styles.container}>
-        <h1 className={styles.title}>Approval Requests</h1>
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-4xl font-bold text-center mb-8">Approval Requests</h1>
         {loading ? (
-          <div className={styles.loadingContainer}>
-            <div className={styles.loader}></div>
-            <p>Loading requests...</p>
+          <div className="flex flex-col items-center justify-center h-64">
+            <span className="loading loading-spinner loading-lg"></span>
+            <p className="mt-4">Loading requests...</p>
           </div>
         ) : approvals.length === 0 ? (
-          <p className={styles.noRequests}>No requests yet!</p>
+          <div className="text-center">
+            <p className="text-lg text-base-content/60 mt-8">No requests yet!</p>
+            <button className="btn btn-primary mt-4">Create a Request</button>
+          </div>
         ) : (
-          <div className={styles.approvalGrid}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {approvals.map(renderApprovalCard)}
           </div>
         )}
