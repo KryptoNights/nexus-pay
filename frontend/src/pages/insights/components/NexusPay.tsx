@@ -1,15 +1,22 @@
 import React, { useState } from "react";
-import axios from "axios";
-// import "./nexus.css"; // Importing the CSS file
 import { RequestIframeProps } from "./types";
 
-const NexusPay: React.FC<RequestIframeProps> = ({ name, details, amount }) => {
+type RequiredRequestIframeProps = Required<RequestIframeProps>;
+const NexusPay: React.FC<RequiredRequestIframeProps> = ({
+  name,
+  onClick,
+  details,
+  amount,
+  buttonClassName,
+  onClose,
+  open,
+}) => {
   const [email, setEmail] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [message, setMessage] = useState<string | null>(null);
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value); // Directly using e.target.value
+    setEmail(e.target.value);
   };
 
   const handleSubmit = async () => {
@@ -22,26 +29,28 @@ const NexusPay: React.FC<RequestIframeProps> = ({ name, details, amount }) => {
     setMessage(null);
 
     try {
-      const response = await axios.post(
+      const response = await fetch(
         "https://nexus-send-request-876401151866.us-central1.run.app",
         {
-          name: name,
-          details: details,
-          amount: amount,
-          token: "USD",
-          email_to_request: email,
-          callback_url:
-            "https://nexus-test-txfill-callback-876401151866.us-central1.run.app",
-        },
-        {
+          method: "POST",
           headers: {
             "Content-Type": "application/json",
             Authorization: "Bearer 12345890",
           },
+          body: JSON.stringify({
+            name: name,
+            details: details,
+            amount: amount,
+            token: "USD",
+            email_to_request: email,
+            callback_url:
+              "https://nexus-test-txfill-callback-876401151866.us-central1.run.app",
+          }),
         }
       );
+      const data = await response.json();
+      // console.log(data);
 
-      console.log(response);
       setMessage("Request sent successfully!");
     } catch (error) {
       console.error("Error sending request:", error);
@@ -52,33 +61,69 @@ const NexusPay: React.FC<RequestIframeProps> = ({ name, details, amount }) => {
   };
 
   return (
-    <div className="container">
-      <div className="card">
-        <h2 className="title">Nexus Payment Request</h2>
-        <div className="mb-6">
-          <label className="label">Email to request:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={handleEmailChange}
-            placeholder="Enter your email"
-            className="input"
-          />
-        </div>
-        <button onClick={handleSubmit} className="button" disabled={loading}>
-          {loading ? "Sending..." : "Send Request"}
+    <>
+      {!open && (
+        <button
+          onClick={onClick}
+          className={
+            buttonClassName
+              ? buttonClassName
+              : "p-3 bg-blue-600 text-white rounded-md transition duration-200 hover:bg-blue-700"
+          }
+        >
+          Pay Now
         </button>
-        {message && (
-          <p
-            className={`message ${
-              message.includes("successfully") ? "success" : "error"
-            }`}
-          >
-            {message}
-          </p>
-        )}
-      </div>
-    </div>
+      )}
+      {open && (
+        <div className="modal modal-open fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="m-auto bg-white shadow-lg rounded-lg p-8 w-full max-w-md relative">
+            <button
+              className="btn btn-sm btn-circle absolute right-2 top-2"
+              onClick={onClose}
+            >
+              ✕
+            </button>
+            <div className="nexus_iframe">
+              <div className="nexus_card">
+                <h2 className="text-xl font-bold text-center mb-6 text-gray-800">
+                  Nexus Payment Request
+                </h2>
+                <div className="mb-6">
+                  <label className="block text-sm  mb-2 text-gray-700 font-bold">
+                    Email to request:
+                  </label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={handleEmailChange}
+                    placeholder="Enter your email"
+                    className="w-full p-3 border border-blue-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-700 bg-white text-gray-800 placeholder-gray-400" // Updated styles
+                  />
+                </div>
+                <button
+                  onClick={handleSubmit}
+                  className="w-full p-3 bg-blue-600 text-white rounded-md transition duration-200 hover:bg-blue-700"
+                  disabled={loading}
+                >
+                  {loading ? "Sending..." : "Send Request"}
+                </button>
+                {message && (
+                  <p
+                    className={`mt-4 text-sm ${
+                      message.includes("successfully")
+                        ? "text-green-600"
+                        : "text-red-600"
+                    }`}
+                  >
+                    {message}
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

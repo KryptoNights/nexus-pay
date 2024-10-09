@@ -1,9 +1,9 @@
 /* nexus.css */
-.container {
+.nexus_container {
   margin: auto;
 }
 
-.card {
+.nexus_card {
   background-color: white;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border-radius: 0.5rem;
@@ -12,7 +12,7 @@
   max-width: 24rem;
 }
 
-.title {
+.nexus_title {
   font-size: 1.5rem;
   font-weight: bold;
   text-align: center;
@@ -20,7 +20,7 @@
   color: #4a5568; /* gray-800 */
 }
 
-.label {
+.nexus_label {
   display: block;
   font-size: 0.875rem;
   font-weight: medium;
@@ -28,7 +28,7 @@
   color: #4a5568; /* gray-700 */
 }
 
-.input {
+.nexus_input {
   width: 100%;
   padding: 0.75rem;
   border: 1px solid #d1d5db; /* gray-300 */
@@ -38,12 +38,12 @@
   transition: ring 0.2s;
 }
 
-.input:focus {
+.nexus_input:focus {
   ring: 2px;
   ring-color: #3b82f6; /* blue-500 */
 }
 
-.button {
+.nexus_button {
   width: 100%;
   padding: 0.75rem;
   background-color: #2563eb; /* blue-600 */
@@ -52,19 +52,19 @@
   transition: background-color 0.2s;
 }
 
-.button:hover {
+.nexus_button:hover {
   background-color: #1d4ed8; /* blue-700 */
 }
 
-.message {
+.nexus_message {
   margin-top: 1rem;
   font-size: 0.875rem;
 }
 
-.success {
+.nexus_success {
   color: #16a34a; /* green-600 */
 }
 
-.error {
+.nexus_error {
   color: #dc2626; /* red-600 */
 }

@@ -1,6 +1,6 @@
 {
   "name": "nexus-frontend-sdk",
-  "version": "0.0.3",
+  "version": "0.0.6",
   "description": "Merchant Payment Solution",
   "scripts": {
     "rollup": "rollup -c --bundleConfigAsCjs"

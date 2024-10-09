@@ -4,8 +4,13 @@ interface RequestIframeProps {
     name: string;
     details: string;
     amount: string;
+    buttonClassName?: string;
+    onClose: () => void;
+    open: Boolean;
+    onClick: () => void;
 }
 
-declare const NexusPay: React.FC<RequestIframeProps>;
+type RequiredRequestIframeProps = Required<RequestIframeProps>;
+declare const NexusPay: React.FC<RequiredRequestIframeProps>;
 
 export { NexusPay as default };
