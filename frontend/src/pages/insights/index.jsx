@@ -6,7 +6,8 @@ import mixpanel from "mixpanel-browser";
 import Head from "next/head";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import NexusPay from "./components/NexusPay";
+// import NexusPay from "./components/NexusPay";
+import NexusPay from "nexus-frontend-sdk";
 
 const index = () => {
   const tracked = useRef(false);
@@ -28,9 +29,9 @@ const index = () => {
       </Head>
       <InsightsGraph activeAccountAdress={activeAccountAdress} />
       <NexusPay
-        name="Details"
-        details="as"
-        amount="100"
+        name="Nexus Pay "
+        details="Give Descritption of payment"
+        amount="1000"
         open={handleOpen}
         onClick={() => setHandleOpen(true)}
         onClose={() => setHandleOpen(!handleOpen)}
