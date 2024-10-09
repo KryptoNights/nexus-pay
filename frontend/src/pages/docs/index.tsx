@@ -1,3 +1,4 @@
+import CopyButton from "@/components/CopyButton/CopyButton";
 import Head from "next/head";
 import Link from "next/link";
 import React from "react";
@@ -13,7 +14,7 @@ const DocsPage: React.FC = () => {
         />
       </Head>
 
-      <div className="min-h-screen bg-[#0D0D0D] text-gray-300">
+      <div className="min-h-screen bg-[#0D0D0D] text-gray-300 flex flex-col">
         <nav className="sticky top-0 z-50 bg-opacity-90 backdrop-filter backdrop-blur-lg bg-[#0D0D0D] border-b border-gray-800">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between h-16">
@@ -35,7 +36,7 @@ const DocsPage: React.FC = () => {
           </div>
         </nav>
 
-        <main className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <main className="max-w-4xl mx-auto py-12 px-4 sm:px-6 lg:px-8 flex-grow">
           <h1 className="text-4xl font-bold text-blue-300 mb-8">
             NexusPay SDK Integration Guide
           </h1>
@@ -48,100 +49,66 @@ const DocsPage: React.FC = () => {
               <p className="mb-4">
                 First, install the NexusPay SDK using npm or yarn:
               </p>
-              <pre className="bg-gray-800 text-white p-4 rounded-md overflow-x-auto">
-                <code>npm install nexuspay-sdk # or yarn add nexuspay-sdk</code>
+              <pre className="bg-gray-800 text-white p-4 rounded-md overflow-x-auto relative">
+                <CopyButton text="npm install nexus-frontend-sdk" />
+                <code>npm install nexus-frontend-sdk</code>
               </pre>
             </section>
 
             <section>
               <h2 className="text-2xl font-semibold text-blue-200 mb-4">
-                2. Initialize the SDK
+                2. Import the SDK Component
               </h2>
               <p className="mb-4">
-                Import and initialize the SDK in your application:
+                Import the NexusPay component in your frontend:
               </p>
-              <pre className="bg-gray-800 text-white p-4 rounded-md overflow-x-auto">
-                <code>{`
-import NexusPay from 'nexuspay-sdk';
-
-const nexuspay = new NexusPay({
-  apiKey: 'YOUR_API_KEY',
-  // other configuration options
-});
-                `}</code>
+              <pre className="bg-gray-800 text-white p-4 rounded-md overflow-x-auto relative">
+                <CopyButton text='import NexusPay from "nexus-frontend-sdk";' />
+                <code>import NexusPay from "nexus-frontend-sdk";</code>
               </pre>
             </section>
 
             <section>
               <h2 className="text-2xl font-semibold text-blue-200 mb-4">
-                3. Send a Payment Request
+                3. Use the Component
               </h2>
               <p className="mb-4">
-                To initiate a payment request, use the following method:
+                Implement the NexusPay component in your frontend to request
+                payment:
               </p>
-              <pre className="bg-gray-800 text-white p-4 rounded-md overflow-x-auto">
-                <code>{`
-const sendPaymentRequest = async (userEmail, orderId, amount) => {
-  try {
-    const response = await nexuspay.sendPaymentRequest({
-      email: userEmail,
-      orderId: orderId,
-      amount: amount,
-      currency: 'USD'
-    });
-    console.log('Payment request sent:', response);
-    return response;
-  } catch (error) {
-    console.error('Error sending payment request:', error);
-  }
+              <pre className="bg-gray-800 text-white p-4 rounded-md overflow-x-auto relative">
+                <CopyButton
+                  text={`const PaymentPage = () => {
+  const [handleOpen, setHandleOpen] = useState(false);
+  return (
+    <NexusPay
+      name="Nexus Pay"
+      details="Payment for your order"
+      amount="1000"
+      open={handleOpen}
+      onClick={() => setHandleOpen(true)}
+      onClose={() => setHandleOpen(false)}
+    />
+  );
 };
-                `}</code>
-              </pre>
-            </section>
 
-            <section>
-              <h2 className="text-2xl font-semibold text-blue-200 mb-4">
-                4. Handle Payment Status Updates
-              </h2>
-              <p className="mb-4">
-                Set up a webhook or use our SDK's event listener to receive
-                payment status updates:
-              </p>
-              <pre className="bg-gray-800 text-white p-4 rounded-md overflow-x-auto">
-                <code>{`
-nexuspay.on('paymentUpdate', (update) => {
-  const { orderId, status } = update;
-  if (status === 'approved') {
-    // Handle approved payment
-    console.log(\`Payment for order \${orderId} has been approved\`);
-  } else if (status === 'rejected') {
-    // Handle rejected payment
-    console.log(\`Payment for order \${orderId} has been rejected\`);
-  }
-});
-                `}</code>
-              </pre>
-            </section>
-
-            <section>
-              <h2 className="text-2xl font-semibold text-blue-200 mb-4">
-                5. Verify Payment Status
-              </h2>
-              <p className="mb-4">
-                You can also manually check the status of a payment:
-              </p>
-              <pre className="bg-gray-800 text-white p-4 rounded-md overflow-x-auto">
-                <code>{`
-const checkPaymentStatus = async (orderId) => {
-  try {
-    const status = await nexuspay.getPaymentStatus(orderId);
-    console.log(\`Payment status for order \${orderId}: \${status}\`);
-    return status;
-  } catch (error) {
-    console.error('Error checking payment status:', error);
-  }
+export default PaymentPage;`}
+                />
+                <code>{`const PaymentPage = () => {
+  const [handleOpen, setHandleOpen] = useState(false);
+  return (
+    <NexusPay
+      name="Nexus Pay"
+      details="Payment for your order"
+      amount="1000"
+      open={handleOpen}
+      onClick={() => setHandleOpen(true)}
+      onClose={() => setHandleOpen(false)}
+    />
+  );
 };
-                `}</code>
+
+export default PaymentPage;`}</code>
               </pre>
             </section>
 
@@ -152,9 +119,6 @@ const checkPaymentStatus = async (orderId) => {
               <ul className="list-disc pl-6 space-y-2">
                 <li>
                   Always handle errors and edge cases in your integration.
-                </li>
-                <li>
-                  Secure your API key and never expose it in client-side code.
                 </li>
                 <li>
                   Implement proper error handling and logging for debugging
@@ -169,6 +133,20 @@ const checkPaymentStatus = async (orderId) => {
             </section>
           </div>
         </main>
+
+        <footer className="bg-gray-900 text-gray-300 py-8">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <p className="text-center">
+              Need custom support or additional features? Contact us at{" "}
+              <a
+                href="mailto:kavishshah30@gmail.com"
+                className="text-blue-400 hover:text-blue-300 transition-colors duration-300"
+              >
+                kavishshah30@gmail.com
+              </a>
+            </p>
+          </div>
+        </footer>
       </div>
     </>
   );
