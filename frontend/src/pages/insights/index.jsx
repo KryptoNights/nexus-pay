@@ -6,8 +6,7 @@ import mixpanel from "mixpanel-browser";
 import Head from "next/head";
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import NexusPay from "nexus-frontend-sdk";
-// import NexusPay from "./components/NexusPay";
+import NexusPay from "./components/NexusPay";
 
 const index = () => {
   const tracked = useRef(false);
