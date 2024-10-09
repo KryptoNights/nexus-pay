@@ -84,24 +84,24 @@ const Index = () => {
   };
 
   const handleReject = async (id: string) => {
-    console.log(`Rejected: ${id}`);
-    setRejectLoading(true);
-    const response = await fetch(
-      "https://nexus-fill-request-876401151866.us-central1.run.app",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer 12345",
-        },
-        body: JSON.stringify({
-          id: id,
-          tx_hash: "0x00000000test000000000test0000000000test",
-          email: emailId,
-        }),
-      }
-    );
-    setRejectLoading(false);
+    // console.log(`Rejected: ${id}`);
+    // setRejectLoading(true);
+    // const response = await fetch(
+    //   "https://nexus-fill-request-876401151866.us-central1.run.app",
+    //   {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       Authorization: "Bearer 12345",
+    //     },
+    //     body: JSON.stringify({
+    //       id: id,
+    //       tx_hash: "0x00000000test000000000test0000000000test",
+    //       email: emailId,
+    //     }),
+    //   }
+    // );
+    // setRejectLoading(false);
   };
 
   const getStatusInfo = (approval: Approval) => {
