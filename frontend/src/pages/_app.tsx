@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { Provider } from "react-redux";
 import store from "../redux/store";
+import { Analytics } from "@vercel/analytics/react"
 
 mixpanel.init(process.env.NEXT_PUBLIC_MIXPANEL_TOKEN as string, {
   debug: true,
@@ -33,6 +34,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <Provider store={store}>
       <ThemeProvider themes={["light", "dark", "cupcake", "lofi", "cyberpunk"]}>
         <Component {...pageProps} />
+        <Analytics/>
       </ThemeProvider>
     </Provider>
   );
