@@ -7,7 +7,6 @@ const NexusPay: React.FC<RequiredRequestIframeProps> = ({
   onClick,
   details,
   amount,
-  buttonClassName,
   onClose,
   open,
 }) => {
@@ -65,7 +64,6 @@ const NexusPay: React.FC<RequiredRequestIframeProps> = ({
         <button
           onClick={onClick}
           className={
-            buttonClassName ||
             "px-4 py-2 sm:px-6 sm:py-3 bg-blue-600 text-white text-sm sm:text-base rounded-lg shadow-md hover:bg-blue-700 transition duration-300 ease-in-out transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
           }
         >

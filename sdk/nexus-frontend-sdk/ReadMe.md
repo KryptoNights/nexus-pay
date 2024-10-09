@@ -20,13 +20,11 @@
 
 Sign in with Google and bring your own money. Pay anyone, anywhere from any device. One wallet, all of the world.
 
-
-
-# How to Integrate SDK for Nexus Pay 
+# How to Integrate SDK for Nexus Pay
 
 The NexusPay SDK provides a customizable payment component for integrating Nexus Pay functionality into your application.
 
-1. **Install SDK**: 
+1. **Install SDK**:
 
 ```
 npm i nexus-frontend-sdk
@@ -62,16 +60,14 @@ export default index;
 
 ## Props
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `name` | string | The name or title of the payment component. |
-| `details` | string | A brief description or details about the payment. |
-| `amount` | string | The payment amount. |
-| `open` | boolean | Controls the visibility of the payment component. |
+| Prop      | Type     | Description                                                |
+| --------- | -------- | ---------------------------------------------------------- |
+| `name`    | string   | The name or title of the payment component.                |
+| `details` | string   | A brief description or details about the payment.          |
+| `amount`  | string   | The payment amount.                                        |
+| `open`    | boolean  | Controls the visibility of the payment component.          |
 | `onClick` | function | Callback function triggered when the component is clicked. |
-| `onClose` | function | Callback function triggered when the component is closed. |
-| `buttonClassName` | className | CSS for button. |
-
+| `onClose` | function | Callback function triggered when the component is closed.  |
 
 ### name
 
@@ -109,13 +105,6 @@ export default index;
 - Required: Yes
 - Description: A callback function that is called when the component is closed. Use this to handle any cleanup or state updates when the payment interface is dismissed.
 
-- 
-### buttonClassName
-
-- Type: `function`
-- Required: No
-- Description: CSS properties for the Button 
-
 ## Example
 
 ```
@@ -129,7 +118,6 @@ const index = () => {
         open={handleOpen}
         onClick={() => setHandleOpen(true)}
         onClose={() => setHandleOpen(!handleOpen)}
-        buttonClassName:customClassName;
       />
   );
 };
@@ -138,4 +126,3 @@ export default index;
 
 
 ```
-
