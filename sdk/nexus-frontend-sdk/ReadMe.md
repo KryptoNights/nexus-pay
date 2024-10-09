@@ -32,13 +32,13 @@ The NexusPay SDK provides a customizable payment component for integrating Nexus
 npm i nexus-frontend-sdk
 ```
 
-2. **Import SDK component in Your Frontend **:
+2. **Import SDK component in Your Frontend**:
 
 ```
 import NexusPay from "nexus-frontend-sdk";
 ```
 
-3. **Use the component in Frontend to Request Payment **:
+3. **Use the component in Frontend to Request Payment**:
 
 ```
 const index = () => {
