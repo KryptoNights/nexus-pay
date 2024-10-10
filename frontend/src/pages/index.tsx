@@ -31,6 +31,7 @@ const LandingPage: React.FC = () => {
 
   useEffect(() => {
     AOS.init({ duration: 1000 }); // Initialize AOS with a duration of 1000ms for animations
+    mixpanel.track("landing_page_viewed");
   }, []);
 
   const features: string[] = [
@@ -40,7 +41,7 @@ const LandingPage: React.FC = () => {
   ];
 
   const handleRedirect = () => {
-    mixpanel.track("OnClick Login Button");
+    mixpanel.track("landing_login_clicked");
     router.push("/dashboard");
   };
 

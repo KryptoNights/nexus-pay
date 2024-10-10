@@ -47,100 +47,76 @@ const Home: NextPage = () => {
     setIsPopupOpen(false);
   };
 
+  // Combined useEffect for fetching balances, linking mail ID, and fetching Nexus ID
   useEffect(() => {
-    const fetchBalances = async () => {
+    const fetchBalancesAndNexusId = async () => {
       if (activeAccountAdress) {
+        // Fetch balances
         const getBalancesResponse = await getBalances(activeAccountAdress);
         console.log(`getBalancesResponse`, getBalancesResponse);
-
         dispatch(setUserBalance(getBalancesResponse));
+
+        // Fetch Nexus ID
+        if (idToken?.state?.accounts[0]?.idToken?.raw) {
+          const response = await get_nexus_id_from_wallet(
+            idToken.state.accounts[0].idToken.raw,
+            activeAccountAdress
+          );
+          dispatch(setSelfNexusId(response?.ids[0]));
+          setselfNexusId(response?.ids[0]);
+        }
       }
     };
 
-    //to be removed
+    fetchBalancesAndNexusId();
+
+    // Link mail ID to wallet
     if (
       typeof window !== "undefined" &&
       activeAccountAdress &&
       idToken?.state?.accounts[0]?.idToken?.raw
     ) {
-      try {
-        const response = axios.post(
-          "https://nexus-link-mail-id-to-wallet-7kxt74l7iq-uc.a.run.app",
-          {
-            wallet: activeAccountAdress,
+      axios.post(
+        "https://nexus-link-mail-id-to-wallet-7kxt74l7iq-uc.a.run.app",
+        { wallet: activeAccountAdress },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${idToken.state.accounts[0].idToken.raw}`,
           },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${idToken?.state?.accounts[0]?.idToken?.raw}`,
-            },
-          }
-        );
-      } catch (error) {
-        // console.log(error);
+        }
+      ).catch(() => {
         mixpanel.track("link_mailId_to_wallet_failed");
-        //add mixpanel event here
-      }
+      });
     }
-    fetchBalances();
-  }, [activeAccountAdress]);
+  }, [activeAccountAdress, idToken]);
 
-  // fetch nexus id for a wallet
+  // Combined useEffect for Mixpanel tracking and URL params handling
   useEffect(() => {
-    const fetchNexusId = async () => {
-      if (
-        typeof window !== "undefined" &&
-        activeAccountAdress &&
-        idToken?.state?.accounts[0]?.idToken?.raw
-      ) {
-        const response = await get_nexus_id_from_wallet(
-          idToken?.state?.accounts[0]?.idToken?.raw,
-          activeAccountAdress
-        );
-        dispatch(setSelfNexusId(response?.ids[0]));
-        setselfNexusId(response?.ids[0]);
-      } else {
-        // console.log("No active account address");
-      }
-    };
-    fetchNexusId();
-  }, [activeAccountAdress]);
-
-  useEffect(() => {
-    if (
-      idToken?.state?.accounts[0]?.idToken?.decoded?.name &&
-      idToken?.state?.accounts[0]?.idToken?.decoded?.email
-    ) {
+    // Mixpanel tracking
+    const { decoded } = idToken?.state?.accounts[0]?.idToken || {};
+    if (decoded?.name && decoded?.email) {
       mixpanel.identify(`${activeAccountAdress}`);
-      console.log(idToken?.state?.accounts[0]?.idToken?.decoded?.name);
       mixpanel.people.set({
-        $name: `${idToken?.state?.accounts[0]?.idToken?.decoded?.name}`,
-        $email: `${idToken?.state?.accounts[0]?.idToken?.decoded?.email}`,
-        $address: `${activeAccountAdress}`,
+        $name: decoded?.name,
+        $email: decoded?.email,
+        $address: activeAccountAdress,
       });
     }
     if (!tracked.current) {
       mixpanel.track("dashboard_viewed");
       tracked.current = true;
     }
-  }, [idToken?.state?.accounts[0]?.idToken?.decoded?.name]);
 
-  const handleGoogleSignIn = () => {
-    router.push("/login");
-  };
-
-  React.useEffect(() => {
-    const search = window.location.search;
-    const params = new URLSearchParams(search);
+    // URL params handling
+    const params = new URLSearchParams(window.location.search);
     const address = params.get("address");
     const amount = params.get("amount");
-    // console.log(address);
+
     if (address) {
       setRecipientAddress(address);
       setIsTransferModalOpen(true);
       if (Number(amount) > 0) {
-        // console.log(amount);
-        setIsTransferModalOpen(true);
         setTransferAmount(amount);
         setPaymentviaDynamicQR(true);
       }
@@ -150,7 +126,11 @@ const Home: NextPage = () => {
       setTransferAmount("");
       setTransferError("");
     }
-  }, [router]);
+  }, [idToken, activeAccountAdress, router]);
+
+  const handleGoogleSignIn = () => {
+    router.push("/login");
+  };
 
   const handleInputChange = async (
     event: React.ChangeEvent<HTMLInputElement>
@@ -307,4 +287,4 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
+export default React.memo(Home);
