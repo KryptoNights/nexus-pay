@@ -80,9 +80,10 @@ const Index = () => {
           approval.txn_hash === "0x00000000test000000000test0000000000test"
             ? "Rejected"
             : "Successful",
-        className: approval.txn_hash === "0x00000000test000000000test0000000000test"
-          ? "bg-error text-error-content"
-          : "bg-success text-success-content",
+        className:
+          approval.txn_hash === "0x00000000test000000000test0000000000test"
+            ? "bg-error text-error-content"
+            : "bg-success text-success-content",
         badgeClass: "badge-success",
       };
     } else if (approval.txn_hash) {
@@ -106,17 +107,28 @@ const Index = () => {
     const { status, message, className, badgeClass } = getStatusInfo(approval);
 
     return (
-      <div key={approval.id} className="card bg-base-200 shadow-xl hover:shadow-2xl transition-shadow duration-300">
+      <div
+        key={approval.id}
+        className="card bg-base-200 shadow-xl hover:shadow-2xl transition-shadow duration-300"
+      >
         <div className="card-body flex-initial">
           <div className="flex justify-between items-center mb-4">
-            <h2 className="card-title text-xl font-semibold">{approval.name}</h2>
+            <h2 className="card-title text-xl font-semibold">
+              {approval.name}
+            </h2>
             <span className={`badge ${badgeClass}`}>{status}</span>
           </div>
           <div className="mb-4">
-            <p className="text-2xl font-bold text-primary">${approval.amount}</p>
+            <p className="text-2xl font-bold text-primary">
+              ${approval.amount}
+            </p>
             <p className="text-base-content/70 text-sm">{approval.details}</p>
           </div>
-          {message && <p className={`text-center font-bold p-2 rounded-md ${className}`}>{message}</p>}
+          {message && (
+            <p className={`text-center font-bold p-2 rounded-md ${className}`}>
+              {message}
+            </p>
+          )}
           {status === "Pending" && (
             <div className="card-actions justify-end mt-4">
               <button
@@ -162,7 +174,9 @@ const Index = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="container mx-auto px-4 py-8">
-        <h1 className="text-4xl font-bold text-center mb-8">Approval Requests</h1>
+        <h1 className="text-4xl font-bold text-center mb-8">
+          Approval Requests
+        </h1>
         {loading ? (
           <div className="flex flex-col items-center justify-center h-64">
             <span className="loading loading-spinner loading-lg"></span>
@@ -170,8 +184,10 @@ const Index = () => {
           </div>
         ) : approvals.length === 0 ? (
           <div className="text-center">
-            <p className="text-lg text-base-content/60 mt-8">No requests yet!</p>
-            <button className="btn btn-primary mt-4">Create a Request</button>
+            <p className="text-lg text-base-content/60 mt-8">
+              No requests yet!
+            </p>
+            {/* <button className="btn btn-primary mt-4">Create a Request</button> */}
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
