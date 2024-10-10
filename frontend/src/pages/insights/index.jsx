@@ -30,8 +30,8 @@ const index = () => {
       <InsightsGraph activeAccountAdress={activeAccountAdress} />
       <NexusPay
         name="Nexus Pay "
-        details="Give Descritption of payment"
-        amount="1000"
+        details="Sample request sent from insight page"
+        amount="10"
         open={handleOpen}
         onClick={() => setHandleOpen(true)}
         onClose={() => setHandleOpen(!handleOpen)}
