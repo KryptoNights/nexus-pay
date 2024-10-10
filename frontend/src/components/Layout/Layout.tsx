@@ -38,7 +38,7 @@ const Layout = ({ title, children, className }: Props) => {
         const expirationSec = parseJwt(JwtToken)?.exp;
         const currentTime = Math.floor(Date.now() / 1000);
         if (expirationSec < currentTime) {
-          localStorage.removeItem("@aptos-connect/keyless-accounts");
+          // localStorage.removeItem("@aptos-connect/keyless-accounts");
           localStorage.removeItem("activeAccount");
           dispatch(setUserBalance({}));
           dispatch(setAuthData({}));
