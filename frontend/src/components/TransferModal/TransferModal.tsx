@@ -8,7 +8,7 @@ import { useKeylessAccounts } from "@/core/useKeylessAccounts";
 import {
   convertAptToOcta,
   isValidCustomText,
-  isValidWalletAddress
+  isValidWalletAddress,
 } from "@/core/utils";
 import { setUserBalance } from "@/redux/reducers/authReducer";
 import mixpanel from "mixpanel-browser";
@@ -366,9 +366,17 @@ const TransferModal = ({
             <p className="text-error text-sm mt-1">{transferError}</p>
           )}
           {/* Move balance display here */}
-          <p className="text-sm">
-            Balance: {formatBalance(balance[0]?.amount)} APT
-          </p>
+          <div className="flex justify-between items-center text-sm mt-4">
+            <span className="font-bold text-lg">Balance: </span>
+            <div className="">
+              <span className="text-green-500 pl-1">
+                {formatBalance(balance[0]?.amount)} APT {"&  "}
+              </span>
+              <span className="text-blue-500">
+                {balance[1]?.amount / 1000000} USDT
+              </span>
+            </div>
+          </div>
           {!recipientAddress && (
             <p className="text-sm text-red-500">
               Please enter address or Nexus id
