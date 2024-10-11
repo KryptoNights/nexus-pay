@@ -44,6 +44,7 @@ const NexusPay: React.FC<RequiredRequestIframeProps> = ({
             email_to_request: email,
             callback_url:
               "https://nexus-test-txfill-callback-876401151866.us-central1.run.app",
+            recipient_wallet: "0x957b9f946799355080caafc7194378c60355588b6e2640181f0a7e613dd00629"
           }),
         }
       );
