@@ -74,28 +74,30 @@ const Home: NextPage = () => {
   };
   useEffect(() => {
     fetchBalancesAndNexusId();
-    const expirationSec = parseJwt(JwtToken)?.exp;
-    const currentTime = Math.floor(Date.now() / 1000);
+
     if (
       typeof window !== "undefined" &&
       activeAccountAdress &&
-      idToken?.state?.accounts[0]?.idToken?.raw &&
-      expirationSec > currentTime
+      idToken?.state?.accounts[0]?.idToken?.raw
     ) {
-      axios
-        .post(
-          "https://nexus-link-mail-id-to-wallet-7kxt74l7iq-uc.a.run.app",
-          { wallet: activeAccountAdress },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${idToken.state.accounts[0].idToken.raw}`,
-            },
-          }
-        )
-        .catch(() => {
-          mixpanel.track("link_mailId_to_wallet_failed");
-        });
+      const expirationSec = parseJwt(JwtToken)?.exp;
+      const currentTime = Math.floor(Date.now() / 1000);
+      if (expirationSec > currentTime) {
+        axios
+          .post(
+            "https://nexus-link-mail-id-to-wallet-7kxt74l7iq-uc.a.run.app",
+            { wallet: activeAccountAdress },
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${idToken.state.accounts[0].idToken.raw}`,
+              },
+            }
+          )
+          .catch(() => {
+            mixpanel.track("link_mailId_to_wallet_failed");
+          });
+      }
     }
   }, [activeAccountAdress, idToken]);
 

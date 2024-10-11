@@ -51,7 +51,7 @@ function LoginPage() {
       return;
     }
     if (popup) {
-      const checkPopup = setInterval(() => {
+      const checkPopup = setInterval(async () => {
         // if (popup && popup.window && popup.window.location) {
         //   try {
         //     const fullUrl = popup.window.location.href;
@@ -84,7 +84,7 @@ function LoginPage() {
               idToken = JSON.parse(
                 popup.localStorage.getItem("@aptos-connect/keyless-accounts")
               );
-              dispatch(setAuthData(idToken));
+              await dispatch(setAuthData(idToken));
             } else {
               console.log("No auth data found in localStorage.");
             }
@@ -93,7 +93,7 @@ function LoginPage() {
 
             popup.close();
             console.log(path);
-
+            // window.location.href = path;
             // Use router.push instead of window.location.replace
             router.push(path);
           }
