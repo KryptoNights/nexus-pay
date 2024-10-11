@@ -324,6 +324,7 @@ interface TransactionHistory {
     success: boolean;
     sender?: string;
     asset_type: string;
+    transaction_timestamp: string;
 }
 
 export const get_transaction_history = async (address: string, offset: number): Promise<TransactionHistory[]> => {
