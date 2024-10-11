@@ -36,7 +36,7 @@ const Home: NextPage = () => {
   );
   const dispatch = useDispatch();
   const router = useRouter();
-
+  const JwtToken = idToken?.state?.accounts[0]?.idToken.raw;
   const handlePopupOpen = () => {
     mixpanel.track("open_qr_code_scanner");
     setIsPopupOpen(true);
@@ -47,47 +47,55 @@ const Home: NextPage = () => {
     setIsPopupOpen(false);
   };
 
-  // Combined useEffect for fetching balances, linking mail ID, and fetching Nexus ID
-  useEffect(() => {
-    const fetchBalancesAndNexusId = async () => {
-      if (activeAccountAdress) {
-        // Fetch balances
-        const getBalancesResponse = await getBalances(activeAccountAdress);
-        console.log(`getBalancesResponse`, getBalancesResponse);
-        dispatch(setUserBalance(getBalancesResponse));
+  const parseJwt = (token: string) => {
+    try {
+      return JSON.parse(atob(token.split(".")[1]));
+    } catch (e) {
+      console.error("Failed to parse JWT:", e);
+      return null;
+    }
+  };
+  const fetchBalancesAndNexusId = async () => {
+    if (activeAccountAdress) {
+      const getBalancesResponse = await getBalances(activeAccountAdress);
+      console.log(`getBalancesResponse`, getBalancesResponse);
+      dispatch(setUserBalance(getBalancesResponse));
 
-        // Fetch Nexus ID
-        if (idToken?.state?.accounts[0]?.idToken?.raw) {
-          const response = await get_nexus_id_from_wallet(
-            idToken.state.accounts[0].idToken.raw,
-            activeAccountAdress
-          );
-          dispatch(setSelfNexusId(response?.ids[0]));
-          setselfNexusId(response?.ids[0]);
-        }
+      // Fetch Nexus ID
+      if (idToken?.state?.accounts[0]?.idToken?.raw) {
+        const response = await get_nexus_id_from_wallet(
+          idToken.state.accounts[0].idToken.raw,
+          activeAccountAdress
+        );
+        dispatch(setSelfNexusId(response?.ids[0]));
+        setselfNexusId(response?.ids[0]);
       }
-    };
-
+    }
+  };
+  useEffect(() => {
     fetchBalancesAndNexusId();
-
-    // Link mail ID to wallet
+    const expirationSec = parseJwt(JwtToken)?.exp;
+    const currentTime = Math.floor(Date.now() / 1000);
     if (
       typeof window !== "undefined" &&
       activeAccountAdress &&
-      idToken?.state?.accounts[0]?.idToken?.raw
+      idToken?.state?.accounts[0]?.idToken?.raw &&
+      expirationSec > currentTime
     ) {
-      axios.post(
-        "https://nexus-link-mail-id-to-wallet-7kxt74l7iq-uc.a.run.app",
-        { wallet: activeAccountAdress },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${idToken.state.accounts[0].idToken.raw}`,
-          },
-        }
-      ).catch(() => {
-        mixpanel.track("link_mailId_to_wallet_failed");
-      });
+      axios
+        .post(
+          "https://nexus-link-mail-id-to-wallet-7kxt74l7iq-uc.a.run.app",
+          { wallet: activeAccountAdress },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${idToken.state.accounts[0].idToken.raw}`,
+            },
+          }
+        )
+        .catch(() => {
+          mixpanel.track("link_mailId_to_wallet_failed");
+        });
     }
   }, [activeAccountAdress, idToken]);
 
