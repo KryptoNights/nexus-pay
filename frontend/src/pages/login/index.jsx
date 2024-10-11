@@ -45,7 +45,7 @@ function LoginPage() {
   const router = useRouter();
   const openPopup = () => {
     mixpanel.track("login_inititated");
-    const popup = window.open(redirectUrl, "popup", "popup=false");
+    const popup = window.open(redirectUrl, "popup", "popup=true");
     if (!popup) {
       alert("Popup blocked! Please allow popups for this site.");
       return;
