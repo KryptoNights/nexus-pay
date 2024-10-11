@@ -1,5 +1,8 @@
 import Layout from "@/components/Layout/Layout";
+import { sendStablePayment } from "@/core/transactions";
+import { useKeylessAccounts } from "@/core/useKeylessAccounts";
 import { sendStableMoneyFunc } from "@/utils/apis";
+import { AccountAddress } from "@aptos-labs/ts-sdk";
 import Head from "next/head";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
@@ -11,7 +14,8 @@ interface Approval {
   amount: number;
   details: string;
   is_filled: boolean;
-  txn_hash: string;
+  tx_hash: string;
+  recipient_wallet: string;
 }
 
 // Custom hook for fetching approvals
@@ -51,10 +55,10 @@ const useFetchApprovals = (emailId: string | undefined) => {
 
 // Optimized getStatusInfo function
 const getStatusInfo = (approval: Approval) => {
-  const testTxnHash = "0x00000000test000000000test0000000000test";
+  const rejectTxHash = "0000";
 
   if (approval.is_filled) {
-    const isRejected = approval.txn_hash === testTxnHash;
+    const isRejected = approval.tx_hash === rejectTxHash;
     return {
       status: "Filled",
       message: isRejected ? "Rejected" : "Successful",
@@ -65,10 +69,10 @@ const getStatusInfo = (approval: Approval) => {
     };
   }
 
-  if (approval.txn_hash) {
+  if (approval.tx_hash) {
     return {
       status: "Rejected",
-      message: `Rejected - Transaction Hash: ${approval.txn_hash}`,
+      message: `Rejected - Transaction Hash: ${approval.tx_hash}`,
       className: "bg-error text-error-content",
       badgeClass: "badge-error",
     };
@@ -85,6 +89,7 @@ const getStatusInfo = (approval: Approval) => {
 const Index = () => {
   const [paymentsLoading, setPaymentsLoading] = useState(false);
   const [rejectLoading, setRejectLoading] = useState(false);
+  const { activeAccount } = useKeylessAccounts();
   const { idToken, activeAccountAdress } = useSelector(
     (state: { authSlice: { idToken: any; activeAccountAdress: string } }) =>
       state.authSlice
@@ -102,13 +107,31 @@ const Index = () => {
     ) => {
       try {
         setPaymentsLoading(true);
-        const res = await sendStableMoneyFunc(
-          recipientAddress,
+
+        const hash = await sendStablePayment(
+          AccountAddress.fromString(recipientAddress),
           transferAmount,
-          activeAccountAdress
+          activeAccount!,
+          false
         );
-        console.log("payment status", res);
+        console.log("payment status", hash);
+        
         // Implement the API call to update the approval status
+        const res = await fetch('https://nexus-fill-request-876401151866.us-central1.run.app', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer 12345890'
+          },
+          // body: '{\n    "id": "y1YQGGQw6ydv",\n    "tx_hash": "0000",\n    "email": "debjitbhowal.db@gmail.com"\n}',
+          body: JSON.stringify({
+            'id': id,
+            'tx_hash': hash,
+            'email': 'debjitbhowal.db@gmail.com'
+          })
+        });
+        console.log("API RESPONSE");
+        console.log(res);
       } catch (error) {
         console.error(error);
       } finally {
@@ -122,6 +145,21 @@ const Index = () => {
   const handleReject = useCallback(async (id: string) => {
     // Implement the rejection logic here
     console.log(`Rejected: ${id}`);
+    const res = await fetch('https://nexus-fill-request-876401151866.us-central1.run.app', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer 12345890'
+      },
+      // body: '{\n    "id": "y1YQGGQw6ydv",\n    "tx_hash": "0000",\n    "email": "debjitbhowal.db@gmail.com"\n}',
+      body: JSON.stringify({
+        'id': id,
+        'tx_hash': "0000",
+        'email': 'debjitbhowal.db@gmail.com'
+      })
+    });
+    console.log("API RESPONSE");
+    console.log(res);
   }, []);
 
   const renderApprovalCard = useCallback(
@@ -161,7 +199,7 @@ const Index = () => {
                   onClick={() =>
                     handleApprove(
                       approval.id,
-                      approval.id, // Assuming this is the recipient address
+                      approval.recipient_wallet, // Assuming this is the recipient address
                       approval.amount,
                       activeAccountAdress
                     )
