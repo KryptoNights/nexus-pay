@@ -51,24 +51,7 @@ function LoginPage() {
       return;
     }
     if (popup) {
-      const checkPopup = setInterval(async () => {
-        // if (popup && popup.window && popup.window.location) {
-        //   try {
-        //     const fullUrl = popup.window.location.href;
-        //     if (fullUrl.includes("id_token")) {
-        //       let idToken;
-        //       if (
-        //         popup?.localStorage?.getItem("@aptos-connect/keyless-accounts")
-        //       ) {
-        //         idToken = JSON.parse(
-        //           popup.localStorage.getItem("@aptos-connect/keyless-accounts")
-        //         );
-        //         // console.log(idToken);
-        //         dispatch(setAuthData(idToken));
-        //         // console.log("done");
-        //       } else {
-        //         console.log("No auth data found in localStorage.");
-        //       }
+      const checkPopup = setInterval(() => {
         if (popup.closed) {
           clearInterval(checkPopup);
           return;
@@ -77,31 +60,29 @@ function LoginPage() {
           // Check if the popup has navigated to the redirect URL
           if (popup.location.href.includes("id_token")) {
             const fullUrl = popup.location.href;
-            let idToken;
-            if (
-              popup.localStorage?.getItem("@aptos-connect/keyless-accounts")
-            ) {
-              const storedData = popup.localStorage.getItem(
-                "@aptos-connect/keyless-accounts"
-              );
-              if (storedData) {
-                idToken = JSON.parse(storedData);
-                await dispatch(setAuthData(idToken));
-              } else {
-                console.log("No auth data found in localStorage.");
-              }
-            } else {
-              console.log("No auth data found in localStorage.");
-            }
-
-            const url = new URL(fullUrl);
-            const path: string = `${url.href}${url.search}${url.hash}`;
+            const path = `${fullUrl}${new URL(fullUrl).search}${new URL(fullUrl).hash}`;
 
             popup.close();
-            console.log(path);
-            // window.location.href = path;
-            // Use router.push instead of window.location.replace
             router.push(path);
+
+            const parsedUrl = new URL(fullUrl);
+            const idToken = parsedUrl.hash.split("=")[1].split("&")[0];
+
+            dispatch(setAuthData(idToken));
+
+            // if (popup.localStorage?.getItem("@aptos-connect/keyless-accounts")) {
+            // idToken = JSON.parse(
+            //   popup.localStorage.getItem("@aptos-connect/keyless-accounts")
+            // );
+
+            // Construct the path after successfully retrieving the idToken
+
+            // console.log(path);
+
+            // // Use router.push instead of window.location.replace
+            // } else {
+            //   console.log("No auth data found in localStorage.");
+            // }
           }
         } catch (error) {
           console.error("Error accessing popup location:", error);
