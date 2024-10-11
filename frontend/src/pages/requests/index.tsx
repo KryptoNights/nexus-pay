@@ -1,11 +1,12 @@
 import Layout from "@/components/Layout/Layout";
-import { sendStablePayment } from "@/core/transactions";
+import { getBalances, sendStablePayment } from "@/core/transactions";
 import { useKeylessAccounts } from "@/core/useKeylessAccounts";
-import { sendStableMoneyFunc } from "@/utils/apis";
+import { setUserBalance } from "@/redux/reducers/authReducer";
+import { sendMoney } from "@/utils/apis";
 import { AccountAddress } from "@aptos-labs/ts-sdk";
 import Head from "next/head";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 // Define the Approval type
 interface Approval {
@@ -15,42 +16,49 @@ interface Approval {
   details: string;
   is_filled: boolean;
   tx_hash: string;
+  token: string;
+  timestamp: string;
   recipient_wallet: string;
 }
 
 // Custom hook for fetching approvals
-const useFetchApprovals = (emailId: string | undefined) => {
-  const [approvals, setApprovals] = useState<Approval[]>([]);
+const useFetchApprovals = (
+  emailId: string | undefined,
+  setApprovals: React.Dispatch<React.SetStateAction<Approval[]>>
+) => {
   const [loading, setLoading] = useState(true);
 
+  const fetchApprovals = useCallback(async () => {
+    if (!emailId) return;
+    setLoading(true);
+    try {
+      const response = await fetch(
+        "https://nexus-fetch-approval-requests-876401151866.us-central1.run.app",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer 12345",
+          },
+          body: JSON.stringify({ email: emailId }),
+        }
+      );
+      const data = await response.json();
+      console.log(data.approvals);
+
+      setApprovals(data.approvals);
+    } catch (error) {
+      console.error("Error fetching approvals:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [emailId, setApprovals]);
+
   useEffect(() => {
-    const fetchApprovals = async () => {
-      if (!emailId) return;
-      try {
-        const response = await fetch(
-          "https://nexus-fetch-approval-requests-876401151866.us-central1.run.app",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: "Bearer 12345",
-            },
-            body: JSON.stringify({ email: emailId }),
-          }
-        );
-        const data = await response.json();
-        setApprovals(data.approvals);
-      } catch (error) {
-        console.error("Error fetching approvals:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchApprovals();
-  }, [emailId]);
+  }, [fetchApprovals]);
 
-  return { approvals, loading };
+  return { loading, fetchApprovals };
 };
 
 // Optimized getStatusInfo function
@@ -88,7 +96,7 @@ const getStatusInfo = (approval: Approval) => {
 
 const Index = () => {
   const [paymentsLoading, setPaymentsLoading] = useState(false);
-  const [rejectLoading, setRejectLoading] = useState(false);
+  const [transferError, setTransferError] = useState("");
   const { activeAccount } = useKeylessAccounts();
   const { idToken, activeAccountAdress } = useSelector(
     (state: { authSlice: { idToken: any; activeAccountAdress: string } }) =>
@@ -96,40 +104,60 @@ const Index = () => {
   );
   const emailId = idToken?.state?.accounts?.[0]?.idToken?.decoded?.email;
 
-  const { approvals, loading } = useFetchApprovals(emailId);
+  const [approvals, setApprovals] = useState<Approval[]>([]);
+
+  const { loading, fetchApprovals } = useFetchApprovals(emailId, setApprovals);
+  const dispatch = useDispatch();
 
   const handleApprove = useCallback(
     async (
       id: string,
       recipientAddress: string,
       transferAmount: number,
-      activeAccountAdress: string
+      token: any
+      // activeAccountAdress: string
     ) => {
       try {
         setPaymentsLoading(true);
+        let hash;
+        if (token === "USD") {
+          hash = await sendStablePayment(
+            AccountAddress.fromString(recipientAddress),
+            transferAmount,
+            activeAccount!,
+            false
+          );
+          console.log("payment status", hash);
+        } else if (token === "APT") {
+          hash = await sendMoney(
+            AccountAddress.fromString(recipientAddress),
+            transferAmount,
+            activeAccount!,
+            setTransferError
+          );
+          console.log("payment status", hash);
+          console.log(">>>>", transferError);
+        }
+        const getBalancesResponse = await getBalances(activeAccountAdress);
+        dispatch(setUserBalance(getBalancesResponse));
 
-        const hash = await sendStablePayment(
-          AccountAddress.fromString(recipientAddress),
-          transferAmount,
-          activeAccount!,
-          false
-        );
-        console.log("payment status", hash);
-        
         // Implement the API call to update the approval status
-        const res = await fetch('https://nexus-fill-request-876401151866.us-central1.run.app', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer 12345890'
-          },
-          // body: '{\n    "id": "y1YQGGQw6ydv",\n    "tx_hash": "0000",\n    "email": "debjitbhowal.db@gmail.com"\n}',
-          body: JSON.stringify({
-            'id': id,
-            'tx_hash': hash,
-            'email': 'debjitbhowal.db@gmail.com'
-          })
-        });
+        const res = await fetch(
+          "https://nexus-fill-request-876401151866.us-central1.run.app",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer 12345890",
+            },
+            // body: '{\n    "id": "y1YQGGQw6ydv",\n    "tx_hash": "0000",\n    "email": "debjitbhowal.db@gmail.com"\n}',
+            body: JSON.stringify({
+              id: id,
+              tx_hash: hash,
+              email: emailId,
+            }),
+          }
+        );
         console.log("API RESPONSE");
         console.log(res);
       } catch (error) {
@@ -137,35 +165,54 @@ const Index = () => {
       } finally {
         setPaymentsLoading(false);
       }
-      console.log(`Approved: ${id}`);
     },
     []
   );
 
-  const handleReject = useCallback(async (id: string) => {
-    // Implement the rejection logic here
-    console.log(`Rejected: ${id}`);
-    const res = await fetch('https://nexus-fill-request-876401151866.us-central1.run.app', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer 12345890'
-      },
-      // body: '{\n    "id": "y1YQGGQw6ydv",\n    "tx_hash": "0000",\n    "email": "debjitbhowal.db@gmail.com"\n}',
-      body: JSON.stringify({
-        'id': id,
-        'tx_hash': "0000",
-        'email': 'debjitbhowal.db@gmail.com'
-      })
-    });
-    console.log("API RESPONSE");
-    console.log(res);
-  }, []);
+  const handleDecline = useCallback(
+    async (id: string) => {
+      console.log(`Rejected: ${id}`);
+      setPaymentsLoading(true);
+      try {
+        const res = await fetch(
+          "https://nexus-fill-request-876401151866.us-central1.run.app",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer 12345890",
+            },
+            body: JSON.stringify({
+              id: id,
+              tx_hash: "0000",
+              email: emailId,
+            }),
+          }
+        );
+
+        if (res.ok) {
+          // Re-fetch approvals after successful decline
+          await fetchApprovals();
+        } else {
+          console.error("Failed to update approval status");
+        }
+      } catch (error) {
+        console.error("Error updating approval status:", error);
+      } finally {
+        setPaymentsLoading(false);
+      }
+    },
+    [emailId, fetchApprovals]
+  );
 
   const renderApprovalCard = useCallback(
     (approval: Approval) => {
       const { status, message, className, badgeClass } =
         getStatusInfo(approval);
+
+      // Parse the timestamp and format it to DD/MM/YYYY HH:MM
+      const date = new Date(approval.timestamp);
+      const localTimestamp = `${date.getDate().toString().padStart(2, "0")}/${(date.getMonth() + 1).toString().padStart(2, "0")}/${date.getFullYear()} ${date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
 
       return (
         <div
@@ -173,69 +220,74 @@ const Index = () => {
           className="card bg-base-200 shadow-xl hover:shadow-2xl transition-shadow duration-300"
         >
           <div className="card-body flex-initial">
-            <div className="flex justify-between items-center mb-4">
+            <div className="flex justify-between items-center mb-2">
               <h2 className="card-title text-xl font-semibold">
                 {approval.name}
               </h2>
               <span className={`badge ${badgeClass}`}>{status}</span>
             </div>
+            <div className="text-sm text-base-content/70 mb-3">
+              <span className="font-medium">Created at:</span> {localTimestamp}
+            </div>
             <div className="mb-4">
               <p className="text-2xl font-bold text-primary">
-                ${approval.amount}
+                {approval.token == "USD"
+                  ? `$${approval.amount}`
+                  : `${approval.amount} APT`}
               </p>
-              <p className="text-base-content/70 text-sm">{approval.details}</p>
+              <p className="text-base-content/70 text-sm mt-1">
+                {approval.details}
+              </p>
             </div>
             {message && (
               <p
-                className={`text-center font-bold p-2 rounded-md ${className}`}
+                className={`text-center font-bold p-2 rounded-md mb-3 ${className}`}
               >
                 {message}
               </p>
             )}
             {status === "Pending" && (
-              <div className="card-actions justify-end mt-4">
-                <button
-                  className="btn btn-primary flex-1"
-                  onClick={() =>
-                    handleApprove(
-                      approval.id,
-                      approval.recipient_wallet, // Assuming this is the recipient address
-                      approval.amount,
-                      activeAccountAdress
-                    )
-                  }
-                  disabled={paymentsLoading}
-                >
-                  {paymentsLoading ? (
-                    <span className="loading loading-spinner"></span>
-                  ) : (
-                    "Approve"
-                  )}
-                </button>
-                <button
-                  className="btn btn-outline btn-error flex-1"
-                  onClick={() => handleReject(approval.id)}
-                  disabled={rejectLoading}
-                >
-                  {rejectLoading ? (
-                    <span className="loading loading-spinner"></span>
-                  ) : (
-                    "Reject"
-                  )}
-                </button>
+              <div className="card-actions justify-end mt-2">
+                {paymentsLoading ? (
+                  <div className="flex items-center justify-center w-full">
+                    <span className="loading loading-spinner loading-md"></span>
+                    <span className="ml-2 text-base-content">
+                      Processing...
+                    </span>
+                  </div>
+                ) : (
+                  <>
+                    <button
+                      className="btn btn-primary flex-1"
+                      onClick={() =>
+                        handleApprove(
+                          approval.id,
+                          approval.recipient_wallet, // Assuming this is the recipient address
+                          approval.amount,
+                          approval.token
+                          // activeAccountAdress
+                        )
+                      }
+                      disabled={paymentsLoading}
+                    >
+                      Approve
+                    </button>
+                    <button
+                      className="btn btn-outline btn-error flex-1"
+                      onClick={() => handleDecline(approval.id)}
+                      disabled={paymentsLoading}
+                    >
+                      Decline
+                    </button>
+                  </>
+                )}
               </div>
             )}
           </div>
         </div>
       );
     },
-    [
-      handleApprove,
-      handleReject,
-      paymentsLoading,
-      rejectLoading,
-      activeAccountAdress,
-    ]
+    [handleApprove, handleDecline, paymentsLoading]
   );
 
   const approvalCards = useMemo(

@@ -7,9 +7,8 @@ import {
 import { useKeylessAccounts } from "@/core/useKeylessAccounts";
 import {
   convertAptToOcta,
-  formatBalanceUtils,
   isValidCustomText,
-  isValidWalletAddress,
+  isValidWalletAddress
 } from "@/core/utils";
 import { setUserBalance } from "@/redux/reducers/authReducer";
 import mixpanel from "mixpanel-browser";
@@ -67,6 +66,7 @@ const TransferModal = ({
   };
 
   const sendMoney = async (recipientAddress: any) => {
+    // if change anything here , then also change in /utils/api.tsx
     mixpanel.track("send_money_initiated");
     setIsLoading(true);
     try {
@@ -107,6 +107,7 @@ const TransferModal = ({
 
   // THIS IS JUST A SAMPLE EXAMPLE // NEEDS TO BE COMMENTED OUT
   const sendStableMoney = async (recipientAddress: any) => {
+    // if change anything here , then also change in /utils/api.tsx
     mixpanel.track("send_stable_money_initiated");
     setIsLoading(true);
     try {
