@@ -29,6 +29,8 @@ const TransactionTable: NextPage = () => {
   const [hasMore, setHasMore] = useState(true);
   const observer = useRef<IntersectionObserver | null>(null);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null); // State for selected transaction
+  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
 
   const lastTransactionElementRef = useCallback(
     (node: HTMLTableRowElement | null) => {
@@ -112,6 +114,16 @@ const TransactionTable: NextPage = () => {
       status.includes(searchLower)
     );
   });
+
+  const openModal = (transaction: Transaction) => {
+    setSelectedTransaction(transaction);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedTransaction(null);
+  };
 
   return (
     <main className="flex-grow px-4 text-center">
@@ -200,7 +212,10 @@ const TransactionTable: NextPage = () => {
                   </span>
                 </td>
                 <td className="px-4 py-2">
-                  <button className="text-blue-400 hover:text-blue-300 transition-colors">
+                  <button 
+                    className="text-blue-400 hover:text-blue-300 transition-colors"
+                    onClick={() => openModal(transaction)} // Open modal on click
+                  >
                     <Info className="h-5 w-5" />
                   </button>
                 </td>
@@ -224,6 +239,45 @@ const TransactionTable: NextPage = () => {
         {/* <button className="btn btn-primary">New Transaction</button> */}
         {/* <button className="btn btn-outline">Export</button> */}
       </div>
+
+      {/* Modal for transaction details using DaisyUI */}
+      {isModalOpen && (
+        <div className="modal modal-open">
+          <div className="modal-box max-w-lg mx-auto p-6 rounded-lg shadow-lg bg-gray-900 text-white">
+            <h2 className="text-2xl font-bold mb-4">Transaction Details</h2>
+            {selectedTransaction ? (
+              <div>
+                <p className="mb-2">
+                  <strong>Transaction Hash:</strong> 
+                  <a 
+                    href={`https://explorer.aptoslabs.com/txn/${selectedTransaction.version}/userTxnOverview?network=testnet`} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="text-blue-400 hover:underline"
+                  >
+                    {selectedTransaction.version}
+                  </a>
+                </p>
+                <p className="mb-2">
+                  <strong>Sender Address:</strong> 
+                  <span className="text-gray-300">{collapseAddress(selectedTransaction.sender || "") || "N/A"}</span>
+                </p>
+                <p className="mb-4">
+                  <strong>Gas Fees:</strong> 
+                  <span className="text-gray-300">{selectedTransaction.gas_fee ? `${convertOctaToApt(selectedTransaction.gas_fee)} APT` : "N/A"}</span>
+                </p>
+                {/* Add more details as needed */}
+              </div>
+            ) : (
+              <p className="text-gray-500">Loading transaction details...</p>
+            )}
+            <div className="modal-action">
+              <button onClick={closeModal} className="btn btn-primary">Close</button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </main>
   );
 };
