@@ -192,11 +192,14 @@ const Header = ({ title }: HeaderProps) => {
               className="btn btn-primary p-0 bg-[rgb(0,0,0)] rounded-xl hover:bg-transparent"
             >
               <div className="hidden sm:block pt-[8px] pr-[12px] pb-[8px] pl-[12px]">
-                {formatBalance(balance[0]?.amount, 8)} APT |{" "}
+                {isNaN(balance[0]?.amount)
+                  ? "0"
+                  : formatBalance(balance[0]?.amount, 8)}{" "}
+                APT |{" "}
                 {isNaN(balance[1]?.amount)
                   ? "0"
                   : formatBalance(balance[1]?.amount, 6)}{" "}
-                USDT
+                USD
               </div>
               <div className="bg-custom-gradient pt-[6px] pr-[8px] pl-[8px] pb-[8px] font-bold rounded-xl flex items-center h-[100%]">
                 <div className="gap-[6px] flex items-center">
