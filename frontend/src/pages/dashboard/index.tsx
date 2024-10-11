@@ -46,7 +46,7 @@ const Home: NextPage = () => {
   const hardcodedSuggestions = [
     "kavishshah30@nexus",
     "codewithakki@nexus",
-    "debjitbhowal.db@nexus@nexus",
+    "debjitbhowal.db@nexus",
   ];
   const handlePopupClose = () => {
     mixpanel.track("close_qr_code_scanner");
