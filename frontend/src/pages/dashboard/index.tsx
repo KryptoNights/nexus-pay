@@ -42,6 +42,12 @@ const Home: NextPage = () => {
     setIsPopupOpen(true);
   };
 
+  const [isFocused, setIsFocused] = useState(false);
+  const hardcodedSuggestions = [
+    "kavishshah30@nexus",
+    "codewithakki@nexus",
+    "debjitbhowal.db@nexus@nexus",
+  ];
   const handlePopupClose = () => {
     mixpanel.track("close_qr_code_scanner");
     setIsPopupOpen(false);
@@ -190,6 +196,8 @@ const Home: NextPage = () => {
               className="input input-bordered input-primary w-full pr-20 sm:pr-24 rounded-full text-sm sm:text-base"
               value={recipientAddress}
               onChange={handleInputChange}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setTimeout(() => setIsFocused(false), 200)}
             />
             <button
               className="absolute right-0 top-0 bottom-0 btn btn-secondary rounded-r-full flex items-center px-2 sm:px-4 tooltip tooltip-left text-xs sm:text-sm"
@@ -215,6 +223,22 @@ const Home: NextPage = () => {
               </svg>
               <span className="hidden sm:inline">Scan</span>
             </button>
+            {isFocused && recipientAddress.length === 0 && (
+              <ul className="absolute left-0 right-0 mt-1 max-h-48 overflow-y-auto bg-white border border-gray-300 rounded-md shadow-lg z-10 text-left">
+                {hardcodedSuggestions.map((suggestion, index) => (
+                  <li
+                    key={index}
+                    className="p-2 hover:bg-gray-500 cursor-pointer text-sm sm:text-base bg-[#0D0D0D]"
+                    onClick={() => {
+                      mixpanel.track("hardcoded_suggestion_clicked");
+                      setRecipientAddress(suggestion);
+                    }}
+                  >
+                    {suggestion}
+                  </li>
+                ))}
+              </ul>
+            )}
 
             {suggestions?.length > 0 && (
               <ul className="absolute left-0 right-0 mt-1 max-h-48 overflow-y-auto bg-white border border-gray-300 rounded-md shadow-lg z-10 text-left">
