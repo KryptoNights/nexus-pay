@@ -81,15 +81,21 @@ function LoginPage() {
             if (
               popup.localStorage?.getItem("@aptos-connect/keyless-accounts")
             ) {
-              idToken = JSON.parse(
-                popup.localStorage.getItem("@aptos-connect/keyless-accounts")
+              const storedData = popup.localStorage.getItem(
+                "@aptos-connect/keyless-accounts"
               );
-              await dispatch(setAuthData(idToken));
+              if (storedData) {
+                idToken = JSON.parse(storedData);
+                await dispatch(setAuthData(idToken));
+              } else {
+                console.log("No auth data found in localStorage.");
+              }
             } else {
               console.log("No auth data found in localStorage.");
             }
 
-            const path = `${fullUrl}${fullUrl.search}${fullUrl.hash}`;
+            const url = new URL(fullUrl);
+            const path: string = `${url.href}${url.search}${url.hash}`;
 
             popup.close();
             console.log(path);
@@ -132,7 +138,9 @@ function LoginPage() {
               onClick={openPopup}
               className="w-full flex items-center justify-center px-4 py-3 space-x-4 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200 ease-in-out"
             >
-              <GoogleLogo className="w-6 h-6" />
+              <div className="w-6 h-6">
+                <GoogleLogo />
+              </div>
               <span className="font-medium">Sign in with Google</span>
             </button>
           </div>
