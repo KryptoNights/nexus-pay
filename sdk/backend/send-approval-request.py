@@ -4,6 +4,7 @@ from firebase_admin import firestore, initialize_app
 import google.cloud.firestore
 import requests as req
 import random
+from datetime import datetime
 
 def random_id(n = 12):
     return ''.join(random.choices('0123456789QWERTYUIOPASDFGHJKLZXCVBNMwertyuiopsdfghjklzxcvbnm', k=n))
@@ -27,6 +28,7 @@ def hello_http(request):
     request_token = None
     email_to_request = None
     callback_url = None
+    recipient_wallet = None
 
     if request.content_type == 'application/x-www-form-urlencoded':
         request_name = request.form.get('name')
@@ -35,6 +37,7 @@ def hello_http(request):
         request_token = request.form.get('token')
         email_to_request = request.form.get('email_to_request')
         callback_url = request.form.get('callback_url')
+        recipient_wallet = request.form.get('recipient_wallet')
     elif request.content_type == 'application/json':
         request_name = request.get_json().get('name')
         request_details = request.get_json().get('details')
@@ -42,9 +45,10 @@ def hello_http(request):
         request_token = request.get_json().get('token')
         email_to_request = request.get_json().get('email_to_request')
         callback_url = request.get_json().get('callback_url')
+        recipient_wallet = request.get_json().get('recipient_wallet')
 
-    if not request_name or not request_details or not request_amount or not request_token or not email_to_request or not callback_url:
-        return {"error": "Provide all details: name, details, amount, token, email_to_request, callback_url"}
+    if not request_name or not request_details or not request_amount or not request_token or not email_to_request or not callback_url or not recipient_wallet:
+        return {"error": "Provide all details: name, details, amount, token, email_to_request, callback_url, recipient_wallet"}
     
     doc_ref = db.collection("nexuspay").document("email_mapping").collection("emails").document(email_to_request)
     doc = doc_ref.get().to_dict()
@@ -63,8 +67,10 @@ def hello_http(request):
         "amount": request_amount,
         "token": request_token,
         "callback_url": callback_url,
+        "recipient_wallet": recipient_wallet,
         "id": random_id(),
-        "is_filled": False
+        "is_filled": False,
+        "timestamp": datetime.now()
     })
 
     doc_ref.set({"approvals": approvals}, merge=True)
