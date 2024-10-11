@@ -44,11 +44,13 @@ const index = () => {
   return (
       <NexusPay
         name="Nexus Pay "
-        details="Give Descritption of payment"
-        amount="1000"
+        details="Sample request "
+        amount="10"
         open={handleOpen}
+        token="USD"
         onClick={() => setHandleOpen(true)}
         onClose={() => setHandleOpen(!handleOpen)}
+        recipient_wallet= "0xede634cb984f2897df0d3630257d3707202f85187ae9c8e51bcef102235981d0"
       />
   );
 };
@@ -66,8 +68,10 @@ export default index;
 | `details` | string   | A brief description or details about the payment.          |
 | `amount`  | string   | The payment amount.                                        |
 | `open`    | boolean  | Controls the visibility of the payment component.          |
+| `token`    | string  | Can accept USD or APT as input and user can pay that token.|
 | `onClick` | function | Callback function triggered when the component is clicked. |
 | `onClose` | function | Callback function triggered when the component is closed.  |
+| `recipient_wallet` | string | Nexus wallet address to whom payment will go to.    |
 
 ### name
 
@@ -93,6 +97,12 @@ export default index;
 - Required: Yes
 - Description: Controls the visibility of the NexusPay component. Set to `true` to show the component, `false` to hide it.
 
+### token
+
+- Type: `string`
+- Required: Yes
+- Description:  Can accept USD or APT as input and user can pay that token.
+
 ### onClick
 
 - Type: `function`
@@ -105,6 +115,12 @@ export default index;
 - Required: Yes
 - Description: A callback function that is called when the component is closed. Use this to handle any cleanup or state updates when the payment interface is dismissed.
 
+### recipient_wallet
+
+- Type: `string`
+- Required: Yes
+- Description: Specifies whose nexus account will be credited the money.
+
 ## Example
 
 ```
@@ -113,11 +129,13 @@ const index = () => {
   return (
       <NexusPay
         name="Nexus Pay "
-        details="Give Descritption of payment"
-        amount="1000"
+        details="Sample request "
+        amount="10"
         open={handleOpen}
+        token="USD"
         onClick={() => setHandleOpen(true)}
         onClose={() => setHandleOpen(!handleOpen)}
+        recipient_wallet= "0xede634cb984f2897df0d3630257d3707202f85187ae9c8e51bcef102235981d0"
       />
   );
 };

@@ -7,8 +7,11 @@ const NexusPay: React.FC<RequiredRequestIframeProps> = ({
   onClick,
   details,
   amount,
+  buttonClassName,
   onClose,
   open,
+  token,
+  recipient_wallet,
 }) => {
   const [email, setEmail] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
@@ -40,11 +43,11 @@ const NexusPay: React.FC<RequiredRequestIframeProps> = ({
             name: name,
             details: details,
             amount: amount,
-            token: "USD",
+            token: token,
             email_to_request: email,
             callback_url:
               "https://nexus-test-txfill-callback-876401151866.us-central1.run.app",
-            recipient_wallet: "0x957b9f946799355080caafc7194378c60355588b6e2640181f0a7e613dd00629"
+            recipient_wallet: recipient_wallet,
           }),
         }
       );
@@ -65,6 +68,7 @@ const NexusPay: React.FC<RequiredRequestIframeProps> = ({
         <button
           onClick={onClick}
           className={
+            buttonClassName ||
             "px-4 py-2 sm:px-6 sm:py-3 bg-blue-600 text-white text-sm sm:text-base rounded-lg shadow-md hover:bg-blue-700 transition duration-300 ease-in-out transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
           }
         >
@@ -72,10 +76,13 @@ const NexusPay: React.FC<RequiredRequestIframeProps> = ({
         </button>
       )}
       {open && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 p-4">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-sm sm:max-w-md relative">
+        <div className="fixed inset-0 flex items-center justify-center bg-opacity-50 z-50 p-4">
+          <div
+            className="rounded-lg shadow-xl w-full max-w-sm sm:max-w-md relative"
+            style={{ backgroundColor: "#141a1f" }}
+          >
             <button
-              className="absolute top-2 right-2 sm:top-4 sm:right-4 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+              className="absolute top-2 right-2 sm:top-4 sm:right-4 text-gray-400 hover:text-gray-200"
               onClick={onClose}
             >
               <svg
@@ -94,7 +101,7 @@ const NexusPay: React.FC<RequiredRequestIframeProps> = ({
             </button>
             <div className="p-4 sm:p-6 md:p-8">
               <div className="text-center mb-4 sm:mb-6">
-                <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                <h2 className="text-xl sm:text-2xl font-bold text-white mb-2">
                   NexusPay Payment Request
                 </h2>
                 <div className="flex items-center">
@@ -111,7 +118,7 @@ const NexusPay: React.FC<RequiredRequestIframeProps> = ({
                       d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                     />
                   </svg>
-                  <p className="text-sm sm:text-base text-gray-600 dark:text-gray-100">
+                  <p className="text-sm sm:text-base text-gray-300">
                     {details}
                   </p>
                 </div>
@@ -119,17 +126,17 @@ const NexusPay: React.FC<RequiredRequestIframeProps> = ({
 
               <label
                 htmlFor="email"
-                className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 sm:mb-2"
+                className="block text-xs sm:text-sm font-medium text-gray-300 mb-1 sm:mb-2"
               >
                 Amount to Process:
               </label>
-              <div className="bg-gray-100 dark:bg-gray-500 rounded-lg p-3 mb-4 flex items-center justify-between  cursor-not-allowed">
-                <div className="flex w-full justify-between ">
-                  <p className="text-base sm:text-lg font-bold text-gray-900 dark:text-white">
-                    ${amount}
+              <div className="bg-gray-700 rounded-lg p-3 mb-4 flex items-center justify-between cursor-not-allowed">
+                <div className="flex w-full justify-between">
+                  <p className="text-base sm:text-lg font-bold text-white">
+                    {token === "USD" ? `$${amount}` : `${amount}`}
                   </p>
-                  <span className="text-md sm:text-sm text-gray-600 dark:text-gray-400">
-                    USD
+                  <span className="text-md sm:text-sm text-gray-400">
+                    {token === "USD" ? "USD" : "APT"}
                   </span>
                 </div>
               </div>
@@ -138,7 +145,7 @@ const NexusPay: React.FC<RequiredRequestIframeProps> = ({
                   <div className="mb-4 sm:mb-6">
                     <label
                       htmlFor="email"
-                      className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 sm:mb-2"
+                      className="block text-xs sm:text-sm font-medium text-gray-300 mb-1 sm:mb-2"
                     >
                       Email to request payment:
                     </label>
@@ -148,7 +155,7 @@ const NexusPay: React.FC<RequiredRequestIframeProps> = ({
                       value={email}
                       onChange={handleEmailChange}
                       placeholder="Enter your email"
-                      className="w-full px-3 py-2 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white"
+                      className="w-full px-3 py-2 text-sm sm:text-base border border-gray-600 rounded-md focus:ring-blue-500 focus:border-blue-500 bg-gray-700 text-white"
                     />
                   </div>
                   <button
