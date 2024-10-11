@@ -7,5 +7,4 @@ export interface RequestIframeProps {
     onClose: () => void;
     open: Boolean;
     onClick: () => void;
-    buttonClassName?: string;
 }
