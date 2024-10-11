@@ -25,8 +25,8 @@ def hello_http(request):
         request_id = request.get_json().get('id')
         email = request.get_json().get('email')
 
-    if not request_id or not email:
-        return {"error": "Provide all details: id, email"}
+    if not email:
+        return {"error": "Provide all details: email"}
     
     doc_ref = db.collection("nexuspay").document("email_mapping").collection("emails").document(email)
     doc = doc_ref.get().to_dict()
@@ -37,6 +37,13 @@ def hello_http(request):
     approvals = doc.get('approvals')
     if not approvals:
         approvals = []
-
-    # return approval requests
-    return {"approvals": approvals}
+    
+    if not request_id:
+        # return approval requests
+        return {"approvals": approvals}
+    else:
+        # fetch specific approval request
+        for approval in approvals:
+            if approval['id'] == request_id:
+                return {"approval": approval}
+        return {"error": "Approval request not found"}

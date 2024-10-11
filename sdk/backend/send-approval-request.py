@@ -26,6 +26,7 @@ def hello_http(request):
     request_amount = None
     request_token = None
     email_to_request = None
+    callback_url = None
 
     if request.content_type == 'application/x-www-form-urlencoded':
         request_name = request.form.get('name')
@@ -33,15 +34,17 @@ def hello_http(request):
         request_amount = request.form.get('amount')
         request_token = request.form.get('token')
         email_to_request = request.form.get('email_to_request')
+        callback_url = request.form.get('callback_url')
     elif request.content_type == 'application/json':
         request_name = request.get_json().get('name')
         request_details = request.get_json().get('details')
         request_amount = request.get_json().get('amount')
         request_token = request.get_json().get('token')
         email_to_request = request.get_json().get('email_to_request')
+        callback_url = request.get_json().get('callback_url')
 
-    if not request_name or not request_details or not request_amount or not request_token or not email_to_request:
-        return {"error": "Provide all details: name, details, amount, token"}
+    if not request_name or not request_details or not request_amount or not request_token or not email_to_request or not callback_url:
+        return {"error": "Provide all details: name, details, amount, token, email_to_request, callback_url"}
     
     doc_ref = db.collection("nexuspay").document("email_mapping").collection("emails").document(email_to_request)
     doc = doc_ref.get().to_dict()
@@ -59,10 +62,11 @@ def hello_http(request):
         "details": request_details,
         "amount": request_amount,
         "token": request_token,
+        "callback_url": callback_url,
         "id": random_id(),
         "is_filled": False
     })
 
     doc_ref.set({"approvals": approvals}, merge=True)
 
-    return {"message": None, "added": True, "approvals": approvals}
+    return {"message": None, "added": True, "approvals": approvals[0]}

@@ -41,14 +41,23 @@ def hello_http(request):
     if not approvals:
         approvals = []
 
+    callback_url = None
     # mark approval request as approved and add tx_hash
     for approval in approvals:
         if approval['id'] == request_id:
             approval['is_filled'] = True
             approval['tx_hash'] = tx_hash
+            callback_url = approval.get('callback_url')
             break
+
+    response = None
+    if callback_url:
+        try:
+            response = req.post(callback_url, json={"": tx_hash, "id": request_id}).json()
+        except:
+            response = {"error": "Callback failed"}
 
     doc_ref.set({'approvals': approvals}, merge=True)
 
-    return {"message": "Approval request filled"}
+    return {"message": "Approval request filled", "response": response}
     
