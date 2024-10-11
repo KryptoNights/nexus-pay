@@ -323,6 +323,7 @@ interface TransactionHistory {
     gas_fee?: number;
     success: boolean;
     sender?: string;
+    asset_type: string;
 }
 
 export const get_transaction_history = async (address: string, offset: number): Promise<TransactionHistory[]> => {
@@ -426,6 +427,7 @@ export const get_transaction_history = async (address: string, offset: number): 
                 transaction_timestamp: activity.transaction_timestamp,
                 success: false,
                 amount: 0,
+                asset_type: activity.asset_type // Add asset_type to existingActivity
             };
 
             if (activity.is_gas_fee) {
@@ -434,12 +436,13 @@ export const get_transaction_history = async (address: string, offset: number): 
 
             existingActivity.success = existingActivity.success || activity.is_transaction_success;
 
+            // Update action and amount based on asset type
             if (activity.type.endsWith("DepositEvent")) {
                 existingActivity.action = "Received";
-                existingActivity.amount = activity.amount;
+                existingActivity.amount += activity.amount; // Accumulate amount for the same transaction version
             } else if (activity.type.endsWith("WithdrawEvent")) {
                 existingActivity.action = "Sent";
-                existingActivity.amount = activity.amount;
+                existingActivity.amount += activity.amount; // Accumulate amount for the same transaction version
             }
 
             existingActivity.sender = version_sender_map.get(activity.transaction_version as any as string);
@@ -449,15 +452,24 @@ export const get_transaction_history = async (address: string, offset: number): 
 
         const history: TransactionHistory[] = Array.from(version_activity_map.values());
         history.sort((a, b) => parseInt(b.version) - parseInt(a.version));
+        console.log(">>>>>>>asdasd>>>", history);
 
         return history.map((transaction) => {
             if (transaction.action === "Sent") {
                 return {
                     ...transaction,
                     sender: "You",
+                    asset_type: transaction.asset_type // Include asset_type in the returned transaction
                 };
             }
-            return transaction;
+            console.log(">>>>>>>>>>", transaction);
+            console.log("?????????????",transaction.asset_type);
+            return {
+                ...transaction,
+                asset_type: transaction.asset_type // Include asset_type in the returned transaction
+            };
+            
+            
         });
 
     } catch (error) {
@@ -530,7 +542,7 @@ export const get_transaction_history = async (address: string, offset: number): 
 
 //         version_activity_map[activity.transaction_version as string].gas_fee = (activity.is_gas_fee as boolean) ? activity.amount as number : version_activity_map[activity.transaction_version as string].gas_fee;
 //         version_activity_map[activity.transaction_version as string].success = activity.is_transaction_success as boolean || false;
-        
+//         
 //         if ((activity.type as string).endsWith("DepositEvent")) {
 //             version_activity_map[activity.transaction_version as string].action = "Received";
 //             version_activity_map[activity.transaction_version as string].amount = activity.amount;
@@ -555,4 +567,5 @@ export const get_transaction_history = async (address: string, offset: number): 
 
 //     console.log(history);
 //     return history;
+// }
 // }

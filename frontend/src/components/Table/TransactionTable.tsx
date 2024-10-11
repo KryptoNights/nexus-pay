@@ -16,6 +16,7 @@ interface Transaction {
   gas_fee?: number;
   success: boolean;
   sender?: string;
+  asset_type: any;
 }
 
 const TransactionTable: NextPage = () => {
@@ -168,7 +169,10 @@ const TransactionTable: NextPage = () => {
                     }
                   >
                     {transaction.action === "Sent" ? "- " : "+ "}
-                    {convertOctaToApt(transaction.amount)} APT
+                    {/* {convertOctaToApt(transaction.amount)}{" "} */}
+                    {transaction.asset_type.includes("USDT") ? `${transaction.amount/1000000} USDT` : 
+                     transaction.asset_type.includes("0x1::aptos_coin::AptosCoin") ? `${convertOctaToApt(transaction.amount)} APT` : 
+                     transaction.asset_type} {/* Show asset type based on conditions */}
                   </span>
                 </td>
                 <td className="px-4 py-2 hidden md:table-cell truncate max-w-[150px]">
