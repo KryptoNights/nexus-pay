@@ -22,6 +22,8 @@ Due to our close integration with your email, you can also send money to anyone 
 
 Pay without worrying about volatility. Enter the amount in $USD. We send an equivalent amount of stable coin, or internally convert from your APT balance to USDT so the receiver always receives funds in a coin which doesn't fluctuate.
 
+![stable-swap.png](docs/stable-swap.png)
+
 Merchants can directly price their products in $USD without factoring in the volatility of cryptocurrencies.
 
 ## Merchant SDK

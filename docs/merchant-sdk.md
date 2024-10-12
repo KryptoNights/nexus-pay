@@ -4,7 +4,7 @@ Accept money from an email address.
 
 The `Pay with Nexus` button is a simple way to accept payments from Nexus Pay wallets. It's equivalent to sending a payment request to the user's wallet. The user (the email address provided) will receive a notification in their Nexus Pay wallet to approve the payment. Upon approval, a callback will be sent to the merchant's server. Additionally, the merchant can query the Order ID to check the status of the payment.
 
-![image.png](image.png)
+![sdk.png](sdk.png)
 
 ## Integrate
 

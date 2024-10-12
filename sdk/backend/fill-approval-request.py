@@ -53,7 +53,7 @@ def hello_http(request):
     response = None
     if callback_url:
         try:
-            response = req.post(callback_url, json={"": tx_hash, "id": request_id}).json()
+            response = req.post(callback_url, json={"tx_hash": tx_hash, "id": request_id}).json()
         except:
             response = {"error": "Callback failed"}
 

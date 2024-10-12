@@ -56,8 +56,6 @@ const index = () => {
 };
 
 export default index;
-
-
 ```
 
 ## Props
