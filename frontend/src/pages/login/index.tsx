@@ -62,13 +62,13 @@ function LoginPage() {
             const fullUrl = popup.location.href;
             const path = `${fullUrl}${new URL(fullUrl).search}${new URL(fullUrl).hash}`;
 
-            popup.close();
-            router.push(path);
-
             const parsedUrl = new URL(fullUrl);
             const idToken = parsedUrl.hash.split("=")[1].split("&")[0];
 
             dispatch(setAuthData(idToken));
+            router.push(path);
+            popup.close();
+
 
             // if (popup.localStorage?.getItem("@aptos-connect/keyless-accounts")) {
             // idToken = JSON.parse(
