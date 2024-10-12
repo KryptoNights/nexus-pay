@@ -7,6 +7,7 @@ import {
   get_nexus_ids_starting_with,
   getBalances,
 } from "@/core/transactions";
+import { useKeylessAccounts } from "@/core/useKeylessAccounts";
 import { setSelfNexusId, setUserBalance } from "@/redux/reducers/authReducer";
 import axios from "axios";
 import mixpanel from "mixpanel-browser";
@@ -41,6 +42,11 @@ const Home: NextPage = () => {
     mixpanel.track("open_qr_code_scanner");
     setIsPopupOpen(true);
   };
+  const { activeAccount, disconnectKeylessAccount } = useKeylessAccounts();
+
+  // useEffect(() => {
+  //   if (!activeAccount) router.push("/");
+  // }, [activeAccount, router]);
 
   const [isFocused, setIsFocused] = useState(false);
   const hardcodedSuggestions = [
@@ -143,10 +149,6 @@ const Home: NextPage = () => {
       setTransferError("");
     }
   }, [idToken, activeAccountAdress, router]);
-
-  const handleGoogleSignIn = () => {
-    router.push("/login");
-  };
 
   const handleInputChange = async (
     event: React.ChangeEvent<HTMLInputElement>

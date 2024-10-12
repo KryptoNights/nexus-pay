@@ -1,14 +1,16 @@
 import Header from "@/components/Header/Header";
 import { Sidebar } from "@/components/Sidebar/Sidebar";
 import { SidebarProvider } from "@/context/SidebarContext";
+import { useKeylessAccounts } from "@/core/useKeylessAccounts";
 import {
   setActiveAccountAddress,
   setAuthData,
   setUserBalance,
 } from "@/redux/reducers/authReducer";
+import { showFailureToast } from "@/utils/notifications";
 import clsx from "clsx";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 interface Props {
@@ -21,6 +23,7 @@ const Layout = ({ title, children, className }: Props) => {
   const { idToken, activeAccountAdress } = useSelector(
     (state: any) => state.authSlice
   );
+  const { activeAccount } = useKeylessAccounts();
   const router = useRouter();
   const dispatch = useDispatch();
   const parseJwt = (token: string) => {
@@ -38,6 +41,7 @@ const Layout = ({ title, children, className }: Props) => {
         const expirationSec = parseJwt(JwtToken)?.exp;
         const currentTime = Math.floor(Date.now() / 1000);
         if (expirationSec < currentTime) {
+          console.log("here");
           // localStorage.removeItem("@aptos-connect/keyless-accounts");
           localStorage.removeItem("activeAccount");
           dispatch(setUserBalance({}));
@@ -65,12 +69,12 @@ const Layout = ({ title, children, className }: Props) => {
     }
   }, []);
 
-  React.useEffect(() => {
-    // if active account is  {} push to /login
-    if (Object.keys(activeAccountAdress).length === 0) {
-      router.push("/login");
-    }
-  }, [activeAccountAdress]);
+  useEffect(() => {
+    if (!activeAccount) {
+      router.push("/login")
+      showFailureToast("Session Expired! Please login again.")
+    };
+  }, [activeAccount, router]);
 
   return (
     <SidebarProvider>

@@ -12,12 +12,10 @@ import useEphemeralKeyPair from "../../core/useEphemeralKeyPair";
 
 function LoginPage() {
   const dispatch = useDispatch();
+  // console.log(GOOGLE_CLIENT_ID);
   const ephemeralKeyPair = useEphemeralKeyPair();
 
   const redirectUrl = new URL("https://accounts.google.com/o/oauth2/v2/auth");
-  mixpanel.track("on_login_page");
-
-  // if (typeof window === "undefined") return;
 
   const searchParams = new URLSearchParams({
     /**
@@ -41,56 +39,6 @@ function LoginPage() {
     nonce: ephemeralKeyPair.nonce,
   });
   redirectUrl.search = searchParams.toString();
-
-  const router = useRouter();
-  const openPopup = () => {
-    mixpanel.track("login_inititated");
-    const popup = window.open(redirectUrl, "popup", "popup=true");
-    if (!popup) {
-      alert("Popup blocked! Please allow popups for this site.");
-      return;
-    }
-    if (popup) {
-      const checkPopup = setInterval(() => {
-        if (popup.closed) {
-          clearInterval(checkPopup);
-          return;
-        }
-        try {
-          // Check if the popup has navigated to the redirect URL
-          if (popup.location.href.includes("id_token")) {
-            const fullUrl = popup.location.href;
-            const path = `${fullUrl}${new URL(fullUrl).search}${new URL(fullUrl).hash}`;
-
-            const parsedUrl = new URL(fullUrl);
-            const idToken = parsedUrl.hash.split("=")[1].split("&")[0];
-
-            dispatch(setAuthData(idToken));
-            router.push(path);
-            popup.close();
-
-
-            // if (popup.localStorage?.getItem("@aptos-connect/keyless-accounts")) {
-            // idToken = JSON.parse(
-            //   popup.localStorage.getItem("@aptos-connect/keyless-accounts")
-            // );
-
-            // Construct the path after successfully retrieving the idToken
-
-            // console.log(path);
-
-            // // Use router.push instead of window.location.replace
-            // } else {
-            //   console.log("No auth data found in localStorage.");
-            // }
-          }
-        } catch (error) {
-          console.error("Error accessing popup location:", error);
-        }
-      }, 1000);
-    }
-  };
-
   return (
     <>
       <Head>
@@ -115,15 +63,15 @@ function LoginPage() {
           </div>
 
           <div className="mt-8 space-y-6">
-            <button
-              onClick={openPopup}
+            <a
+              href={redirectUrl.toString()}
               className="w-full flex items-center justify-center px-4 py-3 space-x-4 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200 ease-in-out"
             >
               <div className="w-6 h-6">
                 <GoogleLogo />
               </div>
               <span className="font-medium">Sign in with Google</span>
-            </button>
+            </a>
           </div>
 
           <div className="mt-8 text-center">

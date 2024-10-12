@@ -4,8 +4,10 @@ import {
   setActiveAccountAddress,
   setAuthData,
 } from "@/redux/reducers/authReducer";
+import { showFailureToast } from "@/utils/notifications";
 import Image from "next/image";
-import { useState } from "react";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const Popup = ({
@@ -25,7 +27,7 @@ const Popup = ({
   const { idToken, activeAccountAdress } = useSelector(
     (state: any) => state.authSlice
   );
-  const { disconnectKeylessAccount } = useKeylessAccounts();
+  const { activeAccount, disconnectKeylessAccount } = useKeylessAccounts();
 
   const handleBackgroundClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
@@ -45,8 +47,15 @@ const Popup = ({
         setCopyFeedback("Failed to copy");
       });
   };
+  const router = useRouter();
 
-  console.log(balance[0]?.amount);
+  useEffect(() => {
+    console.log(activeAccount);
+    if (!activeAccount) {
+      router.push("/login")
+      showFailureToast("Session Expired! Please login again.")
+    };
+  }, [activeAccount, router]);
 
   return (
     <div
@@ -106,13 +115,8 @@ const Popup = ({
             <button
               className="btn btn-outline btn-secondary"
               onClick={async () => {
-                // disconnectKeylessAccount();
-                await dispatch(setAuthData({}));
-                await dispatch(setActiveAccountAddress({}));
-                await localStorage.removeItem(
-                  "@aptos-connect/keyless-accounts"
-                );
-                await localStorage.removeItem("activeAccount");
+                disconnectKeylessAccount();
+                console.log("he");
                 handlePopupClose();
               }}
             >

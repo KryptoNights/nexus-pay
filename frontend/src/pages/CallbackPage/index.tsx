@@ -1,6 +1,8 @@
 import { useKeylessAccounts } from "@/core/useKeylessAccounts";
 import { getAddressAsString } from "@/core/utils";
 import { setActiveAccountAddress } from "@/redux/reducers/authReducer";
+import { showFailureToast } from "@/utils/notifications";
+import mixpanel from "mixpanel-browser";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -10,16 +12,23 @@ function CallbackPage() {
   const switchKeylessAccount = useKeylessAccounts(
     (state) => state.switchKeylessAccount
   );
-  const { activeAccount } = useKeylessAccounts();
+  const navigate = useRouter();
+
+  const fragmentParams = new URLSearchParams(window.location.hash.substring(1));
+  const idToken = fragmentParams.get("id_token");
   const dispatch = useDispatch();
-  const address = getAddressAsString(activeAccount?.accountAddress.toString());
-
-  localStorage.setItem("activeAccount", address);
-
-  dispatch(setActiveAccountAddress(address));
-
-  const router = useRouter();
-  const [idToken, setIdToken] = useState<string | null>(null);
+  const { activeAccount } = useKeylessAccounts();
+  useEffect(() => {
+    const setData = async () => {
+      const address = getAddressAsString(
+        activeAccount?.accountAddress.toString()
+      );
+      console.log(address);
+      localStorage.setItem("activeAccount", address);
+      await dispatch(setActiveAccountAddress(address));
+    };
+    setData();
+  }, [activeAccount]);
 
   useEffect(() => {
     // This is a workaround to prevent firing twice due to strict mode
@@ -27,29 +36,28 @@ function CallbackPage() {
     isLoading.current = true;
 
     async function deriveAccount(idToken: string) {
+      console.log(idToken);
       try {
         await switchKeylessAccount(idToken);
-        router.push("/dashboard");
+        console.log("here");
+        navigate.push("/dashboard");
       } catch (error) {
-        router.push("/");
+        console.log("here", error);
+        showFailureToast("Please login again.")
+        mixpanel.track("switchKeylessAccount failed", {
+          error: error
+        })
+        navigate.push("/login");
       }
     }
 
-    if (typeof window !== "undefined") {
-      const fragmentParams = new URLSearchParams(
-        window.location.hash.substring(1)
-      );
-      const newIdToken = fragmentParams.get("id_token");
-      setIdToken(newIdToken);
-
-      if (!newIdToken) {
-        router.push("/");
-        return;
-      }
-
-      deriveAccount(newIdToken);
+    if (!idToken) {
+      navigate.push("/login");
+      return;
     }
-  }, [idToken, switchKeylessAccount]);
+
+    deriveAccount(idToken);
+  }, [idToken, isLoading, navigate, switchKeylessAccount]);
 
   return (
     <div className="flex items-center justify-center h-screen w-screen">
