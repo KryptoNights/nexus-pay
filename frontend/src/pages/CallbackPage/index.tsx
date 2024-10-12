@@ -1,6 +1,8 @@
 import { useKeylessAccounts } from "@/core/useKeylessAccounts";
 import { getAddressAsString } from "@/core/utils";
 import { setActiveAccountAddress } from "@/redux/reducers/authReducer";
+import { showFailureToast } from "@/utils/notifications";
+import mixpanel from "mixpanel-browser";
 import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -41,6 +43,10 @@ function CallbackPage() {
         navigate.push("/dashboard");
       } catch (error) {
         console.log("here", error);
+        showFailureToast("Please login again.")
+        mixpanel.track("switchKeylessAccount failed", {
+          error: error
+        })
         navigate.push("/login");
       }
     }

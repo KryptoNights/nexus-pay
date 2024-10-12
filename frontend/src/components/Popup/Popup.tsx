@@ -4,6 +4,7 @@ import {
   setActiveAccountAddress,
   setAuthData,
 } from "@/redux/reducers/authReducer";
+import { showFailureToast } from "@/utils/notifications";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -50,7 +51,10 @@ const Popup = ({
 
   useEffect(() => {
     console.log(activeAccount);
-    if (!activeAccount) router.push("/login");
+    if (!activeAccount) {
+      router.push("/login")
+      showFailureToast("Session Expired! Please login again.")
+    };
   }, [activeAccount, router]);
 
   return (

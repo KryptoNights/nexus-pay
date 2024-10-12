@@ -7,6 +7,7 @@ import {
   setAuthData,
   setUserBalance,
 } from "@/redux/reducers/authReducer";
+import { showFailureToast } from "@/utils/notifications";
 import clsx from "clsx";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
@@ -69,7 +70,10 @@ const Layout = ({ title, children, className }: Props) => {
   }, []);
 
   useEffect(() => {
-    if (!activeAccount) router.push("/login");
+    if (!activeAccount) {
+      router.push("/login")
+      showFailureToast("Session Expired! Please login again.")
+    };
   }, [activeAccount, router]);
 
   return (
