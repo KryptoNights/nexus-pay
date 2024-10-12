@@ -105,11 +105,14 @@ const Popup = ({
             </div>
             <button
               className="btn btn-outline btn-secondary"
-              onClick={() => {
-                disconnectKeylessAccount();
-                dispatch(setAuthData({}));
-                dispatch(setActiveAccountAddress({}));
-                localStorage.removeItem("activeAccount");
+              onClick={async () => {
+                // disconnectKeylessAccount();
+                await dispatch(setAuthData({}));
+                await dispatch(setActiveAccountAddress({}));
+                await localStorage.removeItem(
+                  "@aptos-connect/keyless-accounts"
+                );
+                await localStorage.removeItem("activeAccount");
                 handlePopupClose();
               }}
             >
