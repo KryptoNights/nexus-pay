@@ -1,21 +1,31 @@
 # Nexus Pay
 
-**Nexus Pay** is a seamless crypto payment platform that allows users to send and receive payments using QR codes and Nexus IDs. Designed for both P2P and merchant transactions, NexusPay simplifies the payment experience.
+Open, decentralized, cross-border payments with instant-finality and low fees. Nexus pay is a p2p and merchant payment platform.
 
-## Features
+## On-device, cross-device
 
-- **Add Money**: Easily add funds from your bank account or an external crypto wallet.
-- **Pay Anywhere**: Scan to pay at any merchant that accepts Nexus Pay, or search and pay people using their Nexus IDs.
-- **Dollar Transactions**: All your transactions are in dollars. We take care of the blockchain conversion in the background.
-- **Withdraw Anytime**: Withdraw your money back to your bank account whenever you want.
-- **Universal Access**: Your Nexus Pay wallet is created using your Google login and can be accessed from any device, anywhere in the world.
-- **Merchant Tools**: We aim to develop a suite of tools for merchants, including detailed transaction reports, easy integration with existing POS systems, and promotional tools to engage customers.
+Login with Google to create a wallet that can be accessed from any device, anywhere in the world. Neither our servers, nor any third party can access your wallet or funds. You can use this wallet on any device you log in with Google.
 
-## Getting Started
+## Easy on and off ramp
 
-1. **Create Your Wallet**: Sign up with your Google account directly from your browser. Your wallet will be created instantly.
-2. **Add Funds**: Link your bank account or external wallet to add money to Nexus Pay.
-3. **Start Paying**: Use your Nexus ID or scan QR codes to pay at merchants or send money to friends.
-4. **Withdraw Funds**: Need your money back in your bank? No problem, you can withdraw it anytime.
+Deposit money from other wallets or your credit card. Withdraw money to your bank account. Currently we use a third party service to facilitate this, but we are working on an easier option soon.
 
-Sign in with Google and bring your own money. Pay anyone, anywhere from any device. One wallet, all of the world.
+## Scan, Pay, Go
+
+Use your unique Nexus-ID or QR code to accept or send payments. Just scan the QR code, enter amount, and done. Merchants can use the QR code at their storefronts so anyone with a Nexus Pay wallet can send money.
+
+![qr.png](docs/qr.png)
+
+Due to our close integration with your email, you can also send money to anyone with an email address if they have a Nexus Pay wallet.
+
+## Stable payments
+
+Pay without worrying about volatility. Enter the amount in $USD. We send an equivalent amount of stable coin, or internally convert from your APT balance to USDT so the receiver always receives funds in a coin which doesn't fluctuate.
+
+Merchants can directly price their products in $USD without factoring in the volatility of cryptocurrencies.
+
+## Merchant SDK
+
+Integrate a `Pay with Nexus` button on your frontend to accept $USD payments from Nexus Pay wallets. Simply provide the email address of the sender, and we'll let you know when the payment is successful.
+
+More information on the [Nexus Pay Merchant SDK here](docs/merchant-sdk.md).
