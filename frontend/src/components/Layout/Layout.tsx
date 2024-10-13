@@ -20,10 +20,8 @@ interface Props {
 }
 
 const Layout = ({ title, children, className }: Props) => {
-  const { idToken, activeAccountAdress } = useSelector(
-    (state: any) => state.authSlice
-  );
-  const { activeAccount } = useKeylessAccounts();
+  const { idToken } = useSelector((state: any) => state.authSlice);
+  const { activeAccount, disconnectKeylessAccount } = useKeylessAccounts();
   const router = useRouter();
   const dispatch = useDispatch();
   const parseJwt = (token: string) => {
@@ -41,9 +39,9 @@ const Layout = ({ title, children, className }: Props) => {
         const expirationSec = parseJwt(JwtToken)?.exp;
         const currentTime = Math.floor(Date.now() / 1000);
         if (expirationSec < currentTime) {
-          console.log("here");
-          // localStorage.removeItem("@aptos-connect/keyless-accounts");
-          localStorage.removeItem("activeAccount");
+          console.log("Session Expired");
+          disconnectKeylessAccount();
+          showFailureToast("Session Expired! Please login again.");
           dispatch(setUserBalance({}));
           dispatch(setAuthData({}));
           dispatch(setActiveAccountAddress(""));
@@ -71,9 +69,9 @@ const Layout = ({ title, children, className }: Props) => {
 
   useEffect(() => {
     if (!activeAccount) {
-      router.push("/login")
-      showFailureToast("Session Expired! Please login again.")
-    };
+      router.push("/login");
+      // showFailureToast("Session Expired! Please login again.");
+    }
   }, [activeAccount, router]);
 
   return (
