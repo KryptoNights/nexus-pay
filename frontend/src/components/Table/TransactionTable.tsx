@@ -152,7 +152,7 @@ const TransactionTable: NextPage = () => {
               <th className="px-4 py-2">Time</th>
               <th className="px-4 py-2">Amount</th>
               <th className="px-4 py-2 hidden md:table-cell">Sender</th>
-              <th className="px-4 py-2 hidden md:table-cell">Txn Hash</th>
+              <th className="px-4 py-2 hidden md:table-cell">Txn Version</th>
               <th className="px-4 py-2">Status</th>
               <th className="px-4 py-2">Details</th>
             </tr>
@@ -248,7 +248,7 @@ const TransactionTable: NextPage = () => {
             {selectedTransaction ? (
               <div>
                 <p className="mb-2">
-                  <strong>Transaction Hash:</strong> 
+                  <strong>Transaction Version: </strong> 
                   <a 
                     href={`https://explorer.aptoslabs.com/txn/${selectedTransaction.version}/userTxnOverview?network=testnet`} 
                     target="_blank" 
@@ -259,11 +259,11 @@ const TransactionTable: NextPage = () => {
                   </a>
                 </p>
                 <p className="mb-2">
-                  <strong>Sender Address:</strong> 
+                  <strong>Sender Address: </strong> 
                   <span className="text-gray-300">{collapseAddress(selectedTransaction.sender || "") || "N/A"}</span>
                 </p>
                 <p className="mb-4">
-                  <strong>Gas Fees:</strong> 
+                  <strong>Gas Fees: </strong> 
                   <span className="text-gray-300">{selectedTransaction.gas_fee ? `${convertOctaToApt(selectedTransaction.gas_fee)} APT` : "N/A"}</span>
                 </p>
                 {/* Add more details as needed */}

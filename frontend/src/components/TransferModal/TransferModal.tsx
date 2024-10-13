@@ -216,10 +216,6 @@ const TransferModal = ({
     transferError !== "" ||
     transferAmount === "" ||
     parseFloat(transferAmount) <= 0 ||
-    // parseFloat(transferAmount) >
-    //   (isApt
-    //     ? Number(formatBalanceUtils(balance[0]?.amount, 8))
-    //     : Number(formatBalanceUtils(balance[1]?.amount, 6))) ||
     simulationIsLoading ||
     isLoading ||
     !recipientAddress ||
