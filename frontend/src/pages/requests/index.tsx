@@ -158,6 +158,12 @@ const Index = () => {
             }),
           }
         );
+        if (res.ok) {
+          // Re-fetch approvals after successful decline
+          await fetchApprovals();
+        } else {
+          console.error("Failed to update approval status");
+        }
         console.log("API RESPONSE");
         console.log(res);
       } catch (error) {

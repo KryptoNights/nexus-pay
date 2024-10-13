@@ -4,7 +4,7 @@ import { setActiveAccountAddress } from "@/redux/reducers/authReducer";
 import { showFailureToast } from "@/utils/notifications";
 import mixpanel from "mixpanel-browser";
 import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 
 function CallbackPage() {
@@ -53,6 +53,8 @@ function CallbackPage() {
 
     if (!idToken) {
       navigate.push("/login");
+      mixpanel.track("idToken not found on callback")
+      showFailureToast("Please login again. idToken not found!")
       return;
     }
 
