@@ -11,6 +11,7 @@ import {
   isValidWalletAddress,
 } from "@/core/utils";
 import { setUserBalance } from "@/redux/reducers/authReducer";
+import { showFailureToast, showSuccessToast } from "@/utils/notifications";
 import mixpanel from "mixpanel-browser";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -85,6 +86,7 @@ const TransferModal = ({
       );
 
       setIsSuccess(true);
+      showSuccessToast("Transfer Successful");
       mixpanel.track("successful_transaction");
     } catch (error: any) {
       const vmStatus = error?.transaction?.vm_status || "";
@@ -94,8 +96,10 @@ const TransferModal = ({
         vmStatus.includes("Not enough coins")
       ) {
         setTransferError("Not Enough Balance");
+        showFailureToast("Insufficient balance");
       } else {
         setTransferError("Transaction failed. Please try again.");
+        showFailureToast("Transaction failed. Please try again.");
       }
 
       console.error("Failed to send money:", vmStatus);
@@ -133,9 +137,11 @@ const TransferModal = ({
         );
       }
       setIsSuccess(true);
+      showSuccessToast("Transfer Successful");
       console.log(hash);
     } catch (error) {
       console.error("Failed to send money:", error);
+      showFailureToast("Transaction failed. Please try again.");
     } finally {
       setIsLoading(false);
     }
