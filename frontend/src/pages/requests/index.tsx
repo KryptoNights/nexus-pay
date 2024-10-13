@@ -253,7 +253,7 @@ const Index = () => {
               </p>
             )}
             {status === "Pending" && (
-              <div className="card-actions justify-end mt-2">
+              <div className="card-actions justify-end">
                 {paymentsLoading ? (
                   <div className="flex items-center justify-center w-full">
                     <span className="loading loading-spinner loading-md"></span>
