@@ -2,15 +2,16 @@ import { get_transaction_history } from "@/core/transactions";
 import { convertOctaToApt, formatDate } from "@/core/utils";
 import { useEffect, useState } from "react";
 import {
+  Bar,
+  BarChart,
   CartesianGrid,
   Legend,
-  Line,
-  LineChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
   YAxis,
 } from "recharts";
+import "./insights.module.css";
 
 // Interface for the transaction history response
 interface TransactionHistory {
@@ -21,18 +22,20 @@ interface TransactionHistory {
   gas_fee?: number;
   success: boolean;
   sender?: string;
+  asset_type?: string;
 }
 
 // Interface for balance data
 interface BalanceData {
   date: string;
-  balance: number;
+  usdt: number;
+  apt: number;
 }
 
 const CustomTooltip = ({ payload, label }: any) => {
   if (payload && payload.length) {
     return (
-      <div className="custom-tooltip">
+      <div className="custom-tooltip transparent-tooltip">
         <p className="label">{`Date: ${label}`}</p>
         <p className="balance">{`Balance: ${payload[0].value.toFixed(2)}`}</p>
       </div>
@@ -54,33 +57,47 @@ const InsightsGraph = ({
     const fetchTransactionHistory = async () => {
       try {
         setLoading(true);
-        console.log("debug", activeAccountAdress);
         const offset = 0;
         const response = await get_transaction_history(
           activeAccountAdress,
           offset
         );
-        console.log("response", response);
 
         // Set the transaction history
         setTransactions(response as TransactionHistory[]);
 
+        // Get today's date and filter for the last 7 days
+        const today = new Date();
+        const last7Days = new Date(today.setDate(today.getDate() - 7));
+
         // Calculate balance insights
         const balanceHistory = (response as TransactionHistory[])
-          .reduce(
-            (acc: BalanceData[], tx: TransactionHistory, index: number) => {
-              const prevBalance =
-                convertOctaToApt(acc[index - 1]?.balance) || 0;
-              const newBalance = convertOctaToApt(prevBalance + tx.amount); // Update balance based on transaction amount
-              acc.push({
-                // Assuming 'version' can be treated as a timestamp or version identifier for simplicity
-                date: formatDate(tx.transaction_timestamp), // Replace 'version' with actual date if available
-                balance: newBalance,
-              });
-              return acc;
-            },
-            []
-          )
+          .filter((tx) => new Date(tx.transaction_timestamp) >= last7Days) // Filter for last 7 days
+          .reduce((acc: BalanceData[], tx: TransactionHistory) => {
+            const date = formatDate(tx.transaction_timestamp);
+            const amount = tx.amount; // Convert amount to APT
+
+            // Initialize entry if it doesn't exist
+            const entry = acc.find((item) => item.date === date) || {
+              date,
+              usdt: 0,
+              apt: 0,
+            };
+
+            // Aggregate amounts based on asset type
+            if (tx?.asset_type?.includes("USDT")) {
+              // Changed comparison to check for truthiness
+              entry.usdt += amount / 1000000;
+            } else {
+              entry.apt += convertOctaToApt(amount);
+            }
+
+            // Update or add the entry
+            if (!acc.find((item) => item.date === date)) {
+              acc.push(entry);
+            }
+            return acc;
+          }, [])
           .reverse();
 
         setBalanceData(balanceHistory);
@@ -102,7 +119,7 @@ const InsightsGraph = ({
         Spend history
       </h1>
       <ResponsiveContainer width="100%" height={400}>
-        <LineChart
+        <BarChart
           data={balanceData}
           margin={{ top: 20, right: 20, left: 20, bottom: 20 }}
         >
@@ -115,7 +132,7 @@ const InsightsGraph = ({
           <YAxis
             tick={{ fill: "#8884d8" }}
             label={{
-              value: "Balance",
+              value: "Amount",
               angle: -90,
               position: "insideLeft",
               offset: 10,
@@ -123,15 +140,9 @@ const InsightsGraph = ({
           />
           <Tooltip content={<CustomTooltip />} />
           <Legend verticalAlign="top" />
-          <Line
-            type="monotone"
-            dataKey="balance"
-            stroke="#8884d8"
-            strokeWidth={2}
-            dot={{ stroke: "#8884d8", strokeWidth: 2 }}
-            activeDot={{ r: 8 }}
-          />
-        </LineChart>
+          <Bar dataKey="usdt" fill="#82ca9d" name="USDT" />
+          <Bar dataKey="apt" fill="#8884d8" name="APT" />
+        </BarChart>
       </ResponsiveContainer>
     </div>
   );

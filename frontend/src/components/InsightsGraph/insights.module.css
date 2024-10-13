@@ -1,0 +1,5 @@
+.transparent-tooltip {
+    background-color: transparent !important; /* Ensure the background is transparent */
+    border: none; /* Remove any border if present */
+    box-shadow: none; /* Remove any shadow if present */
+  }
