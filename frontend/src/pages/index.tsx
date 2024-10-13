@@ -191,25 +191,36 @@ const LandingPage: React.FC = () => {
 
         <main
           ref={headerRef}
-          className="flex-grow container mx-auto px-6 py-16 lg:px-20 bg-[#0D0D0D]"
+          className="flex-grow container mx-auto px-6 py-10 lg:px-20 bg-[#0D0D0D]"
         >
           <header
-            className="text-center mb-24 min-h-[62vh] flex flex-col  items-center mt-[7vh]"
+            className="text-center mb-16 sm:mb-24 min-h-[50vh] sm:min-h-[62vh] grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mt-8 sm:mt-[7vh]"
             data-aos="fade-up"
           >
-            <h1 className="text-5xl md:text-7xl font-extrabold mb-8 text-blue-300">
-              Crypto Payments Simplified
-            </h1>
-            <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed mb-8">
-              Effortless Crypto Payments for Consumers and Merchants – Anytime,
-              Anywhere with NexusPay
-            </p>
-            <button
-              className="py-3 px-8 bg-blue-600 text-white rounded-full text-lg font-semibold hover:bg-blue-700 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 shadow-xl hover:shadow-blue-500/30"
-              onClick={handleRedirect}
-            >
-              Start Paying now
-            </button>
+            <div className="flex flex-col items-center lg:items-start">
+              <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold mb-6 sm:mb-8 text-blue-300 text-center lg:text-start">
+                Crypto Payments Simplified
+              </h1>
+              <p className="text-lg sm:text-xl lg:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed mb-8 text-center lg:text-start">
+                Effortless Crypto Payments for Consumers and Merchants –
+                Anytime, Anywhere with NexusPay
+              </p>
+              <button
+                className="py-3 px-6 sm:px-8 bg-blue-600 text-white rounded-full text-base sm:text-lg font-semibold hover:bg-blue-700 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 shadow-xl hover:shadow-blue-500/30"
+                onClick={handleRedirect}
+              >
+                Get Started
+              </button>
+            </div>
+            <div className="flex justify-center lg:justify-end mt-8 lg:mt-0 relative pr-8">
+              <img
+                src="assets/dashboard_ss.png"
+                alt="dashboard snapshot"
+                className="max-w-full h-auto rounded-lg shadow-2xl transform transition-transform duration-300 hover:scale-105 hover:shadow-3xl" // Added hover effects for 3D look
+                width={250}
+                height={200}
+              />
+            </div>
           </header>
 
           <section
