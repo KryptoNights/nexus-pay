@@ -10,6 +10,8 @@ Login with Google to create a wallet that can be accessed from any device, anywh
 
 Deposit money from other wallets or your credit card. Easily get into Nexus, with several payment modes, including bank transfer or cards. Or just deposit from another wallet if you want to go full off-grid. Currently we use a third party service to facilitate on-ramp, but we are working on an easier option soon.
 
+![onramp.png](docs/onramp.png)
+
 ## Scan, Pay, Go
 
 Use your unique Nexus-ID or QR code to accept or send payments. Just scan the QR code, enter amount, and done. Merchants can use the QR code at their storefronts so anyone with a Nexus Pay wallet can send money.
