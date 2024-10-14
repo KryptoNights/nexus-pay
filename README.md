@@ -1,5 +1,7 @@
 # Nexus Pay
 
+### P2P and merchant payments
+
 Open, decentralized, cross-border payments with instant-finality and low fees. Nexus pay is a p2p and merchant payment platform.
 
 [![Nexus Pay Video](docs/overlay.png)](https://www.youtube.com/watch?v=QK2xFfiOevg)
