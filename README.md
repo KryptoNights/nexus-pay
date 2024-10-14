@@ -2,6 +2,8 @@
 
 Open, decentralized, cross-border payments with instant-finality and low fees. Nexus pay is a p2p and merchant payment platform.
 
+![youtube](https://www.youtube.com/watch?v=QK2xFfiOevg)
+
 ## On-device, cross-device
 
 Login with Google to create a wallet that can be accessed from any device, anywhere in the world. Neither our servers, nor any third party can access your wallet or funds. You can use this wallet on any device you log in with Google.
