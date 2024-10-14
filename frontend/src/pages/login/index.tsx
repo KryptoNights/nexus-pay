@@ -65,6 +65,7 @@ function LoginPage() {
           <div className="mt-8 space-y-6">
             <a
               href={redirectUrl.toString()}
+              onClick={() => mixpanel.track("login_initiated")}
               className="w-full flex items-center justify-center px-4 py-3 space-x-4 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200 ease-in-out"
             >
               <div className="w-6 h-6">
