@@ -6,9 +6,9 @@ Open, decentralized, cross-border payments with instant-finality and low fees. N
 
 Login with Google to create a wallet that can be accessed from any device, anywhere in the world. Neither our servers, nor any third party can access your wallet or funds. You can use this wallet on any device you log in with Google.
 
-## Easy on and off ramp
+## Easy on ramp
 
-Deposit money from other wallets or your credit card. Withdraw money to your bank account. Currently we use a third party service to facilitate this, but we are working on an easier option soon.
+Deposit money from other wallets or your credit card. Easily get into Nexus, with several payment modes, including bank transfer or cards. Or just deposit from another wallet if you want to go full off-grid. Currently we use a third party service to facilitate on-ramp, but we are working on an easier option soon.
 
 ## Scan, Pay, Go
 
