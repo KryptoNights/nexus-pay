@@ -6,7 +6,7 @@ export default function Document() {
       <Head>
         <meta
           name="keywords"
-          content="Nexus, NexusPay, web3, Web3, Crypto, payments, payments sdk, easy payments, Eth Global"
+          content="payments sdk, Nexus, NexusPay, Web3, Crypto, payments, easy payments, eth global, eth global nyc, stablecoin payments"
         />
         <meta name="robots" content="index, follow" />
         <meta charSet="UTF-8" />
