@@ -9,6 +9,7 @@ import {
 } from "@/redux/reducers/authReducer";
 import { showFailureToast } from "@/utils/notifications";
 import clsx from "clsx";
+import mixpanel from "mixpanel-browser";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -34,6 +35,15 @@ const Layout = ({ title, children, className }: Props) => {
   };
   React.useEffect(() => {
     const checkIfExpired = () => {
+      let idToken;
+      const storedToken = localStorage.getItem(
+        "@aptos-connect/keyless-accounts"
+      );
+      if (storedToken) {
+        idToken = JSON.parse(storedToken);
+        dispatch(setAuthData(idToken));
+      }
+
       const JwtToken = idToken?.state?.accounts[0]?.idToken.raw;
       if (JwtToken) {
         const expirationSec = parseJwt(JwtToken)?.exp;
@@ -58,18 +68,12 @@ const Layout = ({ title, children, className }: Props) => {
     return () => clearInterval(intervalId);
   }, []);
 
-  React.useEffect(() => {
-    let idToken;
-    const storedToken = localStorage.getItem("@aptos-connect/keyless-accounts");
-    if (storedToken) {
-      idToken = JSON.parse(storedToken);
-      dispatch(setAuthData(idToken));
-    }
-  }, []);
+  React.useEffect(() => {}, []);
 
   useEffect(() => {
     if (!activeAccount) {
       router.push("/login");
+      mixpanel.track("login failed because of !activeAccount")
       // showFailureToast("Session Expired! Please login again.");
     }
   }, [activeAccount, router]);

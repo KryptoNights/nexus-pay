@@ -48,12 +48,13 @@ function CallbackPage() {
           error: error
         })
         navigate.push("/login");
+        mixpanel.track("login failed because of switchKeylessAccount failed")
       }
     }
 
     if (!idToken) {
       navigate.push("/login");
-      mixpanel.track("idToken not found on callback")
+      mixpanel.track("login failed because of idToken not found on callback")
       showFailureToast("Please login again. idToken not found!")
       return;
     }
