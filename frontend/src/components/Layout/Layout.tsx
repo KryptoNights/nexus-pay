@@ -33,7 +33,7 @@ const Layout = ({ title, children, className }: Props) => {
       return null;
     }
   };
-  React.useEffect(() => {
+  useEffect(() => {
     const checkIfExpired = () => {
       let idToken;
       const storedToken = localStorage.getItem(
@@ -67,8 +67,6 @@ const Layout = ({ title, children, className }: Props) => {
 
     return () => clearInterval(intervalId);
   }, []);
-
-  React.useEffect(() => {}, []);
 
   useEffect(() => {
     if (!activeAccount) {
