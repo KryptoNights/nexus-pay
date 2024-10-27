@@ -194,7 +194,7 @@ const LandingPage: React.FC = () => {
           className="flex-grow container mx-auto px-6 py-10 lg:px-20 bg-[#0D0D0D]"
         >
           <header
-            className="text-center mb-16 sm:mb-24 min-h-[50vh] sm:min-h-[62vh] grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mt-8 sm:mt-[7vh]"
+            className="text-center mb-16 sm:mb-24 min-h-[50vh] sm:min-h-[62vh] grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mt-8 sm:mt-[7vh] justify-items-center lg:pl-10 lg:pr-10"
             data-aos="fade-up"
           >
             <div className="flex flex-col items-center lg:items-start">
@@ -212,7 +212,7 @@ const LandingPage: React.FC = () => {
                 Get Started
               </button>
             </div>
-            <div className="flex justify-center lg:justify-end mt-8 lg:mt-0 relative pr-8">
+            <div className="flex justify-center lg:justify-end mt-8 lg:mt-0 relative">
               <img
                 src="assets/dashboard_ss.png"
                 alt="dashboard snapshot"

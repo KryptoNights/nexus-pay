@@ -19,17 +19,17 @@ export const sendStableMoneyFunc = async (
       false
     );
     if (typeof hash === "string") {
-      console.log("tx has executed", hash);
+      // console.log("tx has executed", hash);
     } else if (typeof hash === "object") {
-      console.log(
-        "tx has only simulated",
-        hash.apt_deducted,
-        hash.usdt_deducted,
-        hash.usdt_per_apt,
-        hash.gas_used
-      );
+      // console.log(
+      //   "tx has only simulated",
+      //   hash.apt_deducted,
+      //   hash.usdt_deducted,
+      //   hash.usdt_per_apt,
+      //   hash.gas_used
+      // );
     }
-    console.log(hash);
+    // console.log(hash);
   } catch (error) {
     console.error("Failed to send money:", error);
   } finally {
@@ -53,7 +53,7 @@ export const sendMoney = async (
       convertAptToOcta(transferAmount),
       "0x1::aptos_coin::AptosCoin"
     );
-    console.log(transactionHash);
+    // console.log(transactionHash);
 
   } catch (error: any) {
     const vmStatus = error?.transaction?.vm_status || "";

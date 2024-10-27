@@ -11,9 +11,6 @@ const Profile = () => {
     (state) => state.authSlice
   );
 
-  const handleCustomNexusIdPurchase = async () => {
-    console.log(`Attempting to purchase custom Nexus ID: ${customNexusId}`);
-  };
 
   const handleProfilePhotoChange = (event) => {};
 

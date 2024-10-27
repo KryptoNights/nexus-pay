@@ -40,7 +40,6 @@ const TransferModal = ({
   const handleTransferAmountChange = (e: any) => {
     const amount = e.target.value;
     setTransferAmount(amount);
-    console.log(amount);
     // const showInsufficientBalanceMessage =
     //   parseFloat(amount) >
     //   (isApt
@@ -61,7 +60,6 @@ const TransferModal = ({
   };
 
   const getEquivalentValue = (amount: number) => {
-    console.log(conversionRate);
     if (isNaN(amount) || amount < 0) return 0;
     return isApt ? amount * conversionRate : amount / conversionRate;
   };
@@ -126,15 +124,15 @@ const TransferModal = ({
         false
       );
       if (typeof hash === "string") {
-        console.log("tx has executed", hash);
+        // console.log("tx has executed", hash);
       } else if (typeof hash === "object") {
-        console.log(
-          "tx has only simulated",
-          hash.apt_deducted,
-          hash.usdt_deducted,
-          hash.usdt_per_apt,
-          hash.gas_used
-        );
+        // console.log(
+        //   "tx has only simulated",
+        //   hash.apt_deducted,
+        //   hash.usdt_deducted,
+        //   hash.usdt_per_apt,
+        //   hash.gas_used
+        // );
       }
       setIsSuccess(true);
       showSuccessToast("Transfer Successful");

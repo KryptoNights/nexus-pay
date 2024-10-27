@@ -49,7 +49,6 @@ const Layout = ({ title, children, className }: Props) => {
         const expirationSec = parseJwt(JwtToken)?.exp;
         const currentTime = Math.floor(Date.now() / 1000);
         if (expirationSec < currentTime) {
-          console.log("Session Expired");
           disconnectKeylessAccount();
           showFailureToast("Session Expired! Please login again.");
           dispatch(setUserBalance({}));

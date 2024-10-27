@@ -23,7 +23,6 @@ const Header = ({ title }: HeaderProps) => {
   const { idToken, activeAccountAdress, balance } = useSelector(
     (state: any) => state.authSlice
   );
-  console.log(balance);
 
   const dispatch = useDispatch();
 

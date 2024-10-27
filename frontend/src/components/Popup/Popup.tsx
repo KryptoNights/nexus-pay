@@ -50,7 +50,6 @@ const Popup = ({
   const router = useRouter();
 
   useEffect(() => {
-    console.log(activeAccount);
     if (!activeAccount) {
       router.push("/login")
       showFailureToast("Session Expired! Please login again.")

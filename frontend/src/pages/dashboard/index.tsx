@@ -10,6 +10,7 @@ import {
 import { useKeylessAccounts } from "@/core/useKeylessAccounts";
 import { setSelfNexusId, setUserBalance } from "@/redux/reducers/authReducer";
 import axios from "axios";
+import { ArrowDownLeft, Send } from "lucide-react";
 import mixpanel from "mixpanel-browser";
 import type { NextPage } from "next";
 import Head from "next/head";
@@ -286,6 +287,7 @@ const Home: NextPage = () => {
                 setIsReceiveModalOpen(true);
               }}
             >
+              <ArrowDownLeft className="w-4 h-4 mr-2" />
               Receive
             </button>
             <button
@@ -295,6 +297,7 @@ const Home: NextPage = () => {
                 setIsTransferModalOpen(true);
               }}
             >
+              <Send className="w-4 h-4 mr-2" />
               Send
             </button>
           </div>

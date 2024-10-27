@@ -44,7 +44,6 @@ const useFetchApprovals = (
         }
       );
       const data = await response.json();
-      console.log(data.approvals);
 
       setApprovals(data.approvals);
     } catch (error) {
@@ -127,7 +126,6 @@ const Index = () => {
             activeAccount!,
             false
           );
-          console.log("payment status", hash);
         } else if (token === "APT") {
           hash = await sendMoney(
             AccountAddress.fromString(recipientAddress),
@@ -135,8 +133,6 @@ const Index = () => {
             activeAccount!,
             setTransferError
           );
-          console.log("payment status", hash);
-          console.log(">>>>", transferError);
         }
         const getBalancesResponse = await getBalances(activeAccountAdress);
         dispatch(setUserBalance(getBalancesResponse));
@@ -164,8 +160,6 @@ const Index = () => {
         } else {
           console.error("Failed to update approval status");
         }
-        console.log("API RESPONSE");
-        console.log(res);
       } catch (error) {
         console.error(error);
       } finally {
@@ -177,7 +171,7 @@ const Index = () => {
 
   const handleDecline = useCallback(
     async (id: string) => {
-      console.log(`Rejected: ${id}`);
+      // console.log(`Rejected: ${id}`);
       setPaymentsLoading(true);
       try {
         const res = await fetch(

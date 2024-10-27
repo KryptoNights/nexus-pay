@@ -106,7 +106,6 @@ export const sendCoinToAddres = async (recipient: AccountAddress, amount: number
 export const sendCoinToAddresSimulation = async (recipient: AccountAddress, amount: number, type: string, signer: KeylessAccount): Promise<string> => {
    
     const parts = type.split("::");
-    console.log('inside')
     if (parts.length !== 3) {
         throw new Error("Invalid coin type, should be in the format of '0x1::aptos_coin::AptosCoin'");
     }
@@ -120,13 +119,11 @@ export const sendCoinToAddresSimulation = async (recipient: AccountAddress, amou
         signerPublicKey: signer.publicKey,
         transaction,
     });
-    console.log('as',userTransactionResponse)
     return JSON.stringify(userTransactionResponse)
 }
 
 export const sendCoinToAddresGas = async (recipient: AccountAddress, amount: number, type: string, signer: KeylessAccount): Promise<number> => {
     const parts = type.split("::");
-    console.log('inside')
     if (parts.length !== 3) {
         throw new Error("Invalid coin type, should be in the format of '0x1::aptos_coin::AptosCoin'");
     }
@@ -140,7 +137,6 @@ export const sendCoinToAddresGas = async (recipient: AccountAddress, amount: num
         signerPublicKey: signer.publicKey,
         transaction,
     });
-    console.log('as',userTransactionResponse)
     return Number.parseInt(userTransactionResponse.gas_unit_price) * Number.parseInt(userTransactionResponse.gas_used);
 }
 
@@ -155,9 +151,9 @@ export type SimulationResponse = {
 export const sendStablePayment = async (recipient: AccountAddress, amount_usd: number, signer: KeylessAccount, onlySimulate: boolean = false): Promise<string | SimulationResponse> => {
     const aptos_balance = await getBalances(signer.accountAddress.toString());
     const aptos_amount = aptos_balance.find((balance) => balance.asset_type === "0x1::aptos_coin::AptosCoin")?.amount;
-    console.log(`Aptos balance: ${aptos_amount}`);
+    // console.log(`Aptos balance: ${aptos_amount}`);
     const usdt_amount = aptos_balance.find((balance) => balance.asset_type === "0x43417434fd869edee76cca2a4d2301e528a1551b1d719b75c350c3c97d15b8b9::coins::USDT")?.amount;
-    console.log(`USDT balance: ${usdt_amount}`);
+    // console.log(`USDT balance: ${usdt_amount}`);
     // return Promise.resolve("0x0");
 
     let gas_used = 0;
@@ -166,7 +162,7 @@ export const sendStablePayment = async (recipient: AccountAddress, amount_usd: n
     let usdt_per_apt = 0;
 
     if (usdt_amount < 1000000 * amount_usd) {
-        console.log(`Aptos balance: ${aptos_amount}`);
+        // console.log(`Aptos balance: ${aptos_amount}`);
         if (!aptos_amount) {
             throw new Error("No Aptos balance found");
         }
@@ -191,15 +187,15 @@ export const sendStablePayment = async (recipient: AccountAddress, amount_usd: n
             transaction: tx
         });
 
-        console.log(`step 0:`)
-        console.log(userTransactionResponse);
+        // console.log(`step 0:`)
+        // console.log(userTransactionResponse);
 
         gas_used += Number.parseInt(userTransactionResponse.gas_unit_price) * Number.parseInt(userTransactionResponse.gas_used);
 
         const swap_event = userTransactionResponse.events.find((event: any) => event.type === "0x19b400ef28270cdd00ff826412a13b2e7d82a8a0762c46bed34a6e8d52f0275a::pool::SwapEvent");
         if (swap_event) {
-            console.log("swap_event");
-            console.log(swap_event);
+            // console.log("swap_event");
+            // console.log(swap_event);
             apt_deducted = Number.parseInt(swap_event.data.y_in[0]) / 1e8;
             usdt_per_apt = Number.parseInt(swap_event.data.x_out[0]) / 1e6 / apt_deducted;
         }
@@ -216,21 +212,21 @@ export const sendStablePayment = async (recipient: AccountAddress, amount_usd: n
             });
 
             const executedTransaction = await aptos.waitForTransaction({ transactionHash: committedTransaction.hash });
-            console.log(`step 1`);
-            console.log(executedTransaction);
+            // console.log(`step 1`);
+            // console.log(executedTransaction);
         }
     }
 
     // const hash = await sendCoinToAddres(recipient, amount_usd, "0x43417434fd869edee76cca2a4d2301e528a1551b1d719b75c350c3c97d15b8b9::coins::USDT", signer);
     if (!onlySimulate) {
         const hash = await testSendMoneyToAccount(recipient.toString(), signer, 1000000 * amount_usd, "0x43417434fd869edee76cca2a4d2301e528a1551b1d719b75c350c3c97d15b8b9::coins::USDT");
-        console.log(`step 2: Executed transaction: ${hash}`);
+        // console.log(`step 2: Executed transaction: ${hash}`);
 
         return hash;
     }
 
     gas_used += await sendCoinToAddresGas(AccountAddress.fromString("0x43417434fd869edee76cca2a4d2301e528a1551b1d719b75c350c3c97d15b8b9"), 1000000 * amount_usd, "0x43417434fd869edee76cca2a4d2301e528a1551b1d719b75c350c3c97d15b8b9::coins::USDT", signer);
-    console.log("returning simulation response");
+    // console.log("returning simulation response");
     if (apt_deducted === 0) {
         usdt_deducted = amount_usd;
     }
@@ -369,7 +365,7 @@ export const get_transaction_history = async (address: string, offset: number): 
         const raw_fungible_asset_activities: FungibleAssetActivity[] = raw_fungible_asset_activities_response.data.data.fungible_asset_activities;
 
         if (!raw_fungible_asset_activities || raw_fungible_asset_activities.length === 0) {
-            console.log('No fungible asset activities found for the given address');
+            // console.log('No fungible asset activities found for the given address');
             return [];
         }
 
@@ -453,7 +449,7 @@ export const get_transaction_history = async (address: string, offset: number): 
 
         const history: TransactionHistory[] = Array.from(version_activity_map.values());
         history.sort((a, b) => parseInt(b.version) - parseInt(a.version));
-        console.log(">>>>>>>asdasd>>>", history);
+        // console.log(">>>>>>>asdasd>>>", history);
 
         return history.map((transaction) => {
             if (transaction.action === "Sent") {
@@ -463,8 +459,8 @@ export const get_transaction_history = async (address: string, offset: number): 
                     asset_type: transaction.asset_type // Include asset_type in the returned transaction
                 };
             }
-            console.log(">>>>>>>>>>", transaction);
-            console.log("?????????????",transaction.asset_type);
+            // console.log(">>>>>>>>>>", transaction);
+            // console.log("?????????????",transaction.asset_type);
             return {
                 ...transaction,
                 asset_type: transaction.asset_type // Include asset_type in the returned transaction
