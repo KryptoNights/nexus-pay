@@ -22,6 +22,7 @@ export default function Document() {
           name="twitter:title"
           content="Pay anyone anywhere fast and secure using crypto"
         />
+        <meta name="twitter:image" content="https://i.imghippo.com/files/Lkn5387ZQ.jpg"></meta>
       </Head>
       <body>
         <Main />
