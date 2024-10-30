@@ -25,6 +25,7 @@ export default function Document() {
           content="https://i.imghippo.com/files/Lkn5387ZQ.jpg"
         />
         <meta name="twitter:url" content="https://nexuspaylink.com"/>
+        <meta name="twitter:url" content="https://www.nexuspaylink.com"/>
       </Head>
       <body>
         <Main />
