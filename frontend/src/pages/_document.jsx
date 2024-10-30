@@ -18,15 +18,12 @@ export default function Document() {
         {/* <meta name="twitter:card" content="summary_large_image" /> */}
         <meta name="twitter:site" content="@paywithnexus" />
         <meta name="twitter:creator" content="@kavishshahh" />
-        <meta
-          name="twitter:title"
-          content="Nexus pay is a p2p and merchant payment platform. Open, decentralized, cross-border payments with instant-finality and low fees."
-        />
+        <meta name="twitter:title" content="NexusPay | P2P & Merchant Payments"/>
         <meta
           name="twitter:image"
           content="https://i.imghippo.com/files/Lkn5387ZQ.jpg"
         />
-        <meta name="twitter:url" content="https://nexuspay.vercel.app/"/>
+        <meta name="twitter:url" content="https://www.nexuspaylink.com/"/>
       </Head>
       <body>
         <Main />

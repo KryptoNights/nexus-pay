@@ -51,9 +51,9 @@ const Popup = ({
 
   useEffect(() => {
     if (!activeAccount) {
-      router.push("/login")
-      showFailureToast("Session Expired! Please login again.")
-    };
+      router.push("/login");
+      showFailureToast("Session Expired! Please login again.");
+    }
   }, [activeAccount, router]);
 
   return (
@@ -87,7 +87,10 @@ const Popup = ({
             {collapseAddress(activeAccountAdress)}
           </h3>
           <p className="text-gray-400">
-            {Number(formatBalance(balance[0]?.amount, 8))} APT
+            {isNaN(balance[1]?.amount)
+              ? "0"
+              : Number(formatBalance(balance[0]?.amount, 8))}{" "}
+            APT
           </p>
           <p className="text-gray-400">
             {isNaN(balance[1]?.amount)

@@ -3,49 +3,49 @@ import { MetadataRoute } from 'next'
 export default function sitemap(): MetadataRoute.Sitemap {
     return [
         {
-            url: 'https://nexuspay.vercel.app/',
+            url: 'https://www.nexuspaylink.com/',
             lastModified: new Date(),
             changeFrequency: 'weekly',
             priority: 1.0,
         },
         {
-            url: 'https://nexuspay.vercel.app/login',
+            url: 'https://www.nexuspaylink.com/login',
             lastModified: new Date(),
             changeFrequency: 'weekly',
             priority: 0.5,
         },
         {
-            url: 'https://nexuspay.vercel.app/dashboard',
+            url: 'https://www.nexuspaylink.com/dashboard',
             lastModified: new Date(),
             changeFrequency: 'weekly',
             priority: 1.0,
         },
         {
-            url: 'https://nexuspay.vercel.app/transactions',
+            url: 'https://www.nexuspaylink.com/transactions',
             lastModified: new Date(),
             changeFrequency: 'weekly',
             priority: 0.4,
         },
         {
-            url: 'https://nexuspay.vercel.app/docs',
+            url: 'https://www.nexuspaylink.com/docs',
             lastModified: new Date(),
             changeFrequency: 'weekly',
             priority: 0.5,
         },
         {
-            url: 'https://nexuspay.vercel.app/profile',
+            url: 'https://www.nexuspaylink.com/profile',
             lastModified: new Date(),
             changeFrequency: 'weekly',
             priority: 0.2,
         },
         {
-            url: 'https://nexuspay.vercel.app/requests',
+            url: 'https://www.nexuspaylink.com/requests',
             lastModified: new Date(),
             changeFrequency: 'weekly',
             priority: 0.6,
         },
         {
-            url: 'https://nexuspay.vercel.app/insights',
+            url: 'https://www.nexuspaylink.com/insights',
             lastModified: new Date(),
             changeFrequency: 'weekly',
             priority: 0.3,
