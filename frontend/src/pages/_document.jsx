@@ -15,7 +15,7 @@ export default function Document() {
           name="google-site-verification"
           content="NqX5mc07r18m3it3uZ5VvRW_mkz7NmFQ5r6ZZM8IRGk"
         />
-        {/* <meta name="twitter:card" content="summary_large_image" /> */}
+        <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@paywithnexus" />
         <meta name="twitter:creator" content="@kavishshahh" />
         <meta name="twitter:title" content="NexusPay | P2P & Merchant Payments"/>
