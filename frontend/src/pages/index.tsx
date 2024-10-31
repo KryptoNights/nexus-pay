@@ -151,7 +151,7 @@ const LandingPage: React.FC = () => {
                 onClick={() => handleScroll(featuresRef)}
                 className="text-white hover:text-blue-300 transition-colors duration-300  hover:cursor-pointer"
               >
-                Features
+                Why Nexus?
               </a>
               <a
                 onClick={() => handleScroll(faqRef)}
@@ -165,12 +165,12 @@ const LandingPage: React.FC = () => {
               >
                 For Businesses
               </a>
-              <a
+              {/* <a
                 href="/docs"
                 className="text-white hover:text-blue-300 transition-colors duration-300 hover:cursor-pointer"
               >
                 Docs
-              </a>
+              </a> */}
               <button
                 className="text-sm py-2 px-6 bg-blue-600 rounded-full font-medium hover:bg-blue-700 transition duration-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 shadow-xl shadow-blue-500/30"
                 onClick={handleRedirect}
@@ -198,19 +198,30 @@ const LandingPage: React.FC = () => {
             data-aos="fade-up"
           >
             <div className="flex flex-col items-center lg:items-start">
-              <h1 className="text-4xl sm:text-5xl lg:text-7xl font-extrabold mb-6 sm:mb-8 text-blue-300 text-center lg:text-start">
+              <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold mb-6 sm:mb-8 text-blue-300 text-center lg:text-start">
                 Crypto Payments Simplified
               </h1>
               <p className="text-lg sm:text-xl lg:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed mb-8 text-center lg:text-start">
                 Effortless Crypto Payments for Consumers and Merchants –
                 Anytime, Anywhere with NexusPay
               </p>
-              <button
-                className="py-3 px-6 sm:px-8 bg-blue-600 text-white rounded-full text-base sm:text-lg font-semibold hover:bg-blue-700 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 shadow-xl hover:shadow-blue-500/30"
-                onClick={handleRedirect}
-              >
-                Get Started
-              </button>
+              <div className="flex flex-row">
+                <button
+                  className="py-3 px-6 sm:px-8 bg-blue-600 text-white rounded-full text-base sm:text-lg font-semibold hover:bg-blue-700 transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 shadow-xl hover:shadow-blue-500/30 mr-4"
+                  onClick={() => {
+                    mixpanel.track("get_started_clicked");
+                    router.push("/dashboard");
+                  }}
+                >
+                  Get Started
+                </button>
+                <button
+                  className="py-3 px-6 sm:px-8 bg-transparent text-blue-600 border-2 border-blue-600 rounded-full text-base sm:text-lg font-semibold hover:bg-blue-600 hover:text-white transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 shadow-xl hover:shadow-blue-500/30"
+                  onClick={() => handleScroll(featuresRef)}
+                >
+                  Learn more
+                </button>
+              </div>
             </div>
             <div className="flex justify-center lg:justify-end mt-8 lg:mt-0 relative">
               <img
@@ -268,7 +279,7 @@ const LandingPage: React.FC = () => {
             data-aos="fade-up"
           >
             <h2 className="text-4xl md:text-5xl font-semibold text-center mb-16 text-blue-200">
-              Features
+              Why choose Nexus Paylink?
             </h2>
             <div className="grid md:grid-cols-3 gap-12">
               {features.map((feature, index) => (
