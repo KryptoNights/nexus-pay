@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import GoogleLogo from "../../../public/assets/GoogleLogo";
 import { GOOGLE_CLIENT_ID } from "../../core/constants";
 import useEphemeralKeyPair from "../../core/useEphemeralKeyPair";
+import { useEffect } from "react";
 
 function LoginPage() {
   const dispatch = useDispatch();
@@ -39,6 +40,11 @@ function LoginPage() {
     nonce: ephemeralKeyPair.nonce,
   });
   redirectUrl.search = searchParams.toString();
+
+  useEffect(() => {
+    mixpanel.track("login_page_load");
+  }, []);
+
   return (
     <>
       <Head>

@@ -126,7 +126,7 @@ const Home: NextPage = () => {
         $address: activeAccountAdress,
       });
     }
-    if (!tracked.current) {
+    if (!tracked.current && activeAccountAdress) {
       mixpanel.track("dashboard_viewed");
       tracked.current = true;
     }

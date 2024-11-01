@@ -217,7 +217,10 @@ const LandingPage: React.FC = () => {
                 </button>
                 <button
                   className="py-3 px-6 sm:px-8 bg-transparent text-blue-600 border-2 border-blue-600 rounded-full text-base sm:text-lg font-semibold hover:bg-blue-600 hover:text-white transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 shadow-xl hover:shadow-blue-500/30"
-                  onClick={() => handleScroll(featuresRef)}
+                  onClick={() => {
+                    handleScroll(featuresRef)
+                    mixpanel.track("learn_more_clicked")
+                  }}
                 >
                   Learn more
                 </button>
