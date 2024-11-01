@@ -7,7 +7,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import React, { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
-
+import { LayoutGrid, Wallet, FileText } from "lucide-react";
 // Near entry of your product, init Mixpanel
 
 // mixpanel.identify(`guest`);
@@ -38,6 +38,33 @@ const LandingPage: React.FC = () => {
     "Scan QR codes for instant payments",
     "Receive funds via your unique QR",
     "Send and receive using Nexus ID",
+  ];
+
+  const features2 = [
+    {
+      icon: (
+        <LayoutGrid className="w-6 h-6 text-gray-400 group-hover:text-blue-400 transition-colors duration-300" />
+      ),
+      title: "Expense Tracking",
+      description:
+        "CashKaka makes expense tracking easy on WhatsApp. Using AI, it understands your messages, making it simple for anyone to manage their money wisely.",
+    },
+    {
+      icon: (
+        <Wallet className="w-6 h-6 text-gray-400 group-hover:text-blue-400 transition-colors duration-300" />
+      ),
+      title: "Savings and Investments",
+      description:
+        "CashKaka helps you not just track expenses, but also boosts your savings and investments. It helps you making smarter financial decisions, helping you build a secure future.",
+    },
+    {
+      icon: (
+        <FileText className="w-6 h-6 text-gray-400 group-hover:text-blue-400 transition-colors duration-300" />
+      ),
+      title: "Reports",
+      description:
+        "CashKaka generates detailed reports on your finances, providing valuable insights into your spending habits and financial health. With just a few clicks, users can access personalized reports for any time period, empowering them to make informed decisions and take control of their money.",
+    },
   ];
 
   const handleRedirect = () => {
@@ -218,8 +245,8 @@ const LandingPage: React.FC = () => {
                 <button
                   className="py-3 px-6 sm:px-8 bg-transparent text-blue-600 border-2 border-blue-600 rounded-full text-base sm:text-lg font-semibold hover:bg-blue-600 hover:text-white transition duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 shadow-xl hover:shadow-blue-500/30"
                   onClick={() => {
-                    handleScroll(featuresRef)
-                    mixpanel.track("learn_more_clicked")
+                    handleScroll(featuresRef);
+                    mixpanel.track("learn_more_clicked");
                   }}
                 >
                   Learn more
@@ -273,6 +300,60 @@ const LandingPage: React.FC = () => {
                   <p className="text-gray-400">{step.description}</p>
                 </div>
               ))}
+            </div>
+          </section>
+
+          <section className=" min-h-screen py-16 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-7xl mx-auto">
+              <div className="lg:grid lg:grid-cols-12 lg:gap-8 lg:items-center">
+                {/* Left column - Text content */}
+                <div className="lg:col-span-7">
+                  <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6">
+                    Product features
+                  </h2>
+                  <p className="text-gray-400 mb-12">
+                    CashKaka simplifies expense tracking by allowing users to
+                    log expenses via WhatsApp messenger catering to
+                    non-tech-savvy individuals.
+                  </p>
+
+                  <div className="space-y-8">
+                    {features2.map((feature, index) => (
+                      <div
+                        key={index}
+                        className="bg-gray-800/30 p-6 rounded-xl transition-all duration-300 hover:bg-gray-800/50 hover:shadow-lg group cursor-pointer"
+                      >
+                        <div className="flex items-start">
+                          <div className="flex-shrink-0 mt-1">
+                            {feature.icon}
+                          </div>
+                          <div className="ml-4">
+                            <h3 className="text-lg font-semibold text-white mb-2 group-hover:text-blue-300 transition-colors duration-300">
+                              {feature.title}
+                            </h3>
+                            <p className="text-gray-400 group-hover:text-gray-300 transition-colors duration-300">
+                              {feature.description}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Right column - Image */}
+                <div className="mt-12 lg:mt-0 lg:col-span-5">
+                  <div className="relative   bg-gray-800 flex items-center justify-center overflow-hidden">
+                    <img
+                      src=""
+                      width={400}
+                      height={600}
+                      alt="Product feature illustration"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </section>
 
