@@ -226,11 +226,10 @@ const LandingPage: React.FC = () => {
           >
             <div className="flex flex-col items-center lg:items-start">
               <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold mb-6 sm:mb-8 text-blue-300 text-center lg:text-start">
-                Crypto Payments Simplified
+                Stablecoin Payments Simplified
               </h1>
               <p className="text-lg sm:text-xl lg:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed mb-8 text-center lg:text-start">
-                Effortless Crypto Payments for Consumers and Merchants –
-                Anytime, Anywhere with NexusPay
+                Pay your friends, family and merchants using Stable coins with instant Finality and almost zero fees(&lt;0.01$)
               </p>
               <div className="flex flex-row">
                 <button
